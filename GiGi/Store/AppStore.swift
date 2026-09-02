@@ -167,9 +167,12 @@ final class AppStore {
         let now = Date()
         let nowMins = Calendar.current.component(.hour, from: now) * 60
                     + Calendar.current.component(.minute, from: now)
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: now)
         return tasks.first { t in
             guard t.state == .booked, !dismissedLapseIds.contains(t.id),
                   let end = t.endTime, let p = t.period else { return false }
+            if let bd = t.bookedDate, bd != todayStr { return false }
             return nowMins > timeToMinutes(end, p)
         }
     }
@@ -179,6 +182,16 @@ final class AppStore {
     var scheduledTasks: [GTask] {
         tasks.filter { $0.state == .booked }
             .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
+    }
+    var todaysScheduledTasks: [GTask] {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: Date())
+        return tasks.filter { t in
+            guard t.state == .booked else { return false }
+            if let bd = t.bookedDate { return bd == todayStr }
+            return true
+        }
+        .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
     }
     var unscheduledTasks: [GTask] {
         let order: [Priority: Int] = [.high: 0, .medium: 1, .low: 2]
@@ -464,10 +477,7 @@ final class AppStore {
 
     private func bookedStartDate(offset: Int, hour: Int, minute: Int, period: String) -> Date {
         let cal = Calendar.current
-        let today = Date()
-        let todayWeekday = cal.component(.weekday, from: today) - 1
-        let sunday = cal.date(byAdding: .day, value: -todayWeekday, to: today)!
-        let base = cal.date(byAdding: .day, value: offset, to: sunday)!
+        let base = cal.date(byAdding: .day, value: offset, to: cal.startOfDay(for: Date()))!
         var h = hour
         if period == "PM" && h != 12 { h += 12 }
         if period == "AM" && h == 12 { h = 0 }
@@ -487,8 +497,14 @@ final class AppStore {
         if period == "AM" && h == 12 { h = 0 }
         let selStart = h * 60 + minute
         let selEnd = selStart + mins
+        let cal = Calendar.current
+        let targetBase = cal.date(byAdding: .day, value: bookForm.dateOffset,
+                                  to: cal.startOfDay(for: Date()))!
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let targetDate = isoFmt.string(from: targetBase)
         return tasks.first { t in
             guard t.state == .booked, t.id != excludeId else { return false }
+            if let bd = t.bookedDate, bd != targetDate { return false }
             let es = timeToMinutes(t.startTime, t.period)
             let ee = timeToMinutes(t.endTime, t.period)
             return selStart < ee && selEnd > es

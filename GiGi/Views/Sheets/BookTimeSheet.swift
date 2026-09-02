@@ -21,13 +21,12 @@ struct BookTimeSheet: View {
 
     private var dayLabels: [String] {
         let cal = Calendar.current
-        let today = Date()
-        let todayWeekday = cal.component(.weekday, from: today) - 1
-        let sunday = cal.date(byAdding: .day, value: -todayWeekday, to: today)!
+        let today = cal.startOfDay(for: Date())
         let f = DateFormatter(); f.dateFormat = "E d"
-        return (0..<7).map { i in
-            let d = cal.date(byAdding: .day, value: i - todayWeekday, to: today)!
-            if i == todayWeekday { return "Today" }
+        return (0..<14).map { i in
+            let d = cal.date(byAdding: .day, value: i, to: today)!
+            if i == 0 { return "Today" }
+            if i == 1 { return "Tomorrow" }
             return f.string(from: d)
         }
     }

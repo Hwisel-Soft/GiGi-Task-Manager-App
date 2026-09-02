@@ -13,7 +13,7 @@ targets:
       path: Generated-Info.plist
       properties:
         CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "3"
+        CFBundleVersion: "4"
         UILaunchScreen: {}
         UIStatusBarStyle: UIStatusBarStyleDefault
         NSCalendarsFullAccessUsageDescription: "GiGi adds your booked tasks to your calendar so you can see them alongside other events."

@@ -17,6 +17,9 @@ struct MainTabView: View {
 
             NavigationStack {
                 CalendarView()
+                    .navigationDestination(isPresented: $store.showDetail) {
+                        TaskDetailView()
+                    }
             }
             .tabItem { Label("Calendar", systemImage: "calendar") }
             .tag(AppTab.calendar)

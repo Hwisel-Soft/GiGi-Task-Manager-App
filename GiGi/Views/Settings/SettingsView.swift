@@ -156,7 +156,7 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundColor(C.text)
                         Spacer()
-                        Text("1.0 (3)")
+                        Text("1.0 (4)")
                             .font(.system(size: 15))
                             .foregroundColor(C.muted)
                     }
@@ -237,10 +237,10 @@ struct SettingsView: View {
 
     var notificationPreview: some View {
         @Bindable var store = store
-        let scheduled = store.scheduledTasks.count
+        let scheduled = store.todaysScheduledTasks.count
         let unscheduled = store.unscheduledTasks.count
         let followUps = store.waitingTasks.filter { store.isFollowUpDue($0) }.count
-        let topTasks = Array(store.scheduledTasks.prefix(2))
+        let topTasks = Array(store.todaysScheduledTasks.prefix(2))
         return VStack(alignment: .leading, spacing: 0) {
             Divider().background(C.border)
             VStack(alignment: .leading, spacing: 8) {

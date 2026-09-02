@@ -56,13 +56,13 @@ struct TodayView: View {
                     .background(C.card)
 
                     // Scheduled section
-                    if !store.scheduledTasks.isEmpty {
+                    if !store.todaysScheduledTasks.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("SCHEDULED")
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundColor(C.muted)
                                 .tracking(1)
-                            ForEach(store.scheduledTasks) { task in
+                            ForEach(store.todaysScheduledTasks) { task in
                                 TaskCardView(task: task)
                             }
                         }
@@ -99,7 +99,7 @@ struct TodayView: View {
                     .padding(.bottom, 100)
 
                     // Empty state
-                    if store.scheduledTasks.isEmpty && store.unscheduledTasks.isEmpty {
+                    if store.todaysScheduledTasks.isEmpty && store.unscheduledTasks.isEmpty {
                         VStack(spacing: 12) {
                             Text("✨").font(.system(size: 48))
                             Text("All clear!").font(.system(size: 17, weight: .bold)).foregroundColor(C.text)

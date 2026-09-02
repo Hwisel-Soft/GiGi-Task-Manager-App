@@ -32,8 +32,30 @@ struct CalendarView: View {
         return "\(f.string(from: sun)) – \(f.string(from: sat))"
     }
 
+    private var selectedDayISO: String {
+        let cal = Calendar.current
+        let today = Date()
+        let weekday = cal.component(.weekday, from: today) - 1
+        let startOfWeek = cal.date(byAdding: .day, value: -weekday, to: cal.startOfDay(for: today))!
+        let d = cal.date(byAdding: .day, value: store.calSelDay, to: startOfWeek)!
+        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        return f.string(from: d)
+    }
+
     private var tasksForSelectedDay: [GTask] {
-        store.scheduledTasks
+        let dateStr = selectedDayISO
+        return store.scheduledTasks.filter { t in
+            if let bd = t.bookedDate { return bd == dateStr }
+            let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+            return dateStr == isoFmt.string(from: Date())
+        }
+    }
+
+    private var totalPlannedForSelectedDay: Int {
+        let dateStr = selectedDayISO
+        let booked = tasksForSelectedDay.count
+        let completed = store.completedTasks.filter { $0.bookedDate == dateStr }.count
+        return booked + completed
     }
 
     private var colorfulBgs: [Color] {
@@ -200,7 +222,7 @@ struct CalendarView: View {
     }
 
     var motivationalText: String {
-        let count = tasksForSelectedDay.count
+        let count = totalPlannedForSelectedDay
         let day = store.calSelDay // 0=Sun … 6=Sat
         let bucket = min(count, 3) // 0, 1, 2, 3+
         let table: [[String]] = [
