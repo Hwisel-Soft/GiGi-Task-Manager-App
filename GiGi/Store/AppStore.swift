@@ -66,6 +66,8 @@ final class AppStore {
     // Settings
     var lapsedAlert: Bool
     var morningSummary: Bool
+    var morningHour: Int    // 0-23
+    var morningMinute: Int  // 0-59
     var colorfulCards: Bool
     var calSync: Bool
     var defaultDuration: String
@@ -101,8 +103,9 @@ final class AppStore {
     var historySubTab: HistorySubTab = .completed
     var insightsPeriod: InsightsPeriod = .thisWeek
 
-    // MARK: Calendar Sync
+    // MARK: Services
     private let calendarSvc = CalendarSyncService()
+    private let notifSvc = NotificationService()
 
     // MARK: Swipe
     var swipedTaskId: Int? = nil
@@ -135,6 +138,8 @@ final class AppStore {
         darkMode = ud.bool(forKey: "gigi.darkMode")
         lapsedAlert = ud.object(forKey: "gigi.lapsedAlert") as? Bool ?? true
         morningSummary = ud.object(forKey: "gigi.morningSummary") as? Bool ?? true
+        morningHour = ud.object(forKey: "gigi.morningHour") as? Int ?? 8
+        morningMinute = ud.object(forKey: "gigi.morningMinute") as? Int ?? 0
         colorfulCards = ud.object(forKey: "gigi.colorfulCards") as? Bool ?? true
         calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
@@ -153,6 +158,8 @@ final class AppStore {
         ud.set(darkMode, forKey: "gigi.darkMode")
         ud.set(lapsedAlert, forKey: "gigi.lapsedAlert")
         ud.set(morningSummary, forKey: "gigi.morningSummary")
+        ud.set(morningHour, forKey: "gigi.morningHour")
+        ud.set(morningMinute, forKey: "gigi.morningMinute")
         ud.set(colorfulCards, forKey: "gigi.colorfulCards")
         ud.set(calSync, forKey: "gigi.calSync")
         ud.set(defaultDuration, forKey: "gigi.defaultDuration")
@@ -385,7 +392,7 @@ final class AppStore {
 
     func bookTask(_ id: Int) {
         let mins = ["15m": 15, "30m": 30, "45m": 45, "1h": 60, "2h": 120][bookForm.duration] ?? 60
-        var h = bookForm.hour, m = bookForm.minute
+        let h = bookForm.hour, m = bookForm.minute
         var eh = h + mins / 60, em = m + mins % 60
         if em >= 60 { eh += 1; em -= 60 }
         let start = "\(h):\(String(format: "%02d", m))"
@@ -467,12 +474,53 @@ final class AppStore {
 
     // MARK: Calendar Sync Helpers
 
+    var defaultCalendarName: String { calendarSvc.defaultCalendarName }
+
+    var morningTimeLabel: String {
+        let h = morningHour % 12 == 0 ? 12 : morningHour % 12
+        let m = String(format: "%02d", morningMinute)
+        let period = morningHour < 12 ? "AM" : "PM"
+        return "\(h):\(m) \(period)"
+    }
+
     func requestCalendarAccessIfNeeded() {
         guard calSync else { return }
         Task {
             let granted = await calendarSvc.requestAccess()
             if !granted { await MainActor.run { calSync = false; save() } }
         }
+    }
+
+    func requestMorningNotificationIfNeeded() {
+        guard morningSummary else { return }
+        Task {
+            let granted = await notifSvc.requestPermission()
+            if !granted {
+                await MainActor.run { morningSummary = false; save() }
+            } else {
+                await MainActor.run { scheduleMorningNotification() }
+            }
+        }
+    }
+
+    func scheduleMorningNotification() {
+        guard morningSummary else {
+            notifSvc.cancelMorningSummary()
+            return
+        }
+        let sched = todaysScheduledTasks.count
+        let unsched = unscheduledTasks.count
+        let followUp = waitingTasks.filter { isFollowUpDue($0) }.count
+        var parts: [String] = []
+        if sched > 0 { parts.append("\(sched) scheduled") }
+        if unsched > 0 { parts.append("\(unsched) unscheduled") }
+        if followUp > 0 { parts.append("\(followUp) follow-up\(followUp == 1 ? "" : "s")") }
+        let body = parts.isEmpty ? "All clear for today!" : parts.joined(separator: " · ")
+        notifSvc.scheduleMorningSummary(hour: morningHour, minute: morningMinute, body: body)
+    }
+
+    func cancelMorningNotification() {
+        notifSvc.cancelMorningSummary()
     }
 
     private func bookedStartDate(offset: Int, hour: Int, minute: Int, period: String) -> Date {

@@ -15,6 +15,7 @@ struct GiGiApp: App {
 
 struct RootView: View {
     @Environment(AppStore.self) var store
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         @Bindable var store = store
@@ -34,6 +35,9 @@ struct RootView: View {
                     .transition(.opacity)
                     .animation(.easeIn(duration: 0.2), value: true)
             }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { store.scheduleMorningNotification() }
         }
     }
 }

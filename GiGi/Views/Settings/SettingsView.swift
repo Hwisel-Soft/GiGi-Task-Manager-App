@@ -22,9 +22,19 @@ struct SettingsView: View {
                                sub: "Prompt when a booked task's time passes")
                     Divider().background(C.border)
                     toggleRow(label: "Morning Summary", value: $store.morningSummary,
-                               sub: "Daily digest at \(store.morningSummary ? "8:00 AM" : "—")")
+                               sub: "Daily digest at \(store.morningSummary ? store.morningTimeLabel : "—")")
 
                     if store.morningSummary {
+                        Divider().background(C.border)
+                        HStack {
+                            Text("Summary time")
+                                .font(.system(size: 15))
+                                .foregroundColor(C.text)
+                            Spacer()
+                            DatePicker("", selection: morningTimeBinding, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .tint(C.primary)
+                        }
                         notificationPreview
                     }
                 }
@@ -36,7 +46,7 @@ struct SettingsView: View {
                                sub: "Add booked tasks to your calendar")
                     if store.calSync {
                         Divider().background(C.border)
-                        valueRow(label: "Target Calendar", value: "Personal")
+                        valueRow(label: "Target Calendar", value: store.defaultCalendarName)
                     }
                 }
 
@@ -169,13 +179,35 @@ struct SettingsView: View {
         .onChange(of: store.darkMode) { _, _ in store.save() }
         .onChange(of: store.colorfulCards) { _, _ in store.save() }
         .onChange(of: store.lapsedAlert) { _, _ in store.save() }
-        .onChange(of: store.morningSummary) { _, _ in store.save() }
+        .onChange(of: store.morningSummary) { _, newVal in
+            store.save()
+            if newVal { store.requestMorningNotificationIfNeeded() }
+            else { store.cancelMorningNotification() }
+        }
+        .onChange(of: store.morningHour) { _, _ in store.save(); store.scheduleMorningNotification() }
+        .onChange(of: store.morningMinute) { _, _ in store.save(); store.scheduleMorningNotification() }
         .onChange(of: store.calSync) { _, newVal in
             store.save()
             if newVal { store.requestCalendarAccessIfNeeded() }
         }
         .onChange(of: store.defaultDuration) { _, _ in store.save() }
         .onChange(of: store.defaultPriority) { _, _ in store.save() }
+    }
+
+    var morningTimeBinding: Binding<Date> {
+        Binding(
+            get: {
+                var c = DateComponents()
+                c.hour = store.morningHour
+                c.minute = store.morningMinute
+                return Calendar.current.date(from: c) ?? Date()
+            },
+            set: { d in
+                let c = Calendar.current.dateComponents([.hour, .minute], from: d)
+                store.morningHour = c.hour ?? 8
+                store.morningMinute = c.minute ?? 0
+            }
+        )
     }
 
     @ViewBuilder

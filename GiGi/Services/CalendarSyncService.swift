@@ -11,6 +11,11 @@ final class CalendarSyncService {
         EKEventStore.authorizationStatus(for: .event) == .fullAccess
     }
 
+    var defaultCalendarName: String {
+        guard isAuthorized else { return "Default" }
+        return ekStore.defaultCalendarForNewEvents?.title ?? "Default"
+    }
+
     func requestAccess() async -> Bool {
         do {
             return try await ekStore.requestFullAccessToEvents()
