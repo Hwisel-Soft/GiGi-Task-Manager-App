@@ -166,7 +166,7 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundColor(C.text)
                         Spacer()
-                        Text("1.0 (4)")
+                        Text("1.0 (6)")
                             .font(.system(size: 15))
                             .foregroundColor(C.muted)
                     }

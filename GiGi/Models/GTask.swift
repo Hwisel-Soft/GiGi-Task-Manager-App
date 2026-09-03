@@ -32,5 +32,6 @@ struct GTask: Identifiable, Codable {
     var deletedDateLabel: String?
     var duration: String?
     var calendarEventId: String?
-    var bookedDate: String?  // ISO8601 date "2026-09-01" for EventKit reconstruction
+    var bookedDate: String?   // ISO8601 date "2026-09-01" for EventKit reconstruction
+    var createdDate: String?  // ISO8601 date task was first added
 }

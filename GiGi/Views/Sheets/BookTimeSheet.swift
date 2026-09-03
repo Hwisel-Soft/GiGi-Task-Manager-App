@@ -19,17 +19,7 @@ struct BookTimeSheet: View {
         )
     }
 
-    private var dayLabels: [String] {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
-        let f = DateFormatter(); f.dateFormat = "E d"
-        return (0..<14).map { i in
-            let d = cal.date(byAdding: .day, value: i, to: today)!
-            if i == 0 { return "Today" }
-            if i == 1 { return "Tomorrow" }
-            return f.string(from: d)
-        }
-    }
+    private var minDate: Date { Calendar.current.startOfDay(for: Date()) }
 
     var body: some View {
         @Bindable var store = store
@@ -48,28 +38,13 @@ struct BookTimeSheet: View {
                         Spacer()
                     }
 
-                    // Date row
-                    sectionLabel("Date")
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(Array(dayLabels.enumerated()), id: \.offset) { i, label in
-                                Button { store.bookForm.dateOffset = i } label: {
-                                    Text(label)
-                                        .font(.system(size: 13, weight: .semibold))
-                                        .foregroundColor(store.bookForm.dateOffset == i ? C.primary : C.text)
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 8)
-                                        .background(store.bookForm.dateOffset == i ? C.primaryLight : C.card)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(store.bookForm.dateOffset == i ? C.primary : C.border, lineWidth: 1.5)
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
+                    // Date picker
+                    DatePicker("", selection: $store.bookForm.date,
+                               in: minDate...,
+                               displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .tint(C.primary)
+                        .labelsHidden()
 
                     // Time picker
                     sectionLabel("Time")
@@ -192,7 +167,7 @@ struct BookTimeSheet: View {
                 }
             }
         }
-        .presentationDetents([.fraction(0.88)])
+        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
     }

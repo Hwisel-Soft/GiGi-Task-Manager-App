@@ -60,10 +60,17 @@ struct TaskDetailView: View {
                                 .font(.system(size: 24, weight: .heavy))
                                 .foregroundColor(C.text)
                                 .tracking(-0.5)
-                            if task.age > 0 {
-                                Text("Carried forward \(task.age) day\(task.age == 1 ? "" : "s")")
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundColor(C.med)
+                            HStack(spacing: 10) {
+                                if let cd = task.createdDate {
+                                    Text("Added \(formattedCreatedDate(cd))")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(C.muted)
+                                }
+                                if task.age > 0 {
+                                    Text("· Carried \(task.age)d")
+                                        .font(.system(size: 12, weight: .semibold))
+                                        .foregroundColor(C.med)
+                                }
                             }
                         }
                         .padding(.leading, 14)
@@ -246,6 +253,13 @@ struct TaskDetailView: View {
             }
         }
         .background(C.bg)
+    }
+
+    func formattedCreatedDate(_ iso: String) -> String {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        guard let d = isoFmt.date(from: iso) else { return iso }
+        let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none
+        return f.string(from: d)
     }
 
     @ViewBuilder func stateBadge(_ task: GTask) -> some View {
