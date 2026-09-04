@@ -7,13 +7,14 @@ struct MainTabView: View {
         @Bindable var store = store
         TabView(selection: $store.selectedTab) {
             NavigationStack {
-                TodayView()
+                TasksView()
                     .navigationDestination(isPresented: $store.showDetail) {
                         TaskDetailView()
                     }
             }
-            .tabItem { Label("Today", systemImage: "house") }
-            .tag(AppTab.today)
+            .tabItem { Label("Tasks", systemImage: "checklist") }
+            .badge(store.tasksAlertCount > 0 ? store.tasksAlertCount : 0)
+            .tag(AppTab.tasks)
 
             NavigationStack {
                 CalendarView()
@@ -25,21 +26,9 @@ struct MainTabView: View {
             .tag(AppTab.calendar)
 
             NavigationStack {
-                WaitingView()
-                    .navigationDestination(isPresented: $store.showDetail) {
-                        TaskDetailView()
-                    }
-            }
-            .tabItem {
-                Label("Waiting", systemImage: "hourglass")
-            }
-            .badge(store.waitingTasks.count > 0 ? store.waitingTasks.count : 0)
-            .tag(AppTab.waiting)
-
-            NavigationStack {
                 HistoryView()
             }
-            .tabItem { Label("History", systemImage: "checkmark.circle") }
+            .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
             .tag(AppTab.history)
 
             NavigationStack {

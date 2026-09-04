@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TaskCardView: View {
     let task: GTask
+    var showStateBadge: Bool = false
     @Environment(AppStore.self) var store
 
     @State private var offset: CGFloat = 0
@@ -63,7 +64,7 @@ struct TaskCardView: View {
                     if let s = task.startTime, let e = task.endTime, let p = task.period {
                         Text("\(s)–\(e) \(p)")
                             .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(C.primary)
+                            .foregroundColor(store.isLapsed(task) ? C.high : C.primary)
                     }
                     if task.age > 0 {
                         Text("\(task.age)d")
@@ -90,6 +91,14 @@ struct TaskCardView: View {
                         }
                     }
                 }
+
+                if showStateBadge {
+                    HStack(spacing: 6) {
+                        priorityPill
+                        stateBadgeView
+                    }
+                    .padding(.top, 2)
+                }
             }
             .padding(.horizontal, 13)
             .padding(.vertical, 13)
@@ -107,7 +116,57 @@ struct TaskCardView: View {
             }
             .buttonStyle(.plain)
         }
-        .background(C.card)
+        .background(cardBackground)
+    }
+
+    private var cardBackground: Color {
+        guard showStateBadge else { return C.card }
+        if store.isLapsed(task) { return C.highLight }
+        if task.state == .waiting && store.isFollowUpDue(task) { return C.medLight }
+        return C.card
+    }
+
+    @ViewBuilder
+    private var priorityPill: some View {
+        let (label, fg, bg): (String, Color, Color) = {
+            switch task.priority {
+            case .high: return ("High", C.high, C.highLight)
+            case .medium: return ("Med", C.med, C.medLight)
+            case .low: return ("Low", C.green, C.greenLight)
+            }
+        }()
+        Text(label)
+            .font(.system(size: 10, weight: .bold))
+            .foregroundColor(fg)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 2)
+            .background(bg)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    @ViewBuilder
+    private var stateBadgeView: some View {
+        let lapsed = store.isLapsed(task)
+        let followUpOverdue = task.state == .waiting && store.isFollowUpDue(task)
+        let (label, fg, bg): (String, Color, Color) = {
+            if lapsed { return ("Lapsed", C.high, C.highLight) }
+            if followUpOverdue { return ("Follow up", C.med, C.medLight) }
+            switch task.state {
+            case .booked: return ("Booked", C.green, C.greenLight)
+            case .unscheduled: return ("Unscheduled", C.primary, C.primaryLight)
+            case .waiting: return ("Waiting", C.purple, C.purpleLight)
+            default: return ("", C.muted, C.card)
+            }
+        }()
+        if !label.isEmpty {
+            Text(label)
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(fg)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 2)
+                .background(bg)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
     }
 
     @ViewBuilder

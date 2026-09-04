@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0056729AAB893816C3C39B97 /* GCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A3AEFD241EC08410A324B /* GCategory.swift */; };
 		032797841945F11F18CEBB7C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D662B87A2B18598A86E275CB /* SettingsView.swift */; };
+		07C958060F947794B978068E /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */; };
 		0FFF0C6F7EFBAB4003499011 /* LapsedSessionModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837E4A31F544F28AAB6EE6F6 /* LapsedSessionModal.swift */; };
 		1C2E42AD1AD4BB4AF21CC0A8 /* CategorySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5A0E6A270FC335F0922A5F /* CategorySheet.swift */; };
 		32BCA15A9366B8F10B2A40DE /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD78755732FD1C2C485074A /* NotificationService.swift */; };
@@ -52,6 +53,7 @@
 		998377DD58251B230192AFB8 /* BookTimeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTimeSheet.swift; sourceTree = "<group>"; };
 		A1BF64BE449D5CC8CA570B71 /* GiGi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GiGi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC59BD98258EB299E005AEE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 		D662B87A2B18598A86E275CB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D726CBF953B43D3B0FF7EB9C /* AddTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskSheet.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				41338531BAE7832435CE3346 /* Modals */,
 				60C72CFB19FBC8A0DBA19BA1 /* Settings */,
 				85D7B9EB5B3134FE1FC49854 /* Sheets */,
+				40111525C6CB0EFECEB022C2 /* Tasks */,
 				7B590AC5345D185A9747784B /* Today */,
 				88F346BA993479783572EFF1 /* Waiting */,
 			);
@@ -109,6 +112,14 @@
 				7BE5C48DAF526C7A60C5A794 /* PriorityPickerView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		40111525C6CB0EFECEB022C2 /* Tasks */ = {
+			isa = PBXGroup;
+			children = (
+				CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */,
+			);
+			path = Tasks;
 			sourceTree = "<group>";
 		};
 		41338531BAE7832435CE3346 /* Modals */ = {
@@ -320,6 +331,7 @@
 				032797841945F11F18CEBB7C /* SettingsView.swift in Sources */,
 				80914959956DFA87A0F2018A /* TaskCardView.swift in Sources */,
 				78A6042848BD316CA53300C9 /* TaskDetailView.swift in Sources */,
+				07C958060F947794B978068E /* TasksView.swift in Sources */,
 				E26EEA0F0B595E03EB595E64 /* TodayView.swift in Sources */,
 				44B159555D5A036314AD121D /* WaitingSheet.swift in Sources */,
 				CEA751627F4B535C8D46BB78 /* WaitingView.swift in Sources */,

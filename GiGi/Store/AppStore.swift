@@ -6,7 +6,7 @@ import EventKit
 // MARK: - Supporting Types
 
 enum AppTab: String, Hashable {
-    case today, calendar, waiting, history, settings
+    case tasks, calendar, history, settings
 }
 
 enum HistorySubTab: String, CaseIterable {
@@ -79,7 +79,7 @@ final class AppStore {
     var defaultPriority: Priority
 
     // MARK: Navigation
-    var selectedTab: AppTab = .today
+    var selectedTab: AppTab = .tasks
     var selectedTaskId: Int? = nil
     var showDetail: Bool = false
 
@@ -221,6 +221,24 @@ final class AppStore {
         let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
         guard let d = f.date(from: s) else { return false }
         return d <= Calendar.current.startOfDay(for: Date())
+    }
+
+    func isLapsed(_ task: GTask) -> Bool {
+        guard task.state == .booked else { return false }
+        let now = Date()
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: now)
+        if let bd = task.bookedDate, bd != todayStr { return false }
+        let nowMins = Calendar.current.component(.hour, from: now) * 60
+                    + Calendar.current.component(.minute, from: now)
+        guard let end = task.endTime, let p = task.period else { return false }
+        return nowMins > timeToMinutes(end, p)
+    }
+
+    var tasksAlertCount: Int {
+        let lapsed = tasks.filter { isLapsed($0) }.count
+        let overdueWaiting = waitingTasks.filter { isFollowUpDue($0) }.count
+        return lapsed + overdueWaiting
     }
 
     func timeToMinutes(_ time: String?, _ period: String?) -> Int {
