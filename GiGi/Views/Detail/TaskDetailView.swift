@@ -192,7 +192,20 @@ struct TaskDetailView: View {
 
                     // Action buttons
                     VStack(spacing: 10) {
-                        if task.state != .completed {
+                        if task.state == .completed || task.state == .deleted {
+                            Button { store.restoreTask(task.id) } label: {
+                                Text("↩ Restore Task")
+                                    .font(.system(size: 16, weight: .heavy))
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                                    .background(C.primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                                    .shadow(color: C.primary.opacity(0.3), radius: 10, x: 0, y: 6)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        if task.state != .completed && task.state != .deleted {
                             Button { store.completeTask(task.id) } label: {
                                 Text("✓ Mark Complete")
                                     .font(.system(size: 16, weight: .heavy))
@@ -227,7 +240,7 @@ struct TaskDetailView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        if task.state != .waiting && task.state != .completed {
+                        if task.state != .waiting && task.state != .completed && task.state != .deleted {
                             Button { store.showWaitingSheet = true } label: {
                                 Text("⏳ Mark as Waiting")
                                     .font(.system(size: 15, weight: .semibold))
@@ -238,14 +251,16 @@ struct TaskDetailView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        Button { store.deleteTask(task.id) } label: {
-                            Text("Delete Task")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(C.high)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 13)
+                        if task.state != .deleted {
+                            Button { store.deleteTask(task.id) } label: {
+                                Text("Delete Task")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(C.high)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 13)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
                     .padding(.bottom, 40)
                 }

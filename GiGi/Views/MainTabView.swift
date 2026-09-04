@@ -27,6 +27,9 @@ struct MainTabView: View {
 
             NavigationStack {
                 HistoryView()
+                    .navigationDestination(isPresented: $store.showDetail) {
+                        TaskDetailView()
+                    }
             }
             .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
             .tag(AppTab.history)

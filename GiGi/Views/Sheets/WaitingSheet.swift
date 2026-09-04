@@ -34,23 +34,41 @@ struct WaitingSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
                     fieldLabel("Follow up on (optional)")
-                    HStack {
-                        TextField("YYYY-MM-DD", text: $store.waitForm.followUpDate)
-                            .font(.system(size: 14))
-                            .foregroundColor(C.text)
-                            .tint(C.purple)
-                            .keyboardType(.numbersAndPunctuation)
-                        if !store.waitForm.followUpDate.isEmpty {
+                    if store.waitForm.followUpDate.isEmpty {
+                        Button {
+                            let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                            store.waitForm.followUpDate = f.string(from: Date())
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle").foregroundColor(C.purple)
+                                Text("Add follow-up date")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(C.purple)
+                                Spacer()
+                            }
+                            .padding(14)
+                            .background(C.card)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        HStack {
+                            DatePicker("", selection: followUpBinding, in: Date()..., displayedComponents: .date)
+                                .datePickerStyle(.compact)
+                                .labelsHidden()
+                                .tint(C.purple)
+                            Spacer()
                             Button { store.waitForm.followUpDate = "" } label: {
                                 Image(systemName: "xmark.circle.fill").foregroundColor(C.muted)
                             }
                             .buttonStyle(.plain)
                         }
+                        .padding(14)
+                        .background(C.card)
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.purple, lineWidth: 1.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                    .padding(14)
-                    .background(C.card)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
                     Button {
                         if let id = store.selectedTaskId { store.moveToWaiting(id) }
@@ -82,6 +100,19 @@ struct WaitingSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+    }
+
+    private var followUpBinding: Binding<Date> {
+        Binding(
+            get: {
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                return f.date(from: store.waitForm.followUpDate) ?? Date()
+            },
+            set: { d in
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                store.waitForm.followUpDate = f.string(from: d)
+            }
+        )
     }
 
     @ViewBuilder func fieldLabel(_ s: String) -> some View {

@@ -7,7 +7,15 @@ struct NudgeSheet: View {
     private var task: GTask? { store.selectedTask() }
     private var nudgeMessage: String {
         guard let t = task else { return "" }
-        return "Hey \(t.waitingOn ?? "there"), just following up on \"\(t.title)\". \(t.waitingNote ?? "Can you let me know where things stand?") Thanks!"
+        let notePart: String
+        if let note = t.waitingNote, !note.isEmpty {
+            let trimmed = note.trimmingCharacters(in: .whitespaces)
+            let punctuated = trimmed.last.map { ".!?".contains($0) } == true ? trimmed : "\(trimmed)."
+            notePart = " \(punctuated)"
+        } else {
+            notePart = ""
+        }
+        return "Hey \(t.waitingOn ?? "there"), just following up on \"\(t.title)\".\(notePart) Thanks!"
     }
 
     var body: some View {
@@ -43,7 +51,7 @@ struct NudgeSheet: View {
                     VStack(spacing: 10) {
                         nudgeButton(label: "💬 Messages", bg: C.green) {
                             let encoded = nudgeMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-                            if let url = URL(string: "sms:?&body=\(encoded)") {
+                            if let url = URL(string: "sms:?body=\(encoded)") {
                                 UIApplication.shared.open(url)
                             }
                             store.showNudgeSheet = false

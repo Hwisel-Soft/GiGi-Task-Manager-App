@@ -71,25 +71,43 @@ struct AddTaskSheet: View {
 
                     // Deadline
                     label("Deadline (optional)")
-                    HStack {
-                        TextField("YYYY-MM-DD", text: $store.addForm.deadline)
-                            .font(.system(size: 14))
-                            .foregroundColor(C.text)
-                            .tint(C.primary)
-                            .keyboardType(.numbersAndPunctuation)
-                        if !store.addForm.deadline.isEmpty {
+                    if store.addForm.deadline.isEmpty {
+                        Button {
+                            let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                            store.addForm.deadline = f.string(from: Date())
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle").foregroundColor(C.primary)
+                                Text("Add deadline")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(C.primary)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 12)
+                            .background(C.card)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        HStack {
+                            DatePicker("", selection: deadlineBinding, in: Date()..., displayedComponents: .date)
+                                .datePickerStyle(.compact)
+                                .labelsHidden()
+                                .tint(C.primary)
+                            Spacer()
                             Button { store.addForm.deadline = "" } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(C.muted)
+                                Image(systemName: "xmark.circle.fill").foregroundColor(C.muted)
                             }
                             .buttonStyle(.plain)
                         }
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(C.card)
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.primary, lineWidth: 1.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 12)
-                    .background(C.card)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
 
                     // Notes
                     label("Notes")
@@ -134,6 +152,19 @@ struct AddTaskSheet: View {
         .presentationDetents([.fraction(0.88)])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+    }
+
+    private var deadlineBinding: Binding<Date> {
+        Binding(
+            get: {
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                return f.date(from: store.addForm.deadline) ?? Date()
+            },
+            set: { d in
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                store.addForm.deadline = f.string(from: d)
+            }
+        )
     }
 
     @ViewBuilder var addButtonBg: some View {

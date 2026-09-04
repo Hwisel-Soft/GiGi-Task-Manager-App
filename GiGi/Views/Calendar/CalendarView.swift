@@ -204,12 +204,12 @@ struct CalendarView: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
-                    .font(.system(size: 15, weight: .heavy))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundColor(C.text)
                     .lineLimit(1)
                 if let s = task.startTime, let e = task.endTime, let p = task.period {
                     Text("\(s) – \(e) \(p)")
-                        .font(.system(size: 13))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(C.muted)
                 }
             }

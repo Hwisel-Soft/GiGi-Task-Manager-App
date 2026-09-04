@@ -20,6 +20,9 @@ struct TasksView: View {
     @State private var filter: TaskFilter = .all
     @State private var sort: TaskSort = .priority
     @State private var showSortSheet = false
+    @State private var scheduledExpanded = true
+    @State private var unscheduledExpanded = true
+    @State private var waitingExpanded = true
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -77,6 +80,7 @@ struct TasksView: View {
                     .padding(.top, 16)
                     .padding(.bottom, 100)
                 }
+                .scrollIndicators(.visible)
             }
             .background(C.bg)
             .navigationBarHidden(true)
@@ -108,16 +112,22 @@ struct TasksView: View {
         let unscheduled = applySorting(store.unscheduledTasks)
         let waiting = applySorting(store.waitingTasks)
         if !scheduled.isEmpty {
-            sectionLabel("SCHEDULED")
-            ForEach(scheduled) { TaskCardView(task: $0, showStateBadge: true) }
+            sectionHeader("SCHEDULED", count: scheduled.count, expanded: $scheduledExpanded)
+            if scheduledExpanded {
+                ForEach(scheduled) { TaskCardView(task: $0, showStateBadge: true) }
+            }
         }
         if !unscheduled.isEmpty {
-            sectionLabel("UNSCHEDULED")
-            ForEach(unscheduled) { TaskCardView(task: $0, showStateBadge: true) }
+            sectionHeader("UNSCHEDULED", count: unscheduled.count, expanded: $unscheduledExpanded)
+            if unscheduledExpanded {
+                ForEach(unscheduled) { TaskCardView(task: $0, showStateBadge: true) }
+            }
         }
         if !waiting.isEmpty {
-            sectionLabel("WAITING")
-            ForEach(waiting) { TaskCardView(task: $0, showStateBadge: true) }
+            sectionHeader("WAITING", count: waiting.count, expanded: $waitingExpanded)
+            if waitingExpanded {
+                ForEach(waiting) { TaskCardView(task: $0, showStateBadge: true) }
+            }
         }
         if scheduled.isEmpty && unscheduled.isEmpty && waiting.isEmpty { emptyState }
     }
@@ -167,12 +177,23 @@ struct TasksView: View {
     }
 
     @ViewBuilder
-    func sectionLabel(_ title: String) -> some View {
-        Text(title)
-            .font(.system(size: 11, weight: .bold))
-            .foregroundColor(C.muted)
-            .tracking(0.8)
-            .padding(.top, 4)
+    func sectionHeader(_ title: String, count: Int, expanded: Binding<Bool>) -> some View {
+        Button {
+            withAnimation(.spring(duration: 0.25)) { expanded.wrappedValue.toggle() }
+        } label: {
+            HStack(spacing: 4) {
+                Text("\(title) (\(count))")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(C.muted)
+                    .tracking(0.8)
+                Spacer()
+                Image(systemName: expanded.wrappedValue ? "chevron.down" : "chevron.right")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(C.muted)
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(.top, 4)
     }
 
     var emptyState: some View {
