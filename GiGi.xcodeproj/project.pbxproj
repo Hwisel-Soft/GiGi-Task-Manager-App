@@ -10,6 +10,7 @@
 		0056729AAB893816C3C39B97 /* GCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A3AEFD241EC08410A324B /* GCategory.swift */; };
 		032797841945F11F18CEBB7C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D662B87A2B18598A86E275CB /* SettingsView.swift */; };
 		07C958060F947794B978068E /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */; };
+		0B3B081630F8307E26455465 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E752A05355624F5DAE878FBB /* SpeechRecognizer.swift */; };
 		0FFF0C6F7EFBAB4003499011 /* LapsedSessionModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837E4A31F544F28AAB6EE6F6 /* LapsedSessionModal.swift */; };
 		1C2E42AD1AD4BB4AF21CC0A8 /* CategorySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5A0E6A270FC335F0922A5F /* CategorySheet.swift */; };
 		32BCA15A9366B8F10B2A40DE /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD78755732FD1C2C485074A /* NotificationService.swift */; };
@@ -18,6 +19,7 @@
 		44B159555D5A036314AD121D /* WaitingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F3129528D15C8D9788BCFB /* WaitingSheet.swift */; };
 		49B4056697149074D1F141B4 /* BookTimeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998377DD58251B230192AFB8 /* BookTimeSheet.swift */; };
 		511BA29EA0B981A8B82FD740 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB90C7D713FE7D39EBFBF9BE /* AppStore.swift */; };
+		60BB8597178233E3CE583C08 /* AddTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BA4C279BDC57A2103DEE6C /* AddTaskIntent.swift */; };
 		78A6042848BD316CA53300C9 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB4A1EE6E512439E3F7A83F /* TaskDetailView.swift */; };
 		7D7EDA57D6A5820963E9E873 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDEACCC8A4B63B27CDD8CAA /* HistoryView.swift */; };
 		80914959956DFA87A0F2018A /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */; };
@@ -37,6 +39,7 @@
 /* Begin PBXFileReference section */
 		0BDEACCC8A4B63B27CDD8CAA /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		15408D98CBFB22B8D3105BF7 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		18BA4C279BDC57A2103DEE6C /* AddTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskIntent.swift; sourceTree = "<group>"; };
 		19E059CCD7D3F686CC536A31 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		1BD78755732FD1C2C485074A /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		1FB4A1EE6E512439E3F7A83F /* TaskDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailView.swift; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 		E07907259B486151E950DC08 /* WaitingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingView.swift; sourceTree = "<group>"; };
 		E2F3129528D15C8D9788BCFB /* WaitingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingSheet.swift; sourceTree = "<group>"; };
 		E6E2CBAAC4C35BA19936597F /* GTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GTask.swift; sourceTree = "<group>"; };
+		E752A05355624F5DAE878FBB /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		FB90C7D713FE7D39EBFBF9BE /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -209,6 +213,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		AED1490BC7A1A8B52ED4F81B /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				18BA4C279BDC57A2103DEE6C /* AddTaskIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		CC96486228FCC4A88DA80F5D /* Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -222,6 +234,7 @@
 			children = (
 				8A58419A1268D09D6E757CE9 /* CalendarSyncService.swift */,
 				1BD78755732FD1C2C485074A /* NotificationService.swift */,
+				E752A05355624F5DAE878FBB /* SpeechRecognizer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -232,6 +245,7 @@
 				AC59BD98258EB299E005AEE3 /* Assets.xcassets */,
 				97341CB84C73FF7C94014785 /* App */,
 				11A086F2460F1232BB68F86A /* Design */,
+				AED1490BC7A1A8B52ED4F81B /* Intents */,
 				9871262FD8E8AEB90B2906A9 /* Models */,
 				D77879FFE3BA7EFED93AC961 /* Services */,
 				5C52C9A4A1F98CAECC47D183 /* Store */,
@@ -311,6 +325,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60BB8597178233E3CE583C08 /* AddTaskIntent.swift in Sources */,
 				D99F14E43C41DAE81C02EE02 /* AddTaskSheet.swift in Sources */,
 				511BA29EA0B981A8B82FD740 /* AppStore.swift in Sources */,
 				49B4056697149074D1F141B4 /* BookTimeSheet.swift in Sources */,
@@ -329,6 +344,7 @@
 				97A62FC63167279D761908BD /* NudgeSheet.swift in Sources */,
 				8D0932E68E3B913511EAC14B /* PriorityPickerView.swift in Sources */,
 				032797841945F11F18CEBB7C /* SettingsView.swift in Sources */,
+				0B3B081630F8307E26455465 /* SpeechRecognizer.swift in Sources */,
 				80914959956DFA87A0F2018A /* TaskCardView.swift in Sources */,
 				78A6042848BD316CA53300C9 /* TaskDetailView.swift in Sources */,
 				07C958060F947794B978068E /* TasksView.swift in Sources */,

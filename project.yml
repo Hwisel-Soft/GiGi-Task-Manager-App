@@ -13,10 +13,12 @@ targets:
       path: Generated-Info.plist
       properties:
         CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "10"
+        CFBundleVersion: "11"
         UILaunchScreen: {}
         UIStatusBarStyle: UIStatusBarStyleDefault
         NSCalendarsFullAccessUsageDescription: "GiGi adds your booked tasks to your calendar so you can see them alongside other events."
+        NSMicrophoneUsageDescription: "GiGi uses the microphone to let you dictate tasks by voice."
+        NSSpeechRecognitionUsageDescription: "GiGi uses speech recognition to transcribe your voice into task titles."
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
     settings:

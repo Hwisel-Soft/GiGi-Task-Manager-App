@@ -1,4 +1,5 @@
 import SwiftUI
+import AppIntents
 
 struct SettingsView: View {
     @Environment(AppStore.self) var store
@@ -53,26 +54,35 @@ struct SettingsView: View {
                 // Siri
                 settingsCard {
                     sectionHeader("Siri")
-                    HStack {
+                    HStack(spacing: 12) {
+                        Image(systemName: "waveform")
+                            .font(.system(size: 20))
+                            .foregroundColor(.purple)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Add Task Shortcut")
                                 .font(.system(size: 15))
                                 .foregroundColor(C.text)
-                            Text("Use Siri to create tasks hands-free")
+                            Text("Automatically available in Siri")
                                 .font(.system(size: 12))
                                 .foregroundColor(C.muted)
                         }
                         Spacer()
-                        Button { store.showSiriInfo = true } label: {
-                            Text("Set up")
-                                .font(.system(size: 13, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(C.primary)
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                    }
+                    Divider().background(C.border).padding(.vertical, 8)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("SAY TO SIRI")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(C.muted)
+                            .tracking(0.8)
+                        Text("\"Hey Siri, add task in GiGi\"")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(C.text)
+                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(C.bg)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
 

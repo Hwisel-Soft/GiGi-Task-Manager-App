@@ -1,9 +1,14 @@
 import SwiftUI
+import Speech
 
 struct AddTaskSheet: View {
     @Environment(AppStore.self) var store
     private var C: GColors { store.C }
     private let durations = ["15m", "30m", "45m", "1h", "2h"]
+
+    @State private var speechRec = SpeechRecognizer()
+    @State private var titleSnapshot = ""
+    @State private var micDenied = false
 
     var body: some View {
         @Bindable var store = store
@@ -17,17 +22,44 @@ struct AddTaskSheet: View {
                             .foregroundColor(C.text)
                             .tint(C.primary)
 
-                        Button { store.showMicInfo = true } label: {
+                        Button {
+                            Task { await handleMicTap() }
+                        } label: {
                             ZStack {
                                 Circle()
-                                    .fill(C.primaryLight)
+                                    .fill(speechRec.isRecording ? Color.red.opacity(0.15) : C.primaryLight)
                                     .frame(width: 34, height: 34)
-                                Image(systemName: "mic")
+                                    .scaleEffect(speechRec.isRecording ? 1.15 : 1.0)
+                                    .animation(
+                                        speechRec.isRecording
+                                            ? .easeInOut(duration: 0.6).repeatForever(autoreverses: true)
+                                            : .default,
+                                        value: speechRec.isRecording
+                                    )
+                                Image(systemName: speechRec.isRecording ? "stop.fill" : "mic")
                                     .font(.system(size: 14))
-                                    .foregroundColor(C.primary)
+                                    .foregroundColor(speechRec.isRecording ? .red : C.primary)
                             }
                         }
                         .buttonStyle(.plain)
+                    }
+                    .onChange(of: speechRec.transcript) { _, text in
+                        store.addForm.title = text
+                    }
+                    .onChange(of: speechRec.isRecording) { _, recording in
+                        if !recording && speechRec.transcript.isEmpty {
+                            store.addForm.title = titleSnapshot
+                        }
+                    }
+                    .alert("Microphone Access Required", isPresented: $micDenied) {
+                        Button("Open Settings") {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
+                        Button("Cancel", role: .cancel) {}
+                    } message: {
+                        Text("Enable microphone and speech recognition in Settings to use voice dictation.")
                     }
                     .padding(.horizontal, 15)
                     .padding(.vertical, 14)
@@ -152,6 +184,27 @@ struct AddTaskSheet: View {
         .presentationDetents([.fraction(0.88)])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        .onDisappear { speechRec.stop() }
+    }
+
+    private func handleMicTap() async {
+        if speechRec.isRecording {
+            speechRec.stop()
+            return
+        }
+
+        let needsPermission = !SpeechRecognizer.speechAuthorized || !SpeechRecognizer.micGranted
+        if needsPermission {
+            let granted = await SpeechRecognizer.requestPermissions()
+            guard granted else { micDenied = true; return }
+        }
+
+        titleSnapshot = store.addForm.title
+        do {
+            try speechRec.start()
+        } catch {
+            micDenied = true
+        }
     }
 
     private var deadlineBinding: Binding<Date> {
