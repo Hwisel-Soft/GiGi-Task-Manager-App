@@ -7,10 +7,14 @@ final class NotificationService {
     func requestPermission() async -> Bool {
         do {
             return try await UNUserNotificationCenter.current()
-                .requestAuthorization(options: [.alert, .sound])
+                .requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
             return false
         }
+    }
+
+    func setBadge(_ count: Int) {
+        UNUserNotificationCenter.current().setBadgeCount(count) { _ in }
     }
 
     func authorizationStatus() async -> UNAuthorizationStatus {

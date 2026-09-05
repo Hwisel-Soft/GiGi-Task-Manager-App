@@ -171,6 +171,11 @@ final class AppStore {
         ud.set(defaultPriority.rawValue, forKey: "gigi.defaultPriority")
         ud.set(nextId, forKey: "gigi.nextId")
         ud.set(nextCatId, forKey: "gigi.nextCatId")
+        updateBadge()
+    }
+
+    func updateBadge() {
+        notifSvc.setBadge(tasksAlertCount)
     }
 
     // MARK: Computed

@@ -46,9 +46,13 @@ struct RootView: View {
         }
         .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
             timerTick += 1
+            store.updateBadge()
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { store.scheduleMorningNotification() }
+            if phase == .active {
+                store.scheduleMorningNotification()
+                store.updateBadge()
+            }
         }
     }
 }
