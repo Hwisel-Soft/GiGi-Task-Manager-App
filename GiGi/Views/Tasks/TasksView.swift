@@ -66,6 +66,7 @@ struct TasksView: View {
 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 10) {
+                        needsAttentionSection
                         if filter == .all {
                             allSections
                         } else {
@@ -208,6 +209,31 @@ struct TasksView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 60)
+    }
+
+    @ViewBuilder
+    var needsAttentionSection: some View {
+        let alertTasks = store.tasks.filter {
+            store.isLapsed($0) || ($0.state == .waiting && store.isFollowUpDue($0))
+        }
+        if !alertTasks.isEmpty {
+            HStack(spacing: 5) {
+                Image(systemName: "exclamationmark.circle.fill")
+                    .font(.system(size: 11))
+                    .foregroundColor(C.high)
+                Text("NEEDS ATTENTION")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(C.high)
+                    .tracking(0.8)
+                Spacer()
+                Text("\(alertTasks.count)")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(C.high)
+            }
+            .padding(.top, 4)
+            ForEach(alertTasks) { TaskCardView(task: $0, showStateBadge: true) }
+            Divider().background(C.border).padding(.top, 4)
+        }
     }
 
     var sortSheet: some View {

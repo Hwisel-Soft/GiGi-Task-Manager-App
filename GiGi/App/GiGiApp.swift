@@ -16,6 +16,14 @@ struct GiGiApp: App {
 struct RootView: View {
     @Environment(AppStore.self) var store
     @Environment(\.scenePhase) private var scenePhase
+    @State private var timerTick = 0
+
+    // Re-evaluated every 60s via timerTick so the overlay fires while the app is open.
+    // Without this, lapsedTask only refreshes on data changes, not on the clock.
+    private var currentLapsedTask: GTask? {
+        _ = timerTick
+        return store.lapsedTask
+    }
 
     var body: some View {
         @Bindable var store = store
@@ -30,11 +38,14 @@ struct RootView: View {
         .sheet(isPresented: $store.showSiriInfo) { SiriInfoModal() }
         .sheet(isPresented: $store.showMicInfo) { MicInfoModal() }
         .overlay {
-            if let task = store.lapsedTask {
+            if let task = currentLapsedTask {
                 LapsedSessionModal(task: task)
                     .transition(.opacity)
                     .animation(.easeIn(duration: 0.2), value: true)
             }
+        }
+        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
+            timerTick += 1
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { store.scheduleMorningNotification() }

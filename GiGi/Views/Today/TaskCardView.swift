@@ -71,6 +71,11 @@ struct TaskCardView: View {
                             .font(.system(size: 11, weight: .bold))
                             .foregroundColor(C.med)
                     }
+                    if let cd = task.createdDate {
+                        Text(shortCreatedDate(cd))
+                            .font(.system(size: 11))
+                            .foregroundColor(C.muted)
+                    }
                     if let dl = task.deadline, daysUntilDeadline(dl) <= 3 {
                         Text("Due \(formattedDeadline(dl))")
                             .font(.system(size: 11, weight: .bold))
@@ -224,6 +229,17 @@ struct TaskCardView: View {
             }
         }
         return dl
+    }
+
+    func shortCreatedDate(_ iso: String) -> String {
+        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        guard let d = f.date(from: iso) else { return "" }
+        let cal = Calendar.current
+        if cal.isDateInToday(d) { return "Added today" }
+        if cal.isDateInYesterday(d) { return "Added yesterday" }
+        let df = DateFormatter()
+        df.dateFormat = cal.component(.year, from: d) == cal.component(.year, from: Date()) ? "MMM d" : "MMM d, yyyy"
+        return "Added \(df.string(from: d))"
     }
 
     func daysUntilDeadline(_ dl: String) -> Int {
