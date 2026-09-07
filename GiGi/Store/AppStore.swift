@@ -186,6 +186,24 @@ final class AppStore {
         nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
     }
 
+    func autoUpdateAges() {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        var changed = false
+        for i in tasks.indices {
+            if let created = tasks[i].createdDate, let d = isoFmt.date(from: created) {
+                let days = cal.dateComponents([.day], from: cal.startOfDay(for: d), to: today).day ?? 0
+                if tasks[i].age != days { tasks[i].age = max(0, days); changed = true }
+            }
+            if tasks[i].state == .waiting, let since = tasks[i].waitingSince, let d = isoFmt.date(from: since) {
+                let days = cal.dateComponents([.day], from: cal.startOfDay(for: d), to: today).day ?? 0
+                if tasks[i].waitingDays != days { tasks[i].waitingDays = max(0, days); changed = true }
+            }
+        }
+        if changed { save() }
+    }
+
     // MARK: Computed
     var lapsedTask: GTask? {
         guard lapsedAlert else { return nil }
@@ -272,10 +290,6 @@ final class AppStore {
         return tasks.first(where: { $0.id == id })
     }
 
-    func bookedTasksOnDay(_ offset: Int) -> [GTask] {
-        scheduledTasks
-    }
-
     // MARK: Mutation Helper
     private func update(_ id: Int, _ fn: (inout GTask) -> Void) {
         guard let i = tasks.firstIndex(where: { $0.id == id }) else { return }
@@ -312,13 +326,13 @@ final class AppStore {
 
     // MARK: Task Actions
     func completeTask(_ id: Int) {
-        let fmt = DateFormatter(); fmt.timeStyle = .short
-        let now = fmt.string(from: Date())
+        let timeFmt = DateFormatter(); timeFmt.timeStyle = .short
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
         update(id) { t in
             t.state = .completed
-            t.completedTime = now
-            t.completedDateLabel = "Today"
+            t.completedTime = timeFmt.string(from: Date())
+            t.completedDateLabel = isoFmt.string(from: Date())
             t.calendarEventId = nil
         }
         if showDetail && selectedTaskId == id { goBack() }
@@ -327,10 +341,11 @@ final class AppStore {
     }
 
     func deleteTask(_ id: Int) {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
         update(id) { t in
             t.state = .deleted
-            t.deletedDateLabel = "Today"
+            t.deletedDateLabel = isoFmt.string(from: Date())
             t.calendarEventId = nil
         }
         if showDetail && selectedTaskId == id { goBack() }
@@ -413,12 +428,14 @@ final class AppStore {
     }
 
     func moveToWaiting(_ id: Int) {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         update(id) { t in
             t.state = .waiting
             t.waitingOn = waitForm.name.isEmpty ? "Someone" : waitForm.name
             t.waitingNote = waitForm.note.isEmpty ? nil : waitForm.note
             t.followUpDate = waitForm.followUpDate.isEmpty ? nil : waitForm.followUpDate
             t.waitingDays = 0
+            t.waitingSince = isoFmt.string(from: Date())
         }
         showWaitingSheet = false
         waitForm = WaitForm()
@@ -432,7 +449,9 @@ final class AppStore {
         if let bd = task?.bookedDate {
             let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
             if let d = isoFmt.date(from: bd) {
-                form.date = Calendar.current.startOfDay(for: d)
+                let today = Calendar.current.startOfDay(for: Date())
+                let booked = Calendar.current.startOfDay(for: d)
+                form.date = booked < today ? today : booked
             }
         }
         bookForm = form
@@ -441,20 +460,21 @@ final class AppStore {
 
     func bookTask(_ id: Int) {
         let mins = ["15m": 15, "30m": 30, "45m": 45, "1h": 60, "2h": 120][bookForm.duration] ?? 60
-        let h = bookForm.hour, m = bookForm.minute
-        var eh = h + mins / 60, em = m + mins % 60
-        if em >= 60 { eh += 1; em -= 60 }
-        let start = "\(h):\(String(format: "%02d", m))"
-        let end = "\(eh):\(String(format: "%02d", em))"
+        var h24 = bookForm.hour
+        if bookForm.period == "PM" && h24 != 12 { h24 += 12 }
+        if bookForm.period == "AM" && h24 == 12 { h24 = 0 }
+        let startTotal = h24 * 60 + bookForm.minute
+        let endTotal = startTotal + mins
+        let eh24 = (endTotal / 60) % 24
+        let em = endTotal % 60
+        let endH12 = eh24 == 0 ? 12 : (eh24 > 12 ? eh24 - 12 : eh24)
+        let start = "\(bookForm.hour):\(String(format: "%02d", bookForm.minute))"
+        let end = "\(endH12):\(String(format: "%02d", em))"
 
         // Remove old calendar event if rescheduling
         if let existing = tasks.first(where: { $0.id == id }) {
             removeCalendarEvent(for: existing)
         }
-
-        var h24 = bookForm.hour
-        if bookForm.period == "PM" && h24 != 12 { h24 += 12 }
-        if bookForm.period == "AM" && h24 == 12 { h24 = 0 }
         let cal = Calendar.current
         let startDate = cal.date(bySettingHour: h24, minute: bookForm.minute, second: 0,
                                  of: bookForm.date) ?? bookForm.date
@@ -600,7 +620,8 @@ final class AppStore {
         let targetDate = isoFmt.string(from: bookForm.date)
         return tasks.first { t in
             guard t.state == .booked, t.id != excludeId else { return false }
-            if let bd = t.bookedDate, bd != targetDate { return false }
+            let taskDate = t.bookedDate ?? isoFmt.string(from: Date())
+            if taskDate != targetDate { return false }
             let es = timeToMinutes(t.startTime, t.period)
             let ee = timeToMinutes(t.endTime, t.period)
             return selStart < ee && selEnd > es

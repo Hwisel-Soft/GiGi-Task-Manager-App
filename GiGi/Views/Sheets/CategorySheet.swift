@@ -3,6 +3,7 @@ import SwiftUI
 struct CategorySheet: View {
     @Environment(AppStore.self) var store
     private var C: GColors { store.C }
+    @State private var showDeleteConfirm = false
 
     private let swatches = [
         "#3D5AFE","#4CAF50","#FF9800","#FF6B9D","#9C27B0",
@@ -80,9 +81,7 @@ struct CategorySheet: View {
 
                     // Delete button (edit mode only)
                     if !isNew {
-                        Button {
-                            if let id = store.editingCategoryId { store.deleteCategory(id) }
-                        } label: {
+                        Button { showDeleteConfirm = true } label: {
                             Text("Delete Category")
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(C.high)
@@ -90,6 +89,14 @@ struct CategorySheet: View {
                                 .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
+                        .confirmationDialog("Delete this category?", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+                            Button("Delete", role: .destructive) {
+                                if let id = store.editingCategoryId { store.deleteCategory(id) }
+                            }
+                            Button("Cancel", role: .cancel) {}
+                        } message: {
+                            Text("Tasks in this category will become uncategorized.")
+                        }
                     }
                 }
                 .padding(24)

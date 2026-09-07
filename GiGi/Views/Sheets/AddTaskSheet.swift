@@ -213,6 +213,7 @@ struct AddTaskSheet: View {
         do {
             try speechRec.start()
         } catch {
+            speechRec.stop()
             micDenied = true
         }
     }

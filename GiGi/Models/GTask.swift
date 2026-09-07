@@ -27,9 +27,10 @@ struct GTask: Identifiable, Codable {
     var waitingNote: String?
     var followUpDate: String?
     var waitingDays: Int
+    var waitingSince: String?   // ISO8601 date task entered waiting state
     var completedTime: String?
-    var completedDateLabel: String?
-    var deletedDateLabel: String?
+    var completedDateLabel: String?  // ISO8601 date task was completed
+    var deletedDateLabel: String?    // ISO8601 date task was deleted
     var duration: String?
     var calendarEventId: String?
     var bookedDate: String?   // ISO8601 date "2026-09-01" for EventKit reconstruction

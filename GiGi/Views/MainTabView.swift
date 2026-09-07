@@ -41,5 +41,8 @@ struct MainTabView: View {
             .tag(AppTab.settings)
         }
         .tint(store.C.primary)
+        .onChange(of: store.selectedTab) { _, _ in
+            if store.showDetail { store.goBack() }
+        }
     }
 }

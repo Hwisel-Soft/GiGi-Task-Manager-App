@@ -83,6 +83,17 @@ struct HistoryView: View {
         }
     }
 
+    func formatDateLabel(_ iso: String?) -> String? {
+        guard let iso else { return nil }
+        let fmt = ISO8601DateFormatter(); fmt.formatOptions = [.withFullDate]
+        guard let d = fmt.date(from: iso) else { return iso }
+        let cal = Calendar.current
+        if cal.isDateInToday(d) { return "Today" }
+        if cal.isDateInYesterday(d) { return "Yesterday" }
+        let df = DateFormatter(); df.dateFormat = "MMM d"
+        return df.string(from: d)
+    }
+
     @ViewBuilder
     func historyCard(_ task: GTask, isCompleted: Bool) -> some View {
         HStack(spacing: 12) {
@@ -93,11 +104,11 @@ struct HistoryView: View {
                     .strikethrough(isCompleted, color: C.muted)
                     .lineLimit(1)
                 HStack(spacing: 6) {
-                    if isCompleted, let t = task.completedTime, let d = task.completedDateLabel {
+                    if isCompleted, let t = task.completedTime, let d = formatDateLabel(task.completedDateLabel) {
                         Text("\(d) · \(t)")
                             .font(.system(size: 12))
                             .foregroundColor(C.muted)
-                    } else if let d = task.deletedDateLabel {
+                    } else if let d = formatDateLabel(task.deletedDateLabel) {
                         Text(d)
                             .font(.system(size: 12))
                             .foregroundColor(C.muted)
@@ -153,11 +164,35 @@ struct InsightsView: View {
 
     private var allTasks: [GTask] {
         let all = store.tasks
+        guard store.insightsPeriod != .allTime else { return all }
+        let cal = Calendar.current
+        let now = Date()
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let (start, end): (Date, Date)
         switch store.insightsPeriod {
         case .thisWeek:
-            return all  // simplified: show all
-        case .thisMonth, .lastMonth, .allTime:
+            start = cal.date(from: cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now))!
+            end = now
+        case .thisMonth:
+            start = cal.date(from: cal.dateComponents([.year, .month], from: now))!
+            end = now
+        case .lastMonth:
+            let thisMonth = cal.date(from: cal.dateComponents([.year, .month], from: now))!
+            start = cal.date(byAdding: .month, value: -1, to: thisMonth)!
+            end = cal.date(byAdding: .day, value: -1, to: thisMonth)!
+        case .allTime:
             return all
+        }
+        func inRange(_ iso: String?) -> Bool {
+            guard let iso, let d = isoFmt.date(from: iso) else { return false }
+            return d >= cal.startOfDay(for: start) && d <= end
+        }
+        return all.filter { t in
+            switch t.state {
+            case .completed: return inRange(t.completedDateLabel)
+            case .deleted: return inRange(t.deletedDateLabel)
+            default: return inRange(t.createdDate)
+            }
         }
     }
 
