@@ -9,6 +9,7 @@ struct GiGiApp: App {
             RootView()
                 .environment(store)
                 .preferredColorScheme(store.darkMode ? .dark : .light)
+                .dynamicTypeSize(.xSmall ... .xxLarge)
         }
     }
 }

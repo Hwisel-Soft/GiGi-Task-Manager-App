@@ -118,16 +118,16 @@ struct TasksView: View {
                 ForEach(scheduled) { TaskCardView(task: $0, showStateBadge: true) }
             }
         }
-        if !unscheduled.isEmpty {
-            sectionHeader("UNSCHEDULED", count: unscheduled.count, expanded: $unscheduledExpanded)
-            if unscheduledExpanded {
-                ForEach(unscheduled) { TaskCardView(task: $0, showStateBadge: true) }
-            }
-        }
         if !waiting.isEmpty {
             sectionHeader("WAITING", count: waiting.count, expanded: $waitingExpanded)
             if waitingExpanded {
                 ForEach(waiting) { TaskCardView(task: $0, showStateBadge: true) }
+            }
+        }
+        if !unscheduled.isEmpty {
+            sectionHeader("UNSCHEDULED", count: unscheduled.count, expanded: $unscheduledExpanded)
+            if unscheduledExpanded {
+                ForEach(unscheduled) { TaskCardView(task: $0, showStateBadge: true) }
             }
         }
         if scheduled.isEmpty && unscheduled.isEmpty && waiting.isEmpty { emptyState }
@@ -193,6 +193,7 @@ struct TasksView: View {
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(isExpanded ? C.muted : C.sub)
             }
+            .frame(minHeight: 44)
             .padding(.vertical, isExpanded ? 4 : 12)
             .padding(.horizontal, isExpanded ? 0 : 14)
             .background {

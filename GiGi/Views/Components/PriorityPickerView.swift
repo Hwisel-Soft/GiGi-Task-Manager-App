@@ -23,6 +23,8 @@ struct PriorityPickerView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(p.label)
+                .accessibilityAddTraits(selected == p ? [.isSelected] : [])
             }
         }
     }

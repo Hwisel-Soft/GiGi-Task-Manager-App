@@ -28,7 +28,7 @@ struct AddForm {
     var duration: String = "30m"
     var notes: String = ""
     var deadline: String = ""
-    var category: String = "Work"
+    var category: String = ""
 }
 
 struct BookForm {
@@ -376,6 +376,10 @@ final class AppStore {
 
     func updatePriority(_ id: Int, _ p: Priority) {
         update(id) { $0.priority = p }
+    }
+
+    func updateNotes(_ id: Int, _ notes: String) {
+        update(id) { $0.notes = notes }
     }
 
     func addTask() {

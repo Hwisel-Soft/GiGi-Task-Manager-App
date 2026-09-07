@@ -21,6 +21,8 @@ struct AddTaskSheet: View {
                             .font(.system(size: 15))
                             .foregroundColor(C.text)
                             .tint(C.primary)
+                            .submitLabel(.done)
+                            .onSubmit { if !store.addForm.title.trimmingCharacters(in: .whitespaces).isEmpty { store.addTask() } }
 
                         Button {
                             Task { await handleMicTap() }
@@ -42,6 +44,7 @@ struct AddTaskSheet: View {
                             }
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(speechRec.isRecording ? "Stop dictation" : "Dictate task title")
                     }
                     .onChange(of: speechRec.transcript) { _, text in
                         store.addForm.title = text
@@ -69,6 +72,13 @@ struct AddTaskSheet: View {
                             .stroke(store.addForm.title.isEmpty ? C.border : C.primary, lineWidth: 2)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 14))
+
+                    if store.addForm.title.trimmingCharacters(in: .whitespaces).isEmpty {
+                        Text("Enter a title to add the task")
+                            .font(.caption)
+                            .foregroundColor(C.muted)
+                            .padding(.top, -12)
+                    }
 
                     // Priority
                     label("Priority")
@@ -231,6 +241,22 @@ struct AddTaskSheet: View {
     var categoryPicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                // None chip
+                let noneSelected = store.addForm.category.isEmpty
+                Button { store.addForm.category = "" } label: {
+                    Text("None")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(noneSelected ? C.primary : C.muted)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 7)
+                        .background(noneSelected ? C.primaryLight : C.card)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(noneSelected ? C.primary : C.border, lineWidth: 1.5))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("No category")
+                .accessibilityAddTraits(noneSelected ? [.isSelected] : [])
+
                 ForEach(store.categories) { cat in
                     let selected = store.addForm.category == cat.name
                     Button { store.addForm.category = cat.name } label: {
@@ -247,6 +273,7 @@ struct AddTaskSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(selected ? [.isSelected] : [])
                 }
             }
         }

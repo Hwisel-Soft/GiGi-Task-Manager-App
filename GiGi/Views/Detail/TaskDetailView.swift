@@ -5,6 +5,8 @@ struct TaskDetailView: View {
     @Environment(\.dismiss) private var dismiss
     private var C: GColors { store.C }
 
+    @State private var showDeleteConfirm = false
+
     private var task: GTask? { store.selectedTask() }
 
     var body: some View {
@@ -136,7 +138,7 @@ struct TaskDetailView: View {
                             }
                             HStack(spacing: 8) {
                                 Button { store.showNudgeSheet = true } label: {
-                                    Text("✉ Nudge")
+                                    Label("Nudge", systemImage: "envelope")
                                         .font(.system(size: 13, weight: .bold))
                                         .foregroundColor(C.purple)
                                         .frame(maxWidth: .infinity)
@@ -144,8 +146,9 @@ struct TaskDetailView: View {
                                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.purple, lineWidth: 1.5))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityHint("Send a follow-up message")
                                 Button { store.unblockTask(task.id) } label: {
-                                    Text("✓ Got It")
+                                    Label("Got It", systemImage: "checkmark")
                                         .font(.system(size: 13, weight: .bold))
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
@@ -154,6 +157,7 @@ struct TaskDetailView: View {
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityHint("Mark as unblocked, move back to unscheduled")
                             }
                             .padding(.top, 14)
                         }
@@ -165,11 +169,15 @@ struct TaskDetailView: View {
 
                     // Notes
                     sectionLabel("Notes")
-                    Text(task.notes.isEmpty ? "Add notes…" : task.notes)
+                    TextField("Add notes…", text: Binding(
+                        get: { task.notes },
+                        set: { store.updateNotes(task.id, $0) }
+                    ), axis: .vertical)
                         .font(.system(size: 14))
-                        .foregroundColor(task.notes.isEmpty ? C.muted : C.text)
-                        .lineSpacing(6)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(C.text)
+                        .tint(C.primary)
+                        .lineSpacing(4)
+                        .lineLimit(3...)
                         .padding(12)
                         .frame(minHeight: 60, alignment: .topLeading)
                         .background(C.card)
@@ -194,8 +202,8 @@ struct TaskDetailView: View {
                     VStack(spacing: 10) {
                         if task.state == .completed || task.state == .deleted {
                             Button { store.restoreTask(task.id) } label: {
-                                Text("↩ Restore Task")
-                                    .font(.system(size: 16, weight: .heavy))
+                                Label("Restore Task", systemImage: "arrow.uturn.left")
+                                    .font(.headline)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 16)
@@ -207,8 +215,8 @@ struct TaskDetailView: View {
                         }
                         if task.state != .completed && task.state != .deleted {
                             Button { store.completeTask(task.id) } label: {
-                                Text("✓ Mark Complete")
-                                    .font(.system(size: 16, weight: .heavy))
+                                Label("Mark Complete", systemImage: "checkmark")
+                                    .font(.headline)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 16)
@@ -220,8 +228,8 @@ struct TaskDetailView: View {
                         }
                         if task.state == .unscheduled {
                             Button { if let id = store.selectedTaskId { store.openBookTime(for: id) } } label: {
-                                Text("🗓 Schedule")
-                                    .font(.system(size: 15, weight: .bold))
+                                Label("Schedule", systemImage: "calendar")
+                                    .font(.subheadline.weight(.bold))
                                     .foregroundColor(C.primary)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 15)
@@ -231,8 +239,8 @@ struct TaskDetailView: View {
                         }
                         if task.state == .booked {
                             Button { if let id = store.selectedTaskId { store.openBookTime(for: id) } } label: {
-                                Text("🔄 Reschedule")
-                                    .font(.system(size: 15, weight: .bold))
+                                Label("Reschedule", systemImage: "calendar.badge.clock")
+                                    .font(.subheadline.weight(.bold))
                                     .foregroundColor(C.primary)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 15)
@@ -242,8 +250,8 @@ struct TaskDetailView: View {
                         }
                         if task.state != .waiting && task.state != .completed && task.state != .deleted {
                             Button { store.showWaitingSheet = true } label: {
-                                Text("⏳ Mark as Waiting")
-                                    .font(.system(size: 15, weight: .semibold))
+                                Label("Mark as Waiting", systemImage: "hourglass")
+                                    .font(.subheadline.weight(.semibold))
                                     .foregroundColor(C.purple)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 15)
@@ -252,14 +260,20 @@ struct TaskDetailView: View {
                             .buttonStyle(.plain)
                         }
                         if task.state != .deleted {
-                            Button { store.deleteTask(task.id) } label: {
+                            Button { showDeleteConfirm = true } label: {
                                 Text("Delete Task")
-                                    .font(.system(size: 14, weight: .bold))
+                                    .font(.subheadline.weight(.bold))
                                     .foregroundColor(C.high)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 13)
                             }
                             .buttonStyle(.plain)
+                            .confirmationDialog("Delete this task?", isPresented: $showDeleteConfirm, titleVisibility: .visible) {
+                                Button("Delete", role: .destructive) { store.deleteTask(task.id) }
+                                Button("Cancel", role: .cancel) {}
+                            } message: {
+                                Text("The task will be moved to Deleted and can be restored from History.")
+                            }
                         }
                     }
                     .padding(.bottom, 40)

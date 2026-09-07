@@ -18,7 +18,7 @@ struct TaskCardView: View {
                 actionBtn(label: "Done", icon: "checkmark", bg: C.green) {
                     close(); store.completeTask(task.id)
                 }
-                actionBtn(label: "Waiting", emoji: "⏳", bg: C.purple) {
+                actionBtn(label: "Waiting", icon: "hourglass", bg: C.purple) {
                     close()
                     store.selectedTaskId = task.id
                     store.showWaitingSheet = true
@@ -42,6 +42,19 @@ struct TaskCardView: View {
         .shadow(color: Color.black.opacity(0.07), radius: 5, x: 0, y: 2)
         .onChange(of: store.swipedTaskId) { _, newId in
             if newId != task.id && isOpen { close() }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(cardAccessibilityLabel)
+        .accessibilityHint("Double tap to open")
+        .accessibilityAction(named: "Mark Complete") {
+            store.completeTask(task.id)
+        }
+        .accessibilityAction(named: "Mark as Waiting") {
+            store.selectedTaskId = task.id
+            store.showWaitingSheet = true
+        }
+        .accessibilityAction(named: "Delete") {
+            store.deleteTask(task.id)
         }
     }
 
@@ -113,13 +126,14 @@ struct TaskCardView: View {
             Button {
                 if isOpen { close() } else { open() }
             } label: {
-                Text("⋯")
-                    .font(.system(size: 20))
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundColor(C.muted)
                     .padding(.horizontal, 14)
                     .frame(maxHeight: .infinity)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("More actions")
         }
         .background(cardBackground)
     }
@@ -177,10 +191,10 @@ struct TaskCardView: View {
     @ViewBuilder
     func actionBtn(label: String, icon: String? = nil, emoji: String? = nil, bg: Color, cornerRight: CGFloat = 0, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 3) {
+            VStack(spacing: 4) {
                 if let icon { Image(systemName: icon).font(.system(size: 16, weight: .medium)) }
                 else if let emoji { Text(emoji).font(.system(size: 16)) }
-                Text(label).font(.system(size: 9, weight: .bold))
+                Text(label).font(.system(size: 12, weight: .bold))
             }
             .foregroundColor(.white)
             .frame(width: 68)
@@ -189,6 +203,18 @@ struct TaskCardView: View {
             .clipShape(UnevenRoundedRectangle(bottomTrailingRadius: cornerRight, topTrailingRadius: cornerRight))
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(label)
+    }
+
+    private var cardAccessibilityLabel: String {
+        var parts = [task.title, "\(task.priority.label) priority"]
+        if let s = task.startTime, let e = task.endTime, let p = task.period {
+            parts.append("Scheduled \(s) to \(e) \(p)")
+        }
+        if task.age > 0 { parts.append("Carried \(task.age) days") }
+        if store.isLapsed(task) { parts.append("Lapsed") }
+        if !task.category.isEmpty { parts.append(task.category) }
+        return parts.joined(separator: ", ")
     }
 
     var dragGesture: some Gesture {

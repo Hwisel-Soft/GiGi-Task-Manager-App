@@ -91,6 +91,7 @@ struct BookTimeSheet: View {
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityLabel(store.bookForm.period == p ? "\(p), selected" : p)
                             }
                         }
                     }
