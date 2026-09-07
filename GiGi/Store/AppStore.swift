@@ -178,6 +178,14 @@ final class AppStore {
         notifSvc.setBadge(tasksAlertCount)
     }
 
+    func reloadTasksFromUserDefaults() {
+        let ud = UserDefaults.standard
+        guard let d = ud.data(forKey: "gigi.tasks"),
+              let decoded = try? JSONDecoder().decode([GTask].self, from: d) else { return }
+        tasks = decoded
+        nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
+    }
+
     // MARK: Computed
     var lapsedTask: GTask? {
         guard lapsedAlert else { return nil }
@@ -521,6 +529,14 @@ final class AppStore {
         let m = String(format: "%02d", morningMinute)
         let period = morningHour < 12 ? "AM" : "PM"
         return "\(h):\(m) \(period)"
+    }
+
+    func requestBadgePermissionIfNeeded() async {
+        let status = await notifSvc.authorizationStatus()
+        if status == .notDetermined {
+            _ = await notifSvc.requestPermission()
+        }
+        updateBadge()
     }
 
     func requestCalendarAccessIfNeeded() {

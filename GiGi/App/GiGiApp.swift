@@ -50,9 +50,13 @@ struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
+                store.reloadTasksFromUserDefaults()
                 store.scheduleMorningNotification()
                 store.updateBadge()
             }
+        }
+        .task {
+            await store.requestBadgePermissionIfNeeded()
         }
     }
 }

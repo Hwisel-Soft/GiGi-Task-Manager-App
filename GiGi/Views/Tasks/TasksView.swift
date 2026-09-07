@@ -65,7 +65,7 @@ struct TasksView: View {
                 Divider().background(C.border)
 
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 10) {
                         needsAttentionSection
                         if filter == .all {
                             allSections
@@ -79,7 +79,7 @@ struct TasksView: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.top, 16)
-                    .padding(.bottom, 100)
+                    .padding(.bottom, 120)
                 }
                 .scrollIndicators(.visible)
             }
@@ -179,18 +179,28 @@ struct TasksView: View {
 
     @ViewBuilder
     func sectionHeader(_ title: String, count: Int, expanded: Binding<Bool>) -> some View {
+        let isExpanded = expanded.wrappedValue
         Button {
             withAnimation(.spring(duration: 0.25)) { expanded.wrappedValue.toggle() }
         } label: {
             HStack(spacing: 4) {
                 Text("\(title) (\(count))")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(C.muted)
+                    .foregroundColor(isExpanded ? C.muted : C.sub)
                     .tracking(0.8)
                 Spacer()
-                Image(systemName: expanded.wrappedValue ? "chevron.down" : "chevron.right")
+                Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                     .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(C.muted)
+                    .foregroundColor(isExpanded ? C.muted : C.sub)
+            }
+            .padding(.vertical, isExpanded ? 4 : 12)
+            .padding(.horizontal, isExpanded ? 0 : 14)
+            .background {
+                if !isExpanded {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(C.card)
+                        .shadow(color: .black.opacity(0.06), radius: 4, x: 0, y: 2)
+                }
             }
         }
         .buttonStyle(.plain)
