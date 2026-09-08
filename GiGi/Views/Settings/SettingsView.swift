@@ -176,7 +176,7 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundColor(C.text)
                         Spacer()
-                        Text("1.0 (13)")
+                        Text(appVersionString)
                             .font(.system(size: 15))
                             .foregroundColor(C.muted)
                     }
@@ -218,6 +218,12 @@ struct SettingsView: View {
                 store.morningMinute = c.minute ?? 0
             }
         )
+    }
+
+    var appVersionString: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        return "\(version) (\(build))"
     }
 
     @ViewBuilder
