@@ -100,6 +100,11 @@ struct TaskDetailView: View {
                                     .font(.system(size: 10, weight: .heavy))
                                     .foregroundColor(C.green)
                                     .tracking(0.8)
+                                if let bd = task.bookedDate {
+                                    Text(bookedDateFull(bd))
+                                        .font(.system(size: 13, weight: .semibold))
+                                        .foregroundColor(C.sub)
+                                }
                                 Text("\(s) – \(e) \(p)")
                                     .font(.system(size: 15, weight: .bold))
                                     .foregroundColor(C.text)
@@ -282,6 +287,17 @@ struct TaskDetailView: View {
             }
         }
         .background(C.bg)
+    }
+
+    func bookedDateFull(_ iso: String) -> String {
+        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        guard let d = f.date(from: iso) else { return iso }
+        let cal = Calendar.current
+        if cal.isDateInToday(d) { return "Today" }
+        if cal.isDateInTomorrow(d) { return "Tomorrow" }
+        if cal.isDateInYesterday(d) { return "Yesterday" }
+        let df = DateFormatter(); df.dateStyle = .full; df.timeStyle = .none
+        return df.string(from: d)
     }
 
     func formattedCreatedDate(_ iso: String) -> String {

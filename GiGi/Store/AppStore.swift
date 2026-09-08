@@ -3,6 +3,9 @@ import Observation
 import SwiftUI
 import EventKit
 
+private let appGroupId = "group.com.johnnassar.GiGi"
+var sharedDefaults: UserDefaults { UserDefaults(suiteName: appGroupId) ?? .standard }
+
 // MARK: - Supporting Types
 
 enum AppTab: String, Hashable {
@@ -123,7 +126,8 @@ final class AppStore {
 
     // MARK: Init
     init() {
-        let ud = UserDefaults.standard
+        AppStore.migrateToSharedDefaultsIfNeeded()
+        let ud = sharedDefaults
         let decoder = JSONDecoder()
 
         if let d = ud.data(forKey: "gigi.tasks"),
@@ -154,9 +158,27 @@ final class AppStore {
         calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
     }
 
+    // One-time migration from UserDefaults.standard to shared App Group container.
+    // Runs silently on first launch after updating.
+    private static func migrateToSharedDefaultsIfNeeded() {
+        let migrationKey = "gigi.migratedToAppGroup"
+        guard !sharedDefaults.bool(forKey: migrationKey) else { return }
+        let std = UserDefaults.standard
+        let keys = ["gigi.tasks", "gigi.categories", "gigi.darkMode", "gigi.lapsedAlert",
+                    "gigi.morningSummary", "gigi.morningHour", "gigi.morningMinute",
+                    "gigi.colorfulCards", "gigi.calSync", "gigi.defaultDuration",
+                    "gigi.defaultPriority", "gigi.nextId", "gigi.nextCatId"]
+        for key in keys {
+            if let val = std.object(forKey: key) {
+                sharedDefaults.set(val, forKey: key)
+            }
+        }
+        sharedDefaults.set(true, forKey: migrationKey)
+    }
+
     // MARK: Persistence
     func save() {
-        let ud = UserDefaults.standard
+        let ud = sharedDefaults
         let encoder = JSONEncoder()
         if let d = try? encoder.encode(tasks) { ud.set(d, forKey: "gigi.tasks") }
         if let d = try? encoder.encode(categories) { ud.set(d, forKey: "gigi.categories") }
@@ -179,7 +201,7 @@ final class AppStore {
     }
 
     func reloadTasksFromUserDefaults() {
-        let ud = UserDefaults.standard
+        let ud = sharedDefaults
         guard let d = ud.data(forKey: "gigi.tasks"),
               let decoded = try? JSONDecoder().decode([GTask].self, from: d) else { return }
         tasks = decoded

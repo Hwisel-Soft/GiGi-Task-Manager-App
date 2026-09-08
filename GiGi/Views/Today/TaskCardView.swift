@@ -75,7 +75,9 @@ struct TaskCardView: View {
 
                 HStack(spacing: 6) {
                     if let s = task.startTime, let e = task.endTime, let p = task.period {
-                        Text("\(s)–\(e) \(p)")
+                        let dateLabel = task.bookedDate.map { scheduledDateLabel($0) } ?? ""
+                        let timeLabel = dateLabel.isEmpty ? "\(s)–\(e) \(p)" : "\(dateLabel) · \(s)–\(e) \(p)"
+                        Text(timeLabel)
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(store.isLapsed(task) ? C.high : C.primary)
                     }
@@ -266,6 +268,18 @@ struct TaskCardView: View {
         let df = DateFormatter()
         df.dateFormat = cal.component(.year, from: d) == cal.component(.year, from: Date()) ? "MMM d" : "MMM d, yyyy"
         return "Added \(df.string(from: d))"
+    }
+
+    func scheduledDateLabel(_ iso: String) -> String {
+        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        guard let d = f.date(from: iso) else { return "" }
+        let cal = Calendar.current
+        if cal.isDateInToday(d) { return "Today" }
+        if cal.isDateInTomorrow(d) { return "Tomorrow" }
+        if cal.isDateInYesterday(d) { return "Yesterday" }
+        let df = DateFormatter()
+        df.dateFormat = "EEE MMM d"
+        return df.string(from: d)
     }
 
     func daysUntilDeadline(_ dl: String) -> Int {

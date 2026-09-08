@@ -10,7 +10,7 @@ struct AddTaskIntent: AppIntent {
     var taskTitle: String
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let ud = UserDefaults.standard
+        let ud = sharedDefaults
         let nextId = max(11, ud.integer(forKey: "gigi.nextId"))
         let defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
         let defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
