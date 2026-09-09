@@ -180,6 +180,21 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundColor(C.muted)
                     }
+                    Divider().background(C.border)
+                    Button { openBugReport() } label: {
+                        HStack {
+                            Image(systemName: "ladybug")
+                                .foregroundColor(C.high)
+                            Text("Report a Bug")
+                                .font(.system(size: 15))
+                                .foregroundColor(C.high)
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 12))
+                                .foregroundColor(C.muted)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.bottom, 40)
@@ -224,6 +239,36 @@ struct SettingsView: View {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
         return "\(version) (\(build))"
+    }
+
+    func openBugReport() {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        let device = UIDevice.current.model
+        let os = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+
+        let body = """
+**Build:** \(version) (\(build))
+**Device:** \(device) · \(os)
+
+**Steps to reproduce:**
+1.
+
+**Expected behavior:**
+
+
+**Actual behavior:**
+
+
+"""
+        var comps = URLComponents(string: "https://github.com/Hwisel-Soft/GiGi-Task-Manager-App/issues/new")!
+        comps.queryItems = [
+            URLQueryItem(name: "labels", value: "ios,bug"),
+            URLQueryItem(name: "title", value: "Bug: "),
+            URLQueryItem(name: "body", value: body)
+        ]
+        guard let url = comps.url else { return }
+        UIApplication.shared.open(url)
     }
 
     @ViewBuilder
