@@ -58,10 +58,14 @@ struct TaskDetailView: View {
                             .fill(C.priorityColor(task.priority))
                             .frame(width: 4)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(task.title)
-                                .font(.system(size: 24, weight: .heavy))
-                                .foregroundColor(C.text)
-                                .tracking(-0.5)
+                            TextField("Task title", text: Binding(
+                                get: { task.title },
+                                set: { store.updateTitle(task.id, $0) }
+                            ))
+                            .font(.system(size: 24, weight: .heavy))
+                            .foregroundColor(C.text)
+                            .tracking(-0.5)
+                            .tint(C.primary)
                             HStack(spacing: 10) {
                                 if let cd = task.createdDate {
                                     Text("Added \(formattedCreatedDate(cd))")
@@ -290,7 +294,9 @@ struct TaskDetailView: View {
     }
 
     func bookedDateFull(_ iso: String) -> String {
-        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
         guard let d = f.date(from: iso) else { return iso }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Today" }
@@ -301,7 +307,9 @@ struct TaskDetailView: View {
     }
 
     func formattedCreatedDate(_ iso: String) -> String {
-        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let isoFmt = ISO8601DateFormatter()
+        isoFmt.formatOptions = [.withFullDate]
+        isoFmt.timeZone = .current
         guard let d = isoFmt.date(from: iso) else { return iso }
         let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none
         return f.string(from: d)

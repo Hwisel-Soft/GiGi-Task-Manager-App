@@ -211,7 +211,9 @@ final class AppStore {
     func autoUpdateAges() {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
-        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let isoFmt = ISO8601DateFormatter()
+        isoFmt.formatOptions = [.withFullDate]
+        isoFmt.timeZone = .current
         var changed = false
         for i in tasks.indices {
             if let created = tasks[i].createdDate, let d = isoFmt.date(from: created) {
@@ -271,7 +273,9 @@ final class AppStore {
 
     func isFollowUpDue(_ task: GTask) -> Bool {
         guard let s = task.followUpDate else { return false }
-        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
         guard let d = f.date(from: s) else { return false }
         return d <= Calendar.current.startOfDay(for: Date())
     }
@@ -419,6 +423,12 @@ final class AppStore {
         update(id) { $0.notes = notes }
     }
 
+    func updateTitle(_ id: Int, _ title: String) {
+        let trimmed = title.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        update(id) { $0.title = trimmed }
+    }
+
     func addTask() {
         let title = addForm.title.trimmingCharacters(in: .whitespaces)
         guard !title.isEmpty else { return }
@@ -469,7 +479,9 @@ final class AppStore {
         let task = tasks.first(where: { $0.id == id })
         var form = BookForm(duration: task?.duration ?? defaultDuration)
         if let bd = task?.bookedDate {
-            let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+            let isoFmt = ISO8601DateFormatter()
+            isoFmt.formatOptions = [.withFullDate]
+            isoFmt.timeZone = .current
             if let d = isoFmt.date(from: bd) {
                 let today = Calendar.current.startOfDay(for: Date())
                 let booked = Calendar.current.startOfDay(for: d)
@@ -610,7 +622,7 @@ final class AppStore {
             notifSvc.cancelMorningSummary()
             return
         }
-        let sched = todaysScheduledTasks.count
+        let sched = scheduledTasks.count
         let unsched = unscheduledTasks.count
         let followUp = waitingTasks.filter { isFollowUpDue($0) }.count
         var parts: [String] = []

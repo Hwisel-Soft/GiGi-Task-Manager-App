@@ -7,6 +7,7 @@ struct TaskCardView: View {
 
     @State private var offset: CGFloat = 0
     @State private var isOpen = false
+    @State private var dragIsHorizontal: Bool? = nil
     private let openWidth: CGFloat = 204
 
     private var C: GColors { store.C }
@@ -220,13 +221,23 @@ struct TaskCardView: View {
     }
 
     var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 8, coordinateSpace: .local)
+        DragGesture(minimumDistance: 10, coordinateSpace: .local)
             .onChanged { v in
-                guard abs(v.translation.height) < 40 else { return }
+                if dragIsHorizontal == nil {
+                    dragIsHorizontal = abs(v.translation.width) > abs(v.translation.height)
+                }
+                guard dragIsHorizontal == true else { return }
                 let base: CGFloat = isOpen ? -openWidth : 0
                 offset = max(-openWidth, min(0, base + v.translation.width))
             }
             .onEnded { v in
+                defer { dragIsHorizontal = nil }
+                guard dragIsHorizontal == true else {
+                    withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                        offset = isOpen ? -openWidth : 0
+                    }
+                    return
+                }
                 if v.translation.width < -30 { open() } else { close() }
             }
     }
@@ -247,7 +258,9 @@ struct TaskCardView: View {
 
     func formattedDeadline(_ dl: String) -> String {
         if dl.contains("-") {
-            let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+            let f = ISO8601DateFormatter()
+            f.formatOptions = [.withFullDate]
+            f.timeZone = .current
             if let d = f.date(from: dl) {
                 let days = daysUntilDeadline(dl)
                 if days == 0 { return "today" }
@@ -260,7 +273,9 @@ struct TaskCardView: View {
     }
 
     func shortCreatedDate(_ iso: String) -> String {
-        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
         guard let d = f.date(from: iso) else { return "" }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Added today" }
@@ -271,7 +286,9 @@ struct TaskCardView: View {
     }
 
     func scheduledDateLabel(_ iso: String) -> String {
-        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
         guard let d = f.date(from: iso) else { return "" }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Today" }
@@ -283,7 +300,9 @@ struct TaskCardView: View {
     }
 
     func daysUntilDeadline(_ dl: String) -> Int {
-        let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
         guard let d = f.date(from: dl) else { return Int.max }
         let cal = Calendar.current
         let start = cal.startOfDay(for: Date())
