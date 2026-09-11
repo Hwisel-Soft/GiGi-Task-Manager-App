@@ -388,11 +388,27 @@ final class AppStore {
     }
 
     func unblockTask(_ id: Int) {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let today = Calendar.current.startOfDay(for: Date())
         update(id) { t in
-            t.state = .unscheduled
+            let restoreBooked: Bool = {
+                guard let bd = t.bookedDate, let d = isoFmt.date(from: bd) else { return false }
+                return Calendar.current.startOfDay(for: d) >= today
+            }()
+            if restoreBooked {
+                t.state = .booked
+            } else {
+                t.state = .unscheduled
+                t.startTime = nil
+                t.endTime = nil
+                t.period = nil
+                t.bookedDate = nil
+                t.calendarEventId = nil
+            }
             t.waitingOn = nil
             t.waitingNote = nil
             t.followUpDate = nil
+            t.waitingSince = nil
         }
         goBack()
     }
