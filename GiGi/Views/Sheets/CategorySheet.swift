@@ -20,7 +20,7 @@ struct CategorySheet: View {
                     // Name
                     fieldLabel("Name")
                     TextField("Category name…", text: $store.catForm.name)
-                        .font(.system(size: 15, weight: .bold))
+                        .font(.subheadline.bold())
                         .foregroundColor(C.text)
                         .tint(C.primary)
                         .padding(14)
@@ -55,10 +55,10 @@ struct CategorySheet: View {
                             .fill(Color(hex: store.catForm.color))
                             .frame(width: 12, height: 12)
                         Text(store.catForm.name.isEmpty ? "Preview" : store.catForm.name)
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.callout.bold())
                             .foregroundColor(C.text)
                         Text("· category tag")
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(C.muted)
                     }
                     .padding(14)
@@ -69,7 +69,7 @@ struct CategorySheet: View {
                     // Save button
                     Button { store.saveCategory() } label: {
                         Text(isNew ? "Add Category" : "Save Changes")
-                            .font(.system(size: 15, weight: .heavy))
+                            .font(.subheadline.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
@@ -83,7 +83,7 @@ struct CategorySheet: View {
                     if !isNew {
                         Button { showDeleteConfirm = true } label: {
                             Text("Delete Category")
-                                .font(.system(size: 14, weight: .bold))
+                                .font(.callout.bold())
                                 .foregroundColor(C.high)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
@@ -122,7 +122,7 @@ struct CategorySheet: View {
 
     @ViewBuilder func fieldLabel(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
     }

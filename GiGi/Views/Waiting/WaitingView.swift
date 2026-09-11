@@ -9,11 +9,11 @@ struct WaitingView: View {
             // Header
             VStack(alignment: .leading, spacing: 3) {
                 Text("Waiting")
-                    .font(.system(size: 30, weight: .heavy))
+                    .font(.title.weight(.heavy))
                     .foregroundColor(C.text)
                     .tracking(-1)
                 Text("\(store.waitingTasks.count) task\(store.waitingTasks.count == 1 ? "" : "s") waiting")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.footnote.weight(.medium))
                     .foregroundColor(C.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -27,10 +27,10 @@ struct WaitingView: View {
                 VStack(spacing: 12) {
                     Text("🎉").font(.system(size: 48))
                     Text("No dependencies.")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.headline.bold())
                         .foregroundColor(C.text)
                     Text("Nothing's blocking you.")
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.muted)
                 }
                 Spacer()
@@ -63,7 +63,7 @@ struct WaitingView: View {
             VStack(alignment: .leading, spacing: 4) {
                 if store.isFollowUpDue(task) {
                     Text("⏰ FOLLOW UP TODAY")
-                        .font(.system(size: 10, weight: .heavy))
+                        .font(.caption2.weight(.heavy))
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
@@ -72,14 +72,14 @@ struct WaitingView: View {
                         .padding(.bottom, 2)
                 }
                 Text(task.title)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.subheadline.bold())
                     .foregroundColor(C.text)
                     .lineLimit(1)
                 Text("Waiting on \(task.waitingOn ?? "someone")")
-                    .font(.system(size: 12))
+                    .font(.caption)
                     .foregroundColor(C.muted)
                 Text("\(task.waitingDays)d waiting")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.caption.bold())
                     .foregroundColor(C.purple)
             }
             .padding(.horizontal, 14)
@@ -98,7 +98,7 @@ struct WaitingView: View {
                         .fill(C.purpleLight)
                         .frame(width: 36, height: 36)
                     Image(systemName: "envelope")
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.purple)
                 }
             }

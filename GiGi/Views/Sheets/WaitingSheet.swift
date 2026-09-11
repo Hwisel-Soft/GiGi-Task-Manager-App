@@ -11,7 +11,7 @@ struct WaitingSheet: View {
                 VStack(alignment: .leading, spacing: 18) {
                     fieldLabel("Waiting on")
                     TextField("Person's name…", text: $store.waitForm.name)
-                        .font(.system(size: 15))
+                        .font(.subheadline)
                         .foregroundColor(C.text)
                         .tint(C.purple)
                         .padding(14)
@@ -24,7 +24,7 @@ struct WaitingSheet: View {
 
                     fieldLabel("What you need")
                     TextField("Describe what you're waiting for…", text: $store.waitForm.note, axis: .vertical)
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.text)
                         .tint(C.purple)
                         .lineLimit(2...4)
@@ -42,7 +42,7 @@ struct WaitingSheet: View {
                             HStack {
                                 Image(systemName: "plus.circle").foregroundColor(C.purple)
                                 Text("Add follow-up date")
-                                    .font(.system(size: 14))
+                                    .font(.callout)
                                     .foregroundColor(C.purple)
                                 Spacer()
                             }
@@ -75,7 +75,7 @@ struct WaitingSheet: View {
                         else { store.showWaitingSheet = false }
                     } label: {
                         Text("Park in Waiting")
-                            .font(.system(size: 16, weight: .heavy))
+                            .font(.callout.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
@@ -117,7 +117,7 @@ struct WaitingSheet: View {
 
     @ViewBuilder func fieldLabel(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
     }

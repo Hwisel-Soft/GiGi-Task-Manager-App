@@ -68,11 +68,11 @@ struct CalendarView: View {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
                     Text(monthLabel)
-                        .font(.system(size: 13))
+                        .font(.footnote)
                         .foregroundColor(C.muted)
                     HStack {
                         Text(weekRangeLabel)
-                            .font(.system(size: 28, weight: .heavy))
+                            .font(.title.weight(.heavy))
                             .foregroundColor(C.text)
                             .tracking(-0.5)
                         Spacer()
@@ -81,7 +81,7 @@ struct CalendarView: View {
                                 .fill(C.pinkLight)
                                 .frame(width: 40, height: 40)
                             Image(systemName: "calendar")
-                                .font(.system(size: 16))
+                                .font(.callout)
                                 .foregroundColor(C.pink)
                         }
                     }
@@ -92,14 +92,14 @@ struct CalendarView: View {
                             Button { store.calSelDay = i } label: {
                                 VStack(spacing: 4) {
                                     Text(String(day.abbr.prefix(1)).uppercased())
-                                        .font(.system(size: 10, weight: .semibold))
+                                        .font(.caption2.weight(.semibold))
                                         .foregroundColor(.white.opacity(0.7))
                                     ZStack {
                                         if store.calSelDay == i {
                                             Circle().fill(Color.white).frame(width: 32, height: 32)
                                         }
                                         Text("\(day.date)")
-                                            .font(.system(size: 14, weight: .bold))
+                                            .font(.callout.bold())
                                             .foregroundColor(store.calSelDay == i ? C.primary : .white)
                                     }
                                     .frame(width: 32, height: 32)
@@ -125,7 +125,7 @@ struct CalendarView: View {
 
                 // Motivational line
                 Text(motivationalText)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.footnote.weight(.semibold))
                     .foregroundColor(C.primary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 24)
@@ -138,10 +138,10 @@ struct CalendarView: View {
                         VStack(spacing: 12) {
                             Text(dayEmoji).font(.system(size: 48))
                             Text(dayEmptyTitle)
-                                .font(.system(size: 17, weight: .bold))
+                                .font(.headline.bold())
                                 .foregroundColor(C.text)
                             Text("Tap + to schedule something.")
-                                .font(.system(size: 14))
+                                .font(.callout)
                                 .foregroundColor(C.muted)
                         }
                         .frame(maxWidth: .infinity)
@@ -180,7 +180,7 @@ struct CalendarView: View {
                         .frame(width: 58, height: 58)
                         .shadow(color: C.primary.opacity(0.4), radius: 12, x: 0, y: 6)
                     Text("+")
-                        .font(.system(size: 28, weight: .light))
+                        .font(.title.weight(.light))
                         .foregroundColor(.white)
                 }
             }
@@ -199,17 +199,17 @@ struct CalendarView: View {
                     .fill(C.priorityColor(task.priority).opacity(0.15))
                     .frame(width: 48, height: 48)
                 Image(systemName: "clock")
-                    .font(.system(size: 18))
+                    .font(.body)
                     .foregroundColor(C.priorityColor(task.priority))
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.subheadline.bold())
                     .foregroundColor(C.text)
                     .lineLimit(1)
                 if let s = task.startTime, let e = task.endTime, let p = task.period {
                     Text("\(s) – \(e) \(p)")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.caption.weight(.semibold))
                         .foregroundColor(C.muted)
                 }
             }
@@ -298,18 +298,18 @@ struct UnscheduledDrawer: View {
                 // Header
                 HStack {
                     Text("Unscheduled")
-                        .font(.system(size: 16, weight: .heavy))
+                        .font(.callout.weight(.heavy))
                         .foregroundColor(C.text)
                     ZStack {
                         Circle().fill(C.primary).frame(width: 22, height: 22)
                         Text("\(store.unscheduledTasks.count)")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(.white)
                     }
                     Spacer()
                     Button { withAnimation(.spring()) { store.calDrawerOpen = false } } label: {
                         Image(systemName: "chevron.down")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.callout.weight(.semibold))
                             .foregroundColor(C.muted)
                     }
                 }
@@ -326,16 +326,16 @@ struct UnscheduledDrawer: View {
                                     .frame(width: 8, height: 8)
                                 VStack(alignment: .leading, spacing: 1) {
                                     Text(task.title)
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.callout.weight(.semibold))
                                         .foregroundColor(C.text)
                                         .lineLimit(1)
                                     HStack(spacing: 6) {
                                         Text(task.priority.label)
-                                            .font(.system(size: 11))
+                                            .font(.caption2)
                                             .foregroundColor(C.priorityColor(task.priority))
                                         if task.age > 0 {
                                             Text("\(task.age)d")
-                                                .font(.system(size: 11))
+                                                .font(.caption2)
                                                 .foregroundColor(C.muted)
                                         }
                                     }
@@ -346,7 +346,7 @@ struct UnscheduledDrawer: View {
                                     store.openBookTime(for: task.id)
                                 } label: {
                                     Text("Schedule")
-                                        .font(.system(size: 12, weight: .heavy))
+                                        .font(.caption.weight(.heavy))
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 12)
                                         .padding(.vertical, 6)
@@ -367,15 +367,15 @@ struct UnscheduledDrawer: View {
                     ZStack {
                         Circle().fill(C.primary).frame(width: 22, height: 22)
                         Text("\(store.unscheduledTasks.count)")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(.white)
                     }
                     Text("Unscheduled · tap to schedule")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.footnote.weight(.medium))
                         .foregroundColor(C.text)
                     Spacer()
                     Image(systemName: "chevron.up")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.caption.weight(.semibold))
                         .foregroundColor(C.muted)
                 }
                 .padding(.horizontal, 20)

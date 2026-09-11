@@ -29,7 +29,7 @@ struct BookTimeSheet: View {
                     // Task name chip
                     HStack {
                         Text(taskTitle)
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.footnote.bold())
                             .foregroundColor(C.primary)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
@@ -62,7 +62,7 @@ struct BookTimeSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
                         Text(":")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(.title2.bold())
                             .foregroundColor(C.text)
 
                         // Minute picker
@@ -84,7 +84,7 @@ struct BookTimeSheet: View {
                             ForEach(["AM", "PM"], id: \.self) { p in
                                 Button { store.bookForm.period = p } label: {
                                     Text(p)
-                                        .font(.system(size: 14, weight: .bold))
+                                        .font(.callout.bold())
                                         .foregroundColor(store.bookForm.period == p ? .white : C.muted)
                                         .frame(width: 52, height: 40)
                                         .background(store.bookForm.period == p ? C.primary : C.card)
@@ -102,7 +102,7 @@ struct BookTimeSheet: View {
                         ForEach(durations, id: \.self) { d in
                             Button { store.bookForm.duration = d } label: {
                                 Text(d)
-                                    .font(.system(size: 13, weight: .semibold))
+                                    .font(.footnote.weight(.semibold))
                                     .foregroundColor(store.bookForm.duration == d ? C.primary : C.text)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 8)
@@ -124,11 +124,11 @@ struct BookTimeSheet: View {
                                 .foregroundColor(C.med)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Conflicts with: \(c.title)")
-                                    .font(.system(size: 13, weight: .semibold))
+                                    .font(.footnote.weight(.semibold))
                                     .foregroundColor(C.text)
                                 if let s = c.startTime, let e = c.endTime, let p = c.period {
                                     Text("\(s) – \(e) \(p)  ·  You can still proceed.")
-                                        .font(.system(size: 11))
+                                        .font(.caption2)
                                         .foregroundColor(C.muted)
                                 }
                             }
@@ -144,7 +144,7 @@ struct BookTimeSheet: View {
                         else { store.showBookTime = false }
                     } label: {
                         Text(conflict != nil ? "Book It Anyway" : "Book It")
-                            .font(.system(size: 16, weight: .heavy))
+                            .font(.callout.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
@@ -175,7 +175,7 @@ struct BookTimeSheet: View {
 
     @ViewBuilder func sectionLabel(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
     }

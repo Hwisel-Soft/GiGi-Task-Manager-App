@@ -23,21 +23,21 @@ struct NudgeSheet: View {
             VStack(alignment: .leading, spacing: 20) {
                 if let t = task {
                     Text("Following up with \(t.waitingOn ?? "someone") about:")
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.sub)
 
                     Text(t.title)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.callout.bold())
                         .foregroundColor(C.text)
 
                     // Pre-filled message
                     VStack(alignment: .leading, spacing: 8) {
                         Text("MESSAGE")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.muted)
                             .tracking(0.8)
                         Text(nudgeMessage)
-                            .font(.system(size: 14))
+                            .font(.callout)
                             .foregroundColor(C.text)
                             .lineSpacing(4)
                             .padding(14)
@@ -92,7 +92,7 @@ struct NudgeSheet: View {
     func nudgeButton(label: String, bg: Color, fgColor: Color = .white, bordered: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(label)
-                .font(.system(size: 15, weight: .bold))
+                .font(.subheadline.bold())
                 .foregroundColor(fgColor)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 15)

@@ -10,7 +10,7 @@ struct HistoryView: View {
             // Header
             VStack(alignment: .leading, spacing: 12) {
                 Text("History")
-                    .font(.system(size: 30, weight: .heavy))
+                    .font(.title.weight(.heavy))
                     .foregroundColor(C.text)
                     .tracking(-1)
 
@@ -19,7 +19,7 @@ struct HistoryView: View {
                     ForEach(HistorySubTab.allCases, id: \.self) { tab in
                         Button { store.historySubTab = tab } label: {
                             Text(tab.rawValue)
-                                .font(.system(size: 13, weight: .bold))
+                                .font(.footnote.bold())
                                 .foregroundColor(store.historySubTab == tab ? C.primary : C.muted)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
@@ -99,18 +99,18 @@ struct HistoryView: View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(task.title)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.subheadline.bold())
                     .foregroundColor(C.muted)
                     .strikethrough(isCompleted, color: C.muted)
                     .lineLimit(1)
                 HStack(spacing: 6) {
                     if isCompleted, let t = task.completedTime, let d = formatDateLabel(task.completedDateLabel) {
                         Text("\(d) · \(t)")
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(C.muted)
                     } else if let d = formatDateLabel(task.deletedDateLabel) {
                         Text(d)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(C.muted)
                     }
                     if !task.category.isEmpty {
@@ -119,7 +119,7 @@ struct HistoryView: View {
                                 .fill(store.categoryColor(task.category))
                                 .frame(width: 6, height: 6)
                             Text(task.category)
-                                .font(.system(size: 11))
+                                .font(.caption2)
                                 .foregroundColor(C.muted)
                         }
                     }
@@ -128,7 +128,7 @@ struct HistoryView: View {
             Spacer()
             Button { store.restoreTask(task.id) } label: {
                 Image(systemName: "arrowshape.turn.up.backward")
-                    .font(.system(size: 14))
+                    .font(.callout)
                     .foregroundColor(C.primary)
                     .frame(width: 36, height: 36)
                     .background(C.primaryLight)
@@ -148,8 +148,8 @@ struct HistoryView: View {
     func emptyState(emoji: String, title: String, sub: String) -> some View {
         VStack(spacing: 12) {
             Text(emoji).font(.system(size: 48))
-            Text(title).font(.system(size: 17, weight: .bold)).foregroundColor(C.text)
-            Text(sub).font(.system(size: 14)).foregroundColor(C.muted)
+            Text(title).font(.headline.bold()).foregroundColor(C.text)
+            Text(sub).font(.callout).foregroundColor(C.muted)
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 60)
@@ -213,7 +213,7 @@ struct InsightsView: View {
                         ForEach(InsightsPeriod.allCases, id: \.self) { p in
                             Button { store.insightsPeriod = p } label: {
                                 Text(p.rawValue)
-                                    .font(.system(size: 13, weight: .bold))
+                                    .font(.footnote.bold())
                                     .foregroundColor(store.insightsPeriod == p ? C.primary : C.muted)
                                     .padding(.horizontal, 14)
                                     .padding(.vertical, 8)
@@ -239,7 +239,7 @@ struct InsightsView: View {
                 // Completion ring
                 VStack(alignment: .leading, spacing: 12) {
                     Text("COMPLETION RATE")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.caption2.bold())
                         .foregroundColor(C.muted)
                         .tracking(0.8)
 
@@ -254,15 +254,15 @@ struct InsightsView: View {
                                 .frame(width: 84, height: 84)
                                 .rotationEffect(.degrees(-90))
                             Text("\(rate)%")
-                                .font(.system(size: 16, weight: .heavy))
+                                .font(.callout.weight(.heavy))
                                 .foregroundColor(C.text)
                         }
                         VStack(alignment: .leading, spacing: 4) {
                             Text("\(completed) of \(total) tasks completed")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.callout.weight(.semibold))
                                 .foregroundColor(C.text)
                             Text("across selected period")
-                                .font(.system(size: 12))
+                                .font(.caption)
                                 .foregroundColor(C.muted)
                         }
                     }
@@ -276,7 +276,7 @@ struct InsightsView: View {
                 // Priority follow-through
                 VStack(alignment: .leading, spacing: 12) {
                     Text("PRIORITY FOLLOW-THROUGH")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(.caption2.bold())
                         .foregroundColor(C.muted)
                         .tracking(0.8)
 
@@ -306,11 +306,11 @@ struct InsightsView: View {
     func kpiTile(label: String, value: Int, color: Color, bg: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(label.uppercased())
-                .font(.system(size: 10, weight: .bold))
+                .font(.caption2.bold())
                 .foregroundColor(color)
                 .tracking(0.5)
             Text("\(value)")
-                .font(.system(size: 28, weight: .heavy))
+                .font(.title.weight(.heavy))
                 .foregroundColor(C.text)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -325,11 +325,11 @@ struct InsightsView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(p.label)
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.caption.bold())
                     .foregroundColor(C.priorityColor(p))
                 Spacer()
                 Text("\(completed)/\(total) done")
-                    .font(.system(size: 11))
+                    .font(.caption2)
                     .foregroundColor(C.muted)
             }
             GeometryReader { geo in

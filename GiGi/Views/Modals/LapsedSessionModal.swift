@@ -27,20 +27,20 @@ struct LapsedSessionModal: View {
                     HStack(spacing: 8) {
                         Circle().fill(C.high).frame(width: 10, height: 10)
                         Text("SESSION ENDED")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.high)
                             .tracking(0.8)
                     }
                     .padding(.bottom, 6)
 
                     Text(task.title)
-                        .font(.system(size: 20, weight: .heavy))
+                        .font(.title3.weight(.heavy))
                         .foregroundColor(C.text)
                         .tracking(-0.4)
                         .padding(.bottom, 4)
 
                     Text("Your work session just ended. Did you finish it?")
-                        .font(.system(size: 13))
+                        .font(.footnote)
                         .foregroundColor(C.muted)
                         .padding(.bottom, 24)
 
@@ -49,7 +49,7 @@ struct LapsedSessionModal: View {
                             store.completeTask(task.id)
                         } label: {
                             Text("✓ Mark Complete")
-                                .font(.system(size: 15, weight: .heavy))
+                                .font(.subheadline.weight(.heavy))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
@@ -65,7 +65,7 @@ struct LapsedSessionModal: View {
                             store.showBookTime = true
                         } label: {
                             Text("🔄 Reschedule")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.subheadline.bold())
                                 .foregroundColor(C.primary)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 15)
@@ -75,7 +75,7 @@ struct LapsedSessionModal: View {
 
                         Button { store.carryForward(task.id) } label: {
                             Text("Later — carry forward")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.callout.weight(.semibold))
                                 .foregroundColor(C.muted)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)

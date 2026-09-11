@@ -17,10 +17,10 @@ struct TodayView: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(dateString)
-                                .font(.system(size: 13, weight: .medium))
+                                .font(.footnote.weight(.medium))
                                 .foregroundColor(C.muted)
                             Text("Today")
-                                .font(.system(size: 30, weight: .heavy))
+                                .font(.title.weight(.heavy))
                                 .foregroundColor(C.text)
                                 .tracking(-1)
                         }
@@ -28,7 +28,7 @@ struct TodayView: View {
                         HStack(spacing: 8) {
                             if store.unscheduledTasks.count > 0 {
                                 Text("\(store.unscheduledTasks.count) unscheduled")
-                                    .font(.system(size: 11, weight: .bold))
+                                    .font(.caption2.bold())
                                     .foregroundColor(C.primary)
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 4)
@@ -45,7 +45,7 @@ struct TodayView: View {
                                     ))
                                     .frame(width: 36, height: 36)
                                 Text("G")
-                                    .font(.system(size: 15, weight: .heavy))
+                                    .font(.subheadline.weight(.heavy))
                                     .foregroundColor(.white)
                             }
                         }
@@ -59,7 +59,7 @@ struct TodayView: View {
                     if !store.todaysScheduledTasks.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("SCHEDULED")
-                                .font(.system(size: 11, weight: .bold))
+                                .font(.caption2.bold())
                                 .foregroundColor(C.muted)
                                 .tracking(1)
                             ForEach(store.todaysScheduledTasks) { task in
@@ -73,17 +73,17 @@ struct TodayView: View {
                     // Unscheduled section
                     VStack(alignment: .leading, spacing: 10) {
                         Text("UNSCHEDULED")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.muted)
                             .tracking(1)
 
                         if store.unscheduledTasks.isEmpty {
                             VStack(spacing: 4) {
                                 Text("Nothing unscheduled.")
-                                    .font(.system(size: 14))
+                                    .font(.callout)
                                     .foregroundColor(C.muted)
                                 Text("You're on top of it. 🎉")
-                                    .font(.system(size: 14))
+                                    .font(.callout)
                                     .foregroundColor(C.muted)
                             }
                             .frame(maxWidth: .infinity)
@@ -102,8 +102,8 @@ struct TodayView: View {
                     if store.todaysScheduledTasks.isEmpty && store.unscheduledTasks.isEmpty {
                         VStack(spacing: 12) {
                             Text("✨").font(.system(size: 48))
-                            Text("All clear!").font(.system(size: 17, weight: .bold)).foregroundColor(C.text)
-                            Text("Tap + to add your first task").font(.system(size: 14)).foregroundColor(C.muted)
+                            Text("All clear!").font(.headline.bold()).foregroundColor(C.text)
+                            Text("Tap + to add your first task").font(.callout).foregroundColor(C.muted)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.top, 60)
@@ -127,7 +127,7 @@ struct TodayView: View {
                         .frame(width: 58, height: 58)
                         .shadow(color: C.primary.opacity(0.4), radius: 12, x: 0, y: 6)
                     Text("+")
-                        .font(.system(size: 28, weight: .light))
+                        .font(.title.weight(.light))
                         .foregroundColor(.white)
                 }
             }

@@ -11,7 +11,7 @@ struct PriorityPickerView: View {
                     selected = p
                 } label: {
                     Text(p.label)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.footnote.bold())
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 9)
                         .foregroundColor(selected == p ? C.priorityColor(p) : C.muted)

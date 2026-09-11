@@ -10,7 +10,7 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 Text("Settings")
-                    .font(.system(size: 30, weight: .heavy))
+                    .font(.title.weight(.heavy))
                     .foregroundColor(C.text)
                     .tracking(-1)
                     .padding(.horizontal, 24)
@@ -29,7 +29,7 @@ struct SettingsView: View {
                         Divider().background(C.border)
                         HStack {
                             Text("Summary time")
-                                .font(.system(size: 15))
+                                .font(.subheadline)
                                 .foregroundColor(C.text)
                             Spacer()
                             DatePicker("", selection: morningTimeBinding, displayedComponents: .hourAndMinute)
@@ -56,14 +56,14 @@ struct SettingsView: View {
                     sectionHeader("Siri")
                     HStack(spacing: 12) {
                         Image(systemName: "waveform")
-                            .font(.system(size: 20))
+                            .font(.title3)
                             .foregroundColor(.purple)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Add Task Shortcut")
-                                .font(.system(size: 15))
+                                .font(.subheadline)
                                 .foregroundColor(C.text)
                             Text("Automatically available in Siri")
-                                .font(.system(size: 12))
+                                .font(.caption)
                                 .foregroundColor(C.muted)
                         }
                         Spacer()
@@ -73,11 +73,11 @@ struct SettingsView: View {
                     Divider().background(C.border).padding(.vertical, 8)
                     VStack(alignment: .leading, spacing: 6) {
                         Text("SAY TO SIRI")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.muted)
                             .tracking(0.8)
                         Text("\"Hey Siri, add task in GiGi\"")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.callout.weight(.semibold))
                             .foregroundColor(C.text)
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -94,14 +94,14 @@ struct SettingsView: View {
                             HStack {
                                 Text("🏷")
                                 Text(cat.name)
-                                    .font(.system(size: 15))
+                                    .font(.subheadline)
                                     .foregroundColor(C.text)
                                 Spacer()
                                 Circle()
                                     .fill(Color(hex: cat.color))
                                     .frame(width: 12, height: 12)
                                 Image(systemName: "chevron.right")
-                                    .font(.system(size: 12))
+                                    .font(.caption)
                                     .foregroundColor(C.muted)
                             }
                             .padding(.vertical, 4)
@@ -121,7 +121,7 @@ struct SettingsView: View {
                         Image(systemName: "plus.circle.fill")
                             .foregroundColor(C.primary)
                         Text("Add Category")
-                            .font(.system(size: 15, weight: .medium))
+                            .font(.subheadline.weight(.medium))
                             .foregroundColor(C.primary)
                         Spacer()
                     }
@@ -138,7 +138,7 @@ struct SettingsView: View {
                     sectionHeader("Task Defaults")
                     HStack {
                         Text("Default Duration")
-                            .font(.system(size: 15))
+                            .font(.subheadline)
                             .foregroundColor(C.text)
                         Spacer()
                         Picker("", selection: $store.defaultDuration) {
@@ -151,7 +151,7 @@ struct SettingsView: View {
                     Divider().background(C.border)
                     HStack {
                         Text("Default Priority")
-                            .font(.system(size: 15))
+                            .font(.subheadline)
                             .foregroundColor(C.text)
                         Spacer()
                         Picker("", selection: $store.defaultPriority) {
@@ -173,11 +173,11 @@ struct SettingsView: View {
                     Divider().background(C.border)
                     HStack {
                         Text("Version")
-                            .font(.system(size: 15))
+                            .font(.subheadline)
                             .foregroundColor(C.text)
                         Spacer()
                         Text(appVersionString)
-                            .font(.system(size: 15))
+                            .font(.subheadline)
                             .foregroundColor(C.muted)
                     }
                     Divider().background(C.border)
@@ -186,11 +186,11 @@ struct SettingsView: View {
                             Image(systemName: "ladybug")
                                 .foregroundColor(C.high)
                             Text("Report a Bug")
-                                .font(.system(size: 15))
+                                .font(.subheadline)
                                 .foregroundColor(C.high)
                             Spacer()
                             Image(systemName: "arrow.up.right")
-                                .font(.system(size: 12))
+                                .font(.caption)
                                 .foregroundColor(C.muted)
                         }
                     }
@@ -286,7 +286,7 @@ struct SettingsView: View {
     @ViewBuilder
     func sectionHeader(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
             .padding(.bottom, 10)
@@ -297,11 +297,11 @@ struct SettingsView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
-                    .font(.system(size: 15))
+                    .font(.subheadline)
                     .foregroundColor(C.text)
                 if let sub {
                     Text(sub)
-                        .font(.system(size: 12))
+                        .font(.caption)
                         .foregroundColor(C.muted)
                 }
             }
@@ -316,14 +316,14 @@ struct SettingsView: View {
     func valueRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
-                .font(.system(size: 15))
+                .font(.subheadline)
                 .foregroundColor(C.text)
             Spacer()
             Text(value)
-                .font(.system(size: 15))
+                .font(.subheadline)
                 .foregroundColor(C.muted)
             Image(systemName: "chevron.right")
-                .font(.system(size: 12))
+                .font(.caption)
                 .foregroundColor(C.muted)
         }
     }
@@ -343,17 +343,17 @@ struct SettingsView: View {
                             .fill(LinearGradient(colors: [C.primary, C.pink], startPoint: .topLeading, endPoint: .bottomTrailing))
                             .frame(width: 36, height: 36)
                         Text("G")
-                            .font(.system(size: 14, weight: .heavy))
+                            .font(.callout.weight(.heavy))
                             .foregroundColor(.white)
                     }
                     VStack(alignment: .leading, spacing: 1) {
                         HStack {
-                            Text("GiGi").font(.system(size: 12, weight: .bold)).foregroundColor(C.text)
+                            Text("GiGi").font(.caption.bold()).foregroundColor(C.text)
                             Spacer()
-                            Text("8:00 AM").font(.system(size: 11)).foregroundColor(C.muted)
+                            Text("8:00 AM").font(.caption2).foregroundColor(C.muted)
                         }
                         Text("\(scheduled) scheduled · \(unscheduled) unscheduled\(followUps > 0 ? " · \(followUps) follow-up\(followUps == 1 ? "" : "s")" : "")")
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(C.sub)
                     }
                 }
@@ -363,13 +363,13 @@ struct SettingsView: View {
                             HStack(spacing: 6) {
                                 Circle().fill(C.priorityColor(task.priority)).frame(width: 6, height: 6)
                                 Text(task.title)
-                                    .font(.system(size: 11, weight: .semibold))
+                                    .font(.caption2.weight(.semibold))
                                     .foregroundColor(C.text)
                                     .lineLimit(1)
                                 if let s = task.startTime, let p = task.period {
                                     Spacer()
                                     Text("\(s) \(p)")
-                                        .font(.system(size: 11))
+                                        .font(.caption2)
                                         .foregroundColor(C.muted)
                                 }
                             }
@@ -378,7 +378,7 @@ struct SettingsView: View {
                     .padding(.horizontal, 4)
                 }
                 Text("This is how your morning notification will appear.")
-                    .font(.system(size: 11))
+                    .font(.caption2)
                     .foregroundColor(C.muted)
             }
             .padding(12)

@@ -32,9 +32,9 @@ struct TaskDetailView: View {
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.callout.weight(.semibold))
                         Text("Back")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.subheadline.weight(.semibold))
                     }
                     .foregroundColor(C.primary)
                     .padding(.vertical, 10)
@@ -62,19 +62,19 @@ struct TaskDetailView: View {
                                 get: { task.title },
                                 set: { store.updateTitle(task.id, $0) }
                             ))
-                            .font(.system(size: 24, weight: .heavy))
+                            .font(.title2.weight(.heavy))
                             .foregroundColor(C.text)
                             .tracking(-0.5)
                             .tint(C.primary)
                             HStack(spacing: 10) {
                                 if let cd = task.createdDate {
                                     Text("Added \(formattedCreatedDate(cd))")
-                                        .font(.system(size: 12))
+                                        .font(.caption)
                                         .foregroundColor(C.muted)
                                 }
                                 if task.age > 0 {
                                     Text("· Carried \(task.age)d")
-                                        .font(.system(size: 12, weight: .semibold))
+                                        .font(.caption.weight(.semibold))
                                         .foregroundColor(C.med)
                                 }
                             }
@@ -101,24 +101,24 @@ struct TaskDetailView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("BOOKED")
-                                    .font(.system(size: 10, weight: .heavy))
+                                    .font(.caption2.weight(.heavy))
                                     .foregroundColor(C.green)
                                     .tracking(0.8)
                                 if let bd = task.bookedDate {
                                     Text(bookedDateFull(bd))
-                                        .font(.system(size: 13, weight: .semibold))
+                                        .font(.footnote.weight(.semibold))
                                         .foregroundColor(C.sub)
                                 }
                                 Text("\(s) – \(e) \(p)")
-                                    .font(.system(size: 15, weight: .bold))
+                                    .font(.subheadline.bold())
                                     .foregroundColor(C.text)
                             }
                             Spacer()
                             HStack(spacing: 5) {
                                 Image(systemName: "calendar")
-                                    .font(.system(size: 12))
+                                    .font(.caption)
                                 Text("Synced")
-                                    .font(.system(size: 12, weight: .semibold))
+                                    .font(.caption.weight(.semibold))
                             }
                             .foregroundColor(C.green)
                         }
@@ -132,15 +132,15 @@ struct TaskDetailView: View {
                     if task.state == .waiting {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("WAITING ON")
-                                .font(.system(size: 10, weight: .heavy))
+                                .font(.caption2.weight(.heavy))
                                 .foregroundColor(C.purple)
                                 .tracking(0.8)
                             Text(task.waitingOn ?? "Someone")
-                                .font(.system(size: 17, weight: .bold))
+                                .font(.headline.bold())
                                 .foregroundColor(C.text)
                             if let note = task.waitingNote {
                                 Text(note)
-                                    .font(.system(size: 13))
+                                    .font(.footnote)
                                     .foregroundColor(C.sub)
                                     .lineSpacing(4)
                                     .padding(.top, 2)
@@ -148,7 +148,7 @@ struct TaskDetailView: View {
                             HStack(spacing: 8) {
                                 Button { store.showNudgeSheet = true } label: {
                                     Label("Nudge", systemImage: "envelope")
-                                        .font(.system(size: 13, weight: .bold))
+                                        .font(.footnote.bold())
                                         .foregroundColor(C.purple)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 10)
@@ -158,7 +158,7 @@ struct TaskDetailView: View {
                                 .accessibilityHint("Send a follow-up message")
                                 Button { store.unblockTask(task.id) } label: {
                                     Label("Got It", systemImage: "checkmark")
-                                        .font(.system(size: 13, weight: .bold))
+                                        .font(.footnote.bold())
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 10)
@@ -182,7 +182,7 @@ struct TaskDetailView: View {
                         get: { task.notes },
                         set: { store.updateNotes(task.id, $0) }
                     ), axis: .vertical)
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.text)
                         .tint(C.primary)
                         .lineSpacing(4)
@@ -198,7 +198,7 @@ struct TaskDetailView: View {
                     if !task.category.isEmpty {
                         sectionLabel("Category")
                         Text(task.category)
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.footnote.bold())
                             .foregroundColor(C.primary)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 6)
@@ -326,7 +326,7 @@ struct TaskDetailView: View {
             }
         }()
         Text(label)
-            .font(.system(size: 12, weight: .bold))
+            .font(.caption.bold())
             .foregroundColor(color)
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
@@ -336,7 +336,7 @@ struct TaskDetailView: View {
 
     @ViewBuilder func sectionLabel(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
             .padding(.bottom, 8)

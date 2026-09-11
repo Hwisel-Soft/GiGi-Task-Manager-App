@@ -29,16 +29,16 @@ struct TasksView: View {
             VStack(spacing: 0) {
                 HStack {
                     Text("Tasks")
-                        .font(.system(size: 30, weight: .heavy))
+                        .font(.title.weight(.heavy))
                         .foregroundColor(C.text)
                         .tracking(-1)
                     Spacer()
                     Button { showSortSheet = true } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.up.arrow.down")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.caption.weight(.semibold))
                             Text(sort.rawValue)
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.caption.weight(.semibold))
                         }
                         .foregroundColor(C.primary)
                         .padding(.horizontal, 12)
@@ -97,7 +97,7 @@ struct TasksView: View {
                         .frame(width: 58, height: 58)
                         .shadow(color: C.primary.opacity(0.4), radius: 12, x: 0, y: 6)
                     Text("+")
-                        .font(.system(size: 28, weight: .light))
+                        .font(.title.weight(.light))
                         .foregroundColor(.white)
                 }
             }
@@ -166,7 +166,7 @@ struct TasksView: View {
     func filterChip(_ f: TaskFilter) -> some View {
         Button { filter = f } label: {
             Text(f.rawValue)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.footnote.weight(.semibold))
                 .foregroundColor(filter == f ? .white : C.text)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 7)
@@ -185,12 +185,12 @@ struct TasksView: View {
         } label: {
             HStack(spacing: 4) {
                 Text("\(title) (\(count))")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.caption2.bold())
                     .foregroundColor(isExpanded ? C.muted : C.sub)
                     .tracking(0.8)
                 Spacer()
                 Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.caption2.weight(.semibold))
                     .foregroundColor(isExpanded ? C.muted : C.sub)
             }
             .frame(minHeight: 44)
@@ -212,10 +212,10 @@ struct TasksView: View {
         VStack(spacing: 12) {
             Text("✨").font(.system(size: 48))
             Text("All clear!")
-                .font(.system(size: 17, weight: .bold))
+                .font(.headline.bold())
                 .foregroundColor(C.text)
             Text("Tap + to add your first task")
-                .font(.system(size: 14))
+                .font(.callout)
                 .foregroundColor(C.muted)
         }
         .frame(maxWidth: .infinity)
@@ -230,15 +230,15 @@ struct TasksView: View {
         if !alertTasks.isEmpty {
             HStack(spacing: 5) {
                 Image(systemName: "exclamationmark.circle.fill")
-                    .font(.system(size: 11))
+                    .font(.caption2)
                     .foregroundColor(C.high)
                 Text("NEEDS ATTENTION")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.caption2.bold())
                     .foregroundColor(C.high)
                     .tracking(0.8)
                 Spacer()
                 Text("\(alertTasks.count)")
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.caption2.bold())
                     .foregroundColor(C.high)
             }
             .padding(.top, 4)
@@ -255,7 +255,7 @@ struct TasksView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 20)
             Text("SORT BY")
-                .font(.system(size: 11, weight: .bold))
+                .font(.caption2.bold())
                 .foregroundColor(C.muted)
                 .tracking(0.8)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -268,12 +268,12 @@ struct TasksView: View {
                 } label: {
                     HStack {
                         Text(s.rawValue)
-                            .font(.system(size: 16))
+                            .font(.callout)
                             .foregroundColor(C.text)
                         Spacer()
                         if sort == s {
                             Image(systemName: "checkmark")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.callout.weight(.semibold))
                                 .foregroundColor(C.primary)
                         }
                     }

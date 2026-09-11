@@ -18,7 +18,7 @@ struct AddTaskSheet: View {
                     // Title input
                     HStack(spacing: 10) {
                         TextField("Task title…", text: $store.addForm.title)
-                            .font(.system(size: 15))
+                            .font(.subheadline)
                             .foregroundColor(C.text)
                             .tint(C.primary)
                             .submitLabel(.done)
@@ -39,7 +39,7 @@ struct AddTaskSheet: View {
                                         value: speechRec.isRecording
                                     )
                                 Image(systemName: speechRec.isRecording ? "stop.fill" : "mic")
-                                    .font(.system(size: 14))
+                                    .font(.callout)
                                     .foregroundColor(speechRec.isRecording ? .red : C.primary)
                             }
                         }
@@ -91,7 +91,7 @@ struct AddTaskSheet: View {
                             ForEach(durations, id: \.self) { d in
                                 Button { store.addForm.duration = d } label: {
                                     Text(d)
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.callout.weight(.semibold))
                                         .foregroundColor(store.addForm.duration == d ? C.primary : C.text)
                                         .padding(.horizontal, 14)
                                         .padding(.vertical, 8)
@@ -121,7 +121,7 @@ struct AddTaskSheet: View {
                             HStack {
                                 Image(systemName: "plus.circle").foregroundColor(C.primary)
                                 Text("Add deadline")
-                                    .font(.system(size: 14))
+                                    .font(.callout)
                                     .foregroundColor(C.primary)
                                 Spacer()
                             }
@@ -154,7 +154,7 @@ struct AddTaskSheet: View {
                     // Notes
                     label("Notes")
                     TextField("Add notes…", text: $store.addForm.notes, axis: .vertical)
-                        .font(.system(size: 14))
+                        .font(.callout)
                         .foregroundColor(C.text)
                         .tint(C.primary)
                         .lineLimit(3...6)
@@ -166,7 +166,7 @@ struct AddTaskSheet: View {
                     // Add button
                     Button { store.addTask() } label: {
                         Text("Add Task")
-                            .font(.system(size: 17, weight: .heavy))
+                            .font(.headline.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 17)
@@ -246,7 +246,7 @@ struct AddTaskSheet: View {
                 let noneSelected = store.addForm.category.isEmpty
                 Button { store.addForm.category = "" } label: {
                     Text("None")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.footnote.weight(.semibold))
                         .foregroundColor(noneSelected ? C.primary : C.muted)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 7)
@@ -264,7 +264,7 @@ struct AddTaskSheet: View {
                         HStack(spacing: 6) {
                             Circle().fill(Color(hex: cat.color)).frame(width: 8, height: 8)
                             Text(cat.name)
-                                .font(.system(size: 13, weight: .semibold))
+                                .font(.footnote.weight(.semibold))
                                 .foregroundColor(selected ? C.primary : C.text)
                         }
                         .padding(.horizontal, 12)
@@ -282,7 +282,7 @@ struct AddTaskSheet: View {
 
     @ViewBuilder func label(_ s: String) -> some View {
         Text(s.uppercased())
-            .font(.system(size: 11, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
     }

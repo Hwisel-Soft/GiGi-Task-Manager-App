@@ -70,7 +70,7 @@ struct TaskCardView: View {
             // Content
             VStack(alignment: .leading, spacing: 5) {
                 Text(task.title)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.subheadline.bold())
                     .foregroundColor(C.text)
                     .lineLimit(1)
 
@@ -79,22 +79,22 @@ struct TaskCardView: View {
                         let dateLabel = task.bookedDate.map { scheduledDateLabel($0) } ?? ""
                         let timeLabel = dateLabel.isEmpty ? "\(s)–\(e) \(p)" : "\(dateLabel) · \(s)–\(e) \(p)"
                         Text(timeLabel)
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.caption.weight(.semibold))
                             .foregroundColor(store.isLapsed(task) ? C.high : C.primary)
                     }
                     if task.age > 0 {
                         Text("\(task.age)d")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.med)
                     }
                     if let cd = task.createdDate {
                         Text(shortCreatedDate(cd))
-                            .font(.system(size: 11))
+                            .font(.caption2)
                             .foregroundColor(C.muted)
                     }
                     if let dl = task.deadline, daysUntilDeadline(dl) <= 3 {
                         Text("Due \(formattedDeadline(dl))")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.caption2.bold())
                             .foregroundColor(C.high)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 1)
@@ -107,7 +107,7 @@ struct TaskCardView: View {
                                 .fill(store.categoryColor(task.category))
                                 .frame(width: 6, height: 6)
                             Text(task.category)
-                                .font(.system(size: 11))
+                                .font(.caption2)
                                 .foregroundColor(C.muted)
                         }
                     }
@@ -130,7 +130,7 @@ struct TaskCardView: View {
                 if isOpen { close() } else { open() }
             } label: {
                 Image(systemName: "ellipsis")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.callout.weight(.medium))
                     .foregroundColor(C.muted)
                     .padding(.horizontal, 14)
                     .frame(maxHeight: .infinity)
@@ -158,7 +158,7 @@ struct TaskCardView: View {
             }
         }()
         Text(label)
-            .font(.system(size: 10, weight: .bold))
+            .font(.caption2.bold())
             .foregroundColor(fg)
             .padding(.horizontal, 7)
             .padding(.vertical, 2)
@@ -182,7 +182,7 @@ struct TaskCardView: View {
         }()
         if !label.isEmpty {
             Text(label)
-                .font(.system(size: 10, weight: .bold))
+                .font(.caption2.bold())
                 .foregroundColor(fg)
                 .padding(.horizontal, 7)
                 .padding(.vertical, 2)
@@ -195,9 +195,9 @@ struct TaskCardView: View {
     func actionBtn(label: String, icon: String? = nil, emoji: String? = nil, bg: Color, cornerRight: CGFloat = 0, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
-                if let icon { Image(systemName: icon).font(.system(size: 16, weight: .medium)) }
-                else if let emoji { Text(emoji).font(.system(size: 16)) }
-                Text(label).font(.system(size: 12, weight: .bold))
+                if let icon { Image(systemName: icon).font(.callout.weight(.medium)) }
+                else if let emoji { Text(emoji).font(.callout) }
+                Text(label).font(.caption.bold())
             }
             .foregroundColor(.white)
             .frame(width: 68)
