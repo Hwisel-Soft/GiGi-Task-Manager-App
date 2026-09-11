@@ -225,8 +225,24 @@ final class AppStore {
                 let days = cal.dateComponents([.day], from: cal.startOfDay(for: d), to: today).day ?? 0
                 if tasks[i].waitingDays != days { tasks[i].waitingDays = max(0, days); changed = true }
             }
+            // Roll past-date booked tasks forward to tomorrow at the same time
+            if tasks[i].state == .booked,
+               let bd = tasks[i].bookedDate,
+               let bookedDay = isoFmt.date(from: bd),
+               cal.startOfDay(for: bookedDay) < today {
+                let tomorrow = cal.date(byAdding: .day, value: 1, to: today)!
+                tasks[i].bookedDate = isoFmt.string(from: tomorrow)
+                tasks[i].age += 1
+                notifSvc.cancelSessionEnd(taskId: tasks[i].id)
+                changed = true
+            }
         }
-        if changed { save() }
+        if changed {
+            save()
+            for task in tasks where task.state == .booked {
+                scheduleSessionEndNotification(for: task)
+            }
+        }
     }
 
     // MARK: Computed
@@ -247,9 +263,34 @@ final class AppStore {
 
     var waitingTasks: [GTask] { tasks.filter { $0.state == .waiting } }
     var hasOverdueWaiting: Bool { waitingTasks.contains { isFollowUpDue($0) } }
+    var lapsedTasks: [GTask] {
+        let now = Date()
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: now)
+        let nowMins = Calendar.current.component(.hour, from: now) * 60
+                    + Calendar.current.component(.minute, from: now)
+        return tasks.filter { t in
+            guard t.state == .booked,
+                  let bd = t.bookedDate, bd == todayStr,
+                  let end = t.endTime, let p = t.period else { return false }
+            return nowMins > timeToMinutes(end, p)
+        }
+        .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
+    }
     var scheduledTasks: [GTask] {
-        tasks.filter { $0.state == .booked }
-            .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
+        let now = Date()
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: now)
+        let nowMins = Calendar.current.component(.hour, from: now) * 60
+                    + Calendar.current.component(.minute, from: now)
+        return tasks.filter { t in
+            guard t.state == .booked else { return false }
+            if let bd = t.bookedDate, bd == todayStr,
+               let end = t.endTime, let p = t.period,
+               nowMins > timeToMinutes(end, p) { return false }
+            return true
+        }
+        .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
     }
     var todaysScheduledTasks: [GTask] {
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
@@ -294,9 +335,7 @@ final class AppStore {
     }
 
     var tasksAlertCount: Int {
-        let lapsed = tasks.filter { isLapsed($0) }.count
-        let overdueWaiting = waitingTasks.filter { isFollowUpDue($0) }.count
-        return lapsed + overdueWaiting
+        lapsedTasks.count + waitingTasks.filter { isFollowUpDue($0) }.count
     }
 
     func timeToMinutes(_ time: String?, _ period: String?) -> Int {
