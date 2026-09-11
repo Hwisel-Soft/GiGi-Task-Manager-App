@@ -4,40 +4,37 @@ struct CalendarView: View {
     @Environment(AppStore.self) var store
     private var C: GColors { store.C }
 
-    private var weekDays: [(abbr: String, date: Int)] {
+    @State private var weekOffset: Int = 0
+
+    private var startOfViewedWeek: Date {
         let cal = Calendar.current
         let today = Date()
         let weekday = cal.component(.weekday, from: today) - 1
-        let startOfWeek = cal.date(byAdding: .day, value: -weekday, to: today)!
+        let sun = cal.date(byAdding: .day, value: -weekday, to: cal.startOfDay(for: today))!
+        return cal.date(byAdding: .weekOfYear, value: weekOffset, to: sun)!
+    }
+
+    private var weekDays: [(abbr: String, date: Int)] {
+        let cal = Calendar.current
         return (0..<7).map { offset in
-            let d = cal.date(byAdding: .day, value: offset, to: startOfWeek)!
-            let dayNum = cal.component(.day, from: d)
-            let abbr = DateFormatter().shortWeekdaySymbols[offset]
-            return (abbr, dayNum)
+            let d = cal.date(byAdding: .day, value: offset, to: startOfViewedWeek)!
+            return (DateFormatter().shortWeekdaySymbols[offset], cal.component(.day, from: d))
         }
     }
 
     private var monthLabel: String {
         let f = DateFormatter(); f.dateFormat = "MMMM yyyy"
-        return f.string(from: Date())
+        return f.string(from: startOfViewedWeek)
     }
 
     private var weekRangeLabel: String {
-        let cal = Calendar.current
-        let today = Date()
-        let weekday = cal.component(.weekday, from: today) - 1
-        let sun = cal.date(byAdding: .day, value: -weekday, to: today)!
-        let sat = cal.date(byAdding: .day, value: 6 - weekday, to: today)!
+        let sat = Calendar.current.date(byAdding: .day, value: 6, to: startOfViewedWeek)!
         let f = DateFormatter(); f.dateFormat = "MMM d"
-        return "\(f.string(from: sun)) – \(f.string(from: sat))"
+        return "\(f.string(from: startOfViewedWeek)) – \(f.string(from: sat))"
     }
 
     private var selectedDayISO: String {
-        let cal = Calendar.current
-        let today = Date()
-        let weekday = cal.component(.weekday, from: today) - 1
-        let startOfWeek = cal.date(byAdding: .day, value: -weekday, to: cal.startOfDay(for: today))!
-        let d = cal.date(byAdding: .day, value: store.calSelDay, to: startOfWeek)!
+        let d = Calendar.current.date(byAdding: .day, value: store.calSelDay, to: startOfViewedWeek)!
         let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
         return f.string(from: d)
     }
@@ -70,20 +67,38 @@ struct CalendarView: View {
                     Text(monthLabel)
                         .font(.footnote)
                         .foregroundColor(C.muted)
-                    HStack {
-                        Text(weekRangeLabel)
-                            .font(.title.weight(.heavy))
-                            .foregroundColor(C.text)
-                            .tracking(-0.5)
-                        Spacer()
-                        ZStack {
-                            Circle()
-                                .fill(C.pinkLight)
-                                .frame(width: 40, height: 40)
-                            Image(systemName: "calendar")
-                                .font(.callout)
-                                .foregroundColor(C.pink)
+                    HStack(spacing: 0) {
+                        Button { weekOffset -= 1 } label: {
+                            Image(systemName: "chevron.left")
+                                .font(.callout.weight(.semibold))
+                                .foregroundColor(C.primary)
+                                .frame(width: 36, height: 36)
                         }
+                        .buttonStyle(.plain)
+
+                        VStack(spacing: 2) {
+                            Text(weekRangeLabel)
+                                .font(.title.weight(.heavy))
+                                .foregroundColor(C.text)
+                                .tracking(-0.5)
+                            if weekOffset != 0 {
+                                Button("Today") {
+                                    weekOffset = 0
+                                    store.calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
+                                }
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(C.primary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+
+                        Button { weekOffset += 1 } label: {
+                            Image(systemName: "chevron.right")
+                                .font(.callout.weight(.semibold))
+                                .foregroundColor(C.primary)
+                                .frame(width: 36, height: 36)
+                        }
+                        .buttonStyle(.plain)
                     }
 
                     // Week strip
@@ -162,6 +177,7 @@ struct CalendarView: View {
             .background(C.bg)
             .navigationBarHidden(true)
             .onAppear {
+                weekOffset = 0
                 store.calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
             }
 
