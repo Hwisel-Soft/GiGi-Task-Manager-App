@@ -161,6 +161,9 @@ struct CalendarView: View {
             }
             .background(C.bg)
             .navigationBarHidden(true)
+            .onAppear {
+                store.calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
+            }
 
             // Unscheduled Drawer
             UnscheduledDrawer()

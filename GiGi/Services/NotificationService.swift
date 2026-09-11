@@ -3,6 +3,7 @@ import Foundation
 
 final class NotificationService {
     static let morningId = "gigi.morning.summary"
+    static func sessionEndId(_ taskId: Int) -> String { "gigi.session.\(taskId)" }
 
     func requestPermission() async -> Bool {
         do {
@@ -41,5 +42,24 @@ final class NotificationService {
     func cancelMorningSummary() {
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(withIdentifiers: [Self.morningId])
+    }
+
+    func scheduleSessionEnd(taskId: Int, title: String, endDate: Date) {
+        guard endDate > Date() else { return }
+        let center = UNUserNotificationCenter.current()
+        let id = Self.sessionEndId(taskId)
+        center.removePendingNotificationRequests(withIdentifiers: [id])
+        let content = UNMutableNotificationContent()
+        content.title = "Session ended — \(title)"
+        content.body = "Did you finish it? Open GiGi to log your progress."
+        content.sound = .default
+        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: endDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+    }
+
+    func cancelSessionEnd(taskId: Int) {
+        let id = Self.sessionEndId(taskId)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }
 }

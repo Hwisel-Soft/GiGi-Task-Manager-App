@@ -194,6 +194,7 @@ final class AppStore {
         ud.set(nextId, forKey: "gigi.nextId")
         ud.set(nextCatId, forKey: "gigi.nextCatId")
         updateBadge()
+        scheduleMorningNotification()
     }
 
     func updateBadge() {
@@ -355,6 +356,7 @@ final class AppStore {
         let timeFmt = DateFormatter(); timeFmt.timeStyle = .short
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
+        notifSvc.cancelSessionEnd(taskId: id)
         update(id) { t in
             t.state = .completed
             t.completedTime = timeFmt.string(from: Date())
@@ -369,6 +371,7 @@ final class AppStore {
     func deleteTask(_ id: Int) {
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
+        notifSvc.cancelSessionEnd(taskId: id)
         update(id) { t in
             t.state = .deleted
             t.deletedDateLabel = isoFmt.string(from: Date())
@@ -388,6 +391,7 @@ final class AppStore {
     }
 
     func unblockTask(_ id: Int) {
+        notifSvc.cancelSessionEnd(taskId: id)
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         let today = Calendar.current.startOfDay(for: Date())
         update(id) { t in
@@ -415,6 +419,7 @@ final class AppStore {
 
     func carryForward(_ id: Int) {
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
+        notifSvc.cancelSessionEnd(taskId: id)
         update(id) { t in
             t.state = .unscheduled
             t.age += 1
@@ -554,6 +559,9 @@ final class AppStore {
         }
 
         showBookTime = false
+        if let booked = tasks.first(where: { $0.id == id }) {
+            scheduleSessionEndNotification(for: booked)
+        }
         goBack()
     }
 
@@ -638,7 +646,7 @@ final class AppStore {
             notifSvc.cancelMorningSummary()
             return
         }
-        let sched = scheduledTasks.count
+        let sched = todaysScheduledTasks.count
         let unsched = unscheduledTasks.count
         let followUp = waitingTasks.filter { isFollowUpDue($0) }.count
         var parts: [String] = []
@@ -647,6 +655,22 @@ final class AppStore {
         if followUp > 0 { parts.append("\(followUp) follow-up\(followUp == 1 ? "" : "s")") }
         let body = parts.isEmpty ? "All clear for today!" : parts.joined(separator: " · ")
         notifSvc.scheduleMorningSummary(hour: morningHour, minute: morningMinute, body: body)
+    }
+
+    // MARK: Session End Notifications
+
+    func scheduleSessionEndNotification(for task: GTask) {
+        guard lapsedAlert,
+              let bd = task.bookedDate, let end = task.endTime, let p = task.period else { return }
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        guard let dayDate = isoFmt.date(from: bd) else { return }
+        let endMins = timeToMinutes(end, p)
+        guard endMins > 0 else { return }
+        let eh24 = endMins / 60
+        let em = endMins % 60
+        let cal = Calendar.current
+        guard let endDate = cal.date(bySettingHour: eh24, minute: em, second: 0, of: dayDate) else { return }
+        notifSvc.scheduleSessionEnd(taskId: task.id, title: task.title, endDate: endDate)
     }
 
     func cancelMorningNotification() {

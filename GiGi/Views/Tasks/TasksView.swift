@@ -10,6 +10,7 @@ enum TaskFilter: String, CaseIterable {
 enum TaskSort: String, CaseIterable {
     case priority = "Priority"
     case dueTime = "Due time"
+    case scheduledDate = "Scheduled date"
     case dateAdded = "Date added"
 }
 
@@ -155,6 +156,11 @@ struct TasksView: View {
                 let aHas = a.startTime != nil, bHas = b.startTime != nil
                 if aHas != bHas { return aHas }
                 if aHas { return store.timeToMinutes(a.startTime, a.period) < store.timeToMinutes(b.startTime, b.period) }
+                return (pOrd[a.priority] ?? 1) < (pOrd[b.priority] ?? 1)
+            case .scheduledDate:
+                let aHas = a.bookedDate != nil, bHas = b.bookedDate != nil
+                if aHas != bHas { return aHas }
+                if aHas { return (a.bookedDate ?? "") < (b.bookedDate ?? "") }
                 return (pOrd[a.priority] ?? 1) < (pOrd[b.priority] ?? 1)
             case .dateAdded:
                 return (a.createdDate ?? "9999-99-99") < (b.createdDate ?? "9999-99-99")
