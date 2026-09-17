@@ -233,6 +233,7 @@ final class AppStore {
                 let tomorrow = cal.date(byAdding: .day, value: 1, to: today)!
                 tasks[i].bookedDate = isoFmt.string(from: tomorrow)
                 tasks[i].age += 1
+                tasks[i].autoRolled = true
                 notifSvc.cancelSessionEnd(taskId: tasks[i].id)
                 changed = true
             }
@@ -548,6 +549,22 @@ final class AppStore {
                 form.date = booked < today ? today : booked
             }
         }
+        // Pre-fill time: existing booked time when rescheduling, else current time rounded to 15 min
+        if let s = task?.startTime, let p = task?.period {
+            let parts = s.split(separator: ":").compactMap { Int($0) }
+            if let h = parts.first, let m = parts.dropFirst().first {
+                form.period = p; form.hour = h; form.minute = m
+            }
+        } else {
+            let cal = Calendar.current; let now = Date()
+            var h = cal.component(.hour, from: now)
+            var m = cal.component(.minute, from: now)
+            let rem = m % 15; if rem > 0 { m += (15 - rem) }
+            if m >= 60 { h += 1; m = 0 }; h = min(h, 23)
+            form.period = h >= 12 ? "PM" : "AM"
+            form.hour = h % 12 == 0 ? 12 : h % 12
+            form.minute = m
+        }
         bookForm = form
         showBookTime = true
     }
@@ -583,6 +600,7 @@ final class AppStore {
             t.duration = bookForm.duration
             t.bookedDate = isoDate
             t.calendarEventId = nil
+            t.autoRolled = nil
         }
 
         if calSync, let task = tasks.first(where: { $0.id == id }) {
@@ -685,11 +703,11 @@ final class AppStore {
             notifSvc.cancelMorningSummary()
             return
         }
-        let sched = todaysScheduledTasks.count
+        let lapsed = lapsedTasks.count
         let unsched = unscheduledTasks.count
         let followUp = waitingTasks.filter { isFollowUpDue($0) }.count
         var parts: [String] = []
-        if sched > 0 { parts.append("\(sched) scheduled") }
+        if lapsed > 0 { parts.append("\(lapsed) lapsed") }
         if unsched > 0 { parts.append("\(unsched) unscheduled") }
         if followUp > 0 { parts.append("\(followUp) follow-up\(followUp == 1 ? "" : "s")") }
         let body = parts.isEmpty ? "All clear for today!" : parts.joined(separator: " · ")
