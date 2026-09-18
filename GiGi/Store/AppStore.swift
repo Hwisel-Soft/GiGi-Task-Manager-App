@@ -256,9 +256,9 @@ final class AppStore {
         let todayStr = isoFmt.string(from: now)
         return tasks.first { t in
             guard t.state == .booked, !dismissedLapseIds.contains(t.id),
-                  let end = t.endTime, let p = t.period else { return false }
+                  t.endTime != nil, t.period != nil else { return false }
             if let bd = t.bookedDate, bd != todayStr { return false }
-            return nowMins > timeToMinutes(end, p)
+            return nowMins > endTimeMinutes(t)
         }
     }
 
@@ -273,8 +273,8 @@ final class AppStore {
         return tasks.filter { t in
             guard t.state == .booked,
                   let bd = t.bookedDate, bd == todayStr,
-                  let end = t.endTime, let p = t.period else { return false }
-            return nowMins > timeToMinutes(end, p)
+                  t.endTime != nil, t.period != nil else { return false }
+            return nowMins > endTimeMinutes(t)
         }
         .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
     }
@@ -287,8 +287,8 @@ final class AppStore {
         return tasks.filter { t in
             guard t.state == .booked else { return false }
             if let bd = t.bookedDate, bd == todayStr,
-               let end = t.endTime, let p = t.period,
-               nowMins > timeToMinutes(end, p) { return false }
+               t.endTime != nil, t.period != nil,
+               nowMins > endTimeMinutes(t) { return false }
             return true
         }
         .sorted { timeToMinutes($0.startTime, $0.period) < timeToMinutes($1.startTime, $1.period) }
@@ -331,8 +331,8 @@ final class AppStore {
         if let bd = task.bookedDate, bd != todayStr { return false }
         let nowMins = Calendar.current.component(.hour, from: now) * 60
                     + Calendar.current.component(.minute, from: now)
-        guard let end = task.endTime, let p = task.period else { return false }
-        return nowMins > timeToMinutes(end, p)
+        guard task.endTime != nil, task.period != nil else { return false }
+        return nowMins > endTimeMinutes(task)
     }
 
     var tasksAlertCount: Int {
@@ -346,6 +346,15 @@ final class AppStore {
         if period == "PM" && h != 12 { h += 12 }
         if period == "AM" && h == 12 { h = 0 }
         return h * 60 + m
+    }
+
+    // End time uses the start period, which is wrong when the task crosses AM/PM noon boundary.
+    // e.g. 11:30 AM + 1h stores endTime="12:30", period="AM" → timeToMinutes gives 30 (midnight).
+    // Fix: if computed end < start, the end crossed a 12h boundary — add 12*60.
+    func endTimeMinutes(_ task: GTask) -> Int {
+        let start = timeToMinutes(task.startTime, task.period)
+        let end = timeToMinutes(task.endTime, task.period)
+        return end < start ? end + 12 * 60 : end
     }
 
     func categoryColor(_ name: String) -> Color {
@@ -718,13 +727,13 @@ final class AppStore {
 
     func scheduleSessionEndNotification(for task: GTask) {
         guard lapsedAlert,
-              let bd = task.bookedDate, let end = task.endTime, let p = task.period else { return }
+              let bd = task.bookedDate, task.endTime != nil, task.period != nil else { return }
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         guard let dayDate = isoFmt.date(from: bd) else { return }
-        let endMins = timeToMinutes(end, p)
-        guard endMins > 0 else { return }
-        let eh24 = endMins / 60
-        let em = endMins % 60
+        let correctedEndMins = endTimeMinutes(task)
+        guard correctedEndMins > 0 else { return }
+        let eh24 = correctedEndMins / 60
+        let em = correctedEndMins % 60
         let cal = Calendar.current
         guard let endDate = cal.date(bySettingHour: eh24, minute: em, second: 0, of: dayDate) else { return }
         notifSvc.scheduleSessionEnd(taskId: task.id, title: task.title, endDate: endDate)
@@ -754,7 +763,7 @@ final class AppStore {
             let taskDate = t.bookedDate ?? isoFmt.string(from: Date())
             if taskDate != targetDate { return false }
             let es = timeToMinutes(t.startTime, t.period)
-            let ee = timeToMinutes(t.endTime, t.period)
+            let ee = endTimeMinutes(t)
             return selStart < ee && selEnd > es
         }
     }
