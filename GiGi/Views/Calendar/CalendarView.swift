@@ -55,11 +55,17 @@ struct CalendarView: View {
             .sorted { store.timeToMinutes($0.startTime, $0.period) < store.timeToMinutes($1.startTime, $1.period) }
     }
 
+    private var lapsedForSelectedDay: [GTask] {
+        let dateStr = selectedDayISO
+        return store.lapsedTasks.filter { $0.bookedDate == dateStr }
+    }
+
     private var totalPlannedForSelectedDay: Int {
         let dateStr = selectedDayISO
         let booked = tasksForSelectedDay.count
+        let lapsed = store.lapsedTasks.filter { $0.bookedDate == dateStr }.count
         let completed = store.completedTasks.filter { $0.completedDateLabel == dateStr }.count
-        return booked + completed
+        return booked + lapsed + completed
     }
 
     private var colorfulBgs: [Color] {
@@ -156,7 +162,7 @@ struct CalendarView: View {
 
                 // Task list for selected day
                 ScrollView {
-                    if tasksForSelectedDay.isEmpty && completedForSelectedDay.isEmpty {
+                    if tasksForSelectedDay.isEmpty && completedForSelectedDay.isEmpty && lapsedForSelectedDay.isEmpty {
                         VStack(spacing: 12) {
                             Text(dayEmoji).font(.system(size: 48))
                             Text(dayEmptyTitle)
@@ -172,6 +178,10 @@ struct CalendarView: View {
                         VStack(spacing: 10) {
                             ForEach(Array(tasksForSelectedDay.enumerated()), id: \.element.id) { idx, task in
                                 calTaskCard(task, bgIndex: idx % colorfulBgs.count)
+                                    .onTapGesture { store.openTask(task.id) }
+                            }
+                            ForEach(Array(lapsedForSelectedDay.enumerated()), id: \.element.id) { idx, task in
+                                calTaskCard(task, bgIndex: idx % colorfulBgs.count, lapsed: true)
                                     .onTapGesture { store.openTask(task.id) }
                             }
                             ForEach(Array(completedForSelectedDay.enumerated()), id: \.element.id) { idx, task in
@@ -221,28 +231,35 @@ struct CalendarView: View {
     }
 
     @ViewBuilder
-    func calTaskCard(_ task: GTask, bgIndex: Int, completed: Bool = false) -> some View {
+    func calTaskCard(_ task: GTask, bgIndex: Int, completed: Bool = false, lapsed: Bool = false) -> some View {
         let bg = store.colorfulCards ? colorfulBgs[bgIndex] : C.card
         let isAutoRolled = task.autoRolled == true
+        let iconName = completed ? "checkmark" : (lapsed ? "exclamationmark.circle" : "clock")
+        let iconColor = completed ? C.green : (lapsed ? C.high : C.priorityColor(task.priority))
         HStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill((completed ? C.green : C.priorityColor(task.priority)).opacity(0.15))
+                    .fill(iconColor.opacity(0.15))
                     .frame(width: 48, height: 48)
-                Image(systemName: completed ? "checkmark" : "clock")
+                Image(systemName: iconName)
                     .font(.body)
-                    .foregroundColor(completed ? C.green : C.priorityColor(task.priority))
+                    .foregroundColor(iconColor)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
                     .font(.subheadline.bold())
-                    .foregroundColor(completed ? C.muted : C.text)
+                    .foregroundColor((completed || lapsed) ? C.muted : C.text)
                     .lineLimit(1)
                     .strikethrough(completed, color: C.muted)
                 if let s = task.startTime, let e = task.endTime, let p = task.period {
                     Text("\(s) – \(e) \(p)")
                         .font(.caption.weight(.semibold))
                         .foregroundColor(C.muted)
+                }
+                if lapsed {
+                    Text("Lapsed")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundColor(C.high)
                 }
                 if isAutoRolled {
                     Text("↻ Rolled forward")
@@ -253,16 +270,19 @@ struct CalendarView: View {
             Spacer()
         }
         .padding(14)
-        .background(completed ? C.card.opacity(0.5) : bg)
+        .background(lapsed ? C.highLight : (completed ? C.card.opacity(0.5) : bg))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay {
-            if isAutoRolled {
+            if lapsed {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(C.high.opacity(0.4), lineWidth: 1.5)
+            } else if isAutoRolled {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [5]))
                     .foregroundColor(C.med.opacity(0.6))
             }
         }
-        .opacity(completed ? 0.75 : 1.0)
+        .opacity((completed || lapsed) ? 0.75 : 1.0)
         .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 
