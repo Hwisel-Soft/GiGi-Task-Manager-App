@@ -265,6 +265,9 @@ final class AppStore {
     }
 
     private func pushToKVStore() {
+        // nextId > 11 means at least one real task exists or was created here.
+        // If nextId == 11 we only have sample data — don't overwrite iCloud.
+        guard nextId > 11 else { return }
         let kvs = NSUbiquitousKeyValueStore.default
         let ud = sharedDefaults
         if let d = ud.data(forKey: "gigi.tasks") { kvs.set(d, forKey: "gigi.tasks") }
