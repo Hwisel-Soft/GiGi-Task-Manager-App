@@ -40,6 +40,13 @@ struct TaskCardView: View {
                 }
         }
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            if task.autoRolled == true {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [5]))
+                    .foregroundColor(C.med.opacity(0.6))
+            }
+        }
         .shadow(color: Color.black.opacity(0.07), radius: 5, x: 0, y: 2)
         .onChange(of: store.swipedTaskId) { _, newId in
             if newId != task.id && isOpen { close() }
@@ -84,6 +91,11 @@ struct TaskCardView: View {
                     }
                     if task.age > 0 {
                         Text("\(task.age)d")
+                            .font(.caption2.bold())
+                            .foregroundColor(C.med)
+                    }
+                    if task.autoRolled == true {
+                        Text("↻ Rolled")
                             .font(.caption2.bold())
                             .foregroundColor(C.med)
                     }

@@ -84,25 +84,27 @@ struct AddTaskSheet: View {
                     label("Priority")
                     PriorityPickerView(selected: $store.addForm.priority, C: C)
 
-                    // Duration
-                    label("Duration")
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(durations, id: \.self) { d in
-                                Button { store.addForm.duration = d } label: {
-                                    Text(d)
-                                        .font(.callout.weight(.semibold))
-                                        .foregroundColor(store.addForm.duration == d ? C.primary : C.text)
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 8)
-                                        .background(store.addForm.duration == d ? C.primaryLight : C.card)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .stroke(store.addForm.duration == d ? C.primary : C.border, lineWidth: 1.5)
-                                        )
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    // Duration — hidden when adding directly from the calendar (BookTimeSheet shows it)
+                    if !store.calendarAddMode {
+                        label("Duration")
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(durations, id: \.self) { d in
+                                    Button { store.addForm.duration = d } label: {
+                                        Text(d)
+                                            .font(.callout.weight(.semibold))
+                                            .foregroundColor(store.addForm.duration == d ? C.primary : C.text)
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .background(store.addForm.duration == d ? C.primaryLight : C.card)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(store.addForm.duration == d ? C.primary : C.border, lineWidth: 1.5)
+                                            )
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .buttonStyle(.plain)
                             }
                         }
                     }
