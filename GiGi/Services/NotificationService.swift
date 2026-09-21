@@ -62,4 +62,25 @@ final class NotificationService {
         let id = Self.sessionEndId(taskId)
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
     }
+
+    static func followUpId(_ taskId: Int) -> String { "gigi.followup.\(taskId)" }
+
+    func scheduleFollowUp(taskId: Int, title: String, waitingOn: String, date: Date) {
+        let fireDate = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: date) ?? date
+        guard fireDate > Date() else { return }
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [Self.followUpId(taskId)])
+        let content = UNMutableNotificationContent()
+        content.title = "Follow up: \(title)"
+        content.body = "Time to check in with \(waitingOn)."
+        content.sound = .default
+        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        center.add(UNNotificationRequest(identifier: Self.followUpId(taskId), content: content, trigger: trigger))
+    }
+
+    func cancelFollowUp(taskId: Int) {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: [Self.followUpId(taskId)])
+    }
 }

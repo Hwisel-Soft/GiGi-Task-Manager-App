@@ -441,6 +441,7 @@ final class AppStore {
 
     func unblockTask(_ id: Int) {
         notifSvc.cancelSessionEnd(taskId: id)
+        notifSvc.cancelFollowUp(taskId: id)
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         let today = Calendar.current.startOfDay(for: Date())
         update(id) { t in
@@ -531,13 +532,20 @@ final class AppStore {
 
     func moveToWaiting(_ id: Int) {
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let waitingOn = waitForm.name.isEmpty ? "Someone" : waitForm.name
+        let followUpDateStr = waitForm.followUpDate.isEmpty ? nil : waitForm.followUpDate
         update(id) { t in
             t.state = .waiting
-            t.waitingOn = waitForm.name.isEmpty ? "Someone" : waitForm.name
+            t.waitingOn = waitingOn
             t.waitingNote = waitForm.note.isEmpty ? nil : waitForm.note
-            t.followUpDate = waitForm.followUpDate.isEmpty ? nil : waitForm.followUpDate
+            t.followUpDate = followUpDateStr
             t.waitingDays = 0
             t.waitingSince = isoFmt.string(from: Date())
+        }
+        if let dateStr = followUpDateStr,
+           let fireDate = isoFmt.date(from: dateStr),
+           let task = tasks.first(where: { $0.id == id }) {
+            notifSvc.scheduleFollowUp(taskId: id, title: task.title, waitingOn: waitingOn, date: fireDate)
         }
         showWaitingSheet = false
         waitForm = WaitForm()

@@ -33,41 +33,33 @@ struct WaitingSheet: View {
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
-                    fieldLabel("Follow up on (optional)")
-                    if store.waitForm.followUpDate.isEmpty {
-                        Button {
-                            let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
-                            store.waitForm.followUpDate = f.string(from: Date())
-                        } label: {
-                            HStack {
-                                Image(systemName: "plus.circle").foregroundColor(C.purple)
-                                Text("Add follow-up date")
-                                    .font(.callout)
-                                    .foregroundColor(C.purple)
-                                Spacer()
-                            }
-                            .padding(14)
-                            .background(C.card)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        }
-                        .buttonStyle(.plain)
-                    } else {
-                        HStack {
-                            DatePicker("", selection: followUpBinding, in: Date()..., displayedComponents: .date)
-                                .datePickerStyle(.compact)
-                                .labelsHidden()
-                                .tint(C.purple)
-                            Spacer()
+                    fieldLabel("Follow up on")
+                    HStack {
+                        DatePicker("", selection: followUpBinding, in: tomorrow..., displayedComponents: .date)
+                            .datePickerStyle(.compact)
+                            .labelsHidden()
+                            .tint(C.purple)
+                        Spacer()
+                        if !store.waitForm.followUpDate.isEmpty {
                             Button { store.waitForm.followUpDate = "" } label: {
                                 Image(systemName: "xmark.circle.fill").foregroundColor(C.muted)
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(14)
-                        .background(C.card)
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.purple, lineWidth: 1.5))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(14)
+                    .background(C.card)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(store.waitForm.followUpDate.isEmpty ? C.border : C.purple, lineWidth: 1.5)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                    if store.waitForm.followUpDate.isEmpty {
+                        Text("No reminder will be sent without a follow-up date.")
+                            .font(.caption)
+                            .foregroundColor(C.muted)
+                            .padding(.top, -10)
                     }
 
                     Button {
@@ -100,6 +92,17 @@ struct WaitingSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        .onAppear {
+            if store.waitForm.followUpDate.isEmpty {
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                let threeDays = Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
+                store.waitForm.followUpDate = f.string(from: threeDays)
+            }
+        }
+    }
+
+    private var tomorrow: Date {
+        Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: Date())) ?? Date()
     }
 
     private var followUpBinding: Binding<Date> {
