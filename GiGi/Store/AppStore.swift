@@ -678,7 +678,20 @@ final class AppStore {
 
     // MARK: Calendar Sync Helpers
 
-    var defaultCalendarName: String { calendarSvc.defaultCalendarName }
+    var gigiCalendarName: String { calendarSvc.gigiCalendarName }
+
+    var externalConflictingEvent: EKEvent? {
+        guard calSync else { return nil }
+        let mins = ["15m": 15, "30m": 30, "45m": 45, "1h": 60, "2h": 120][bookForm.duration] ?? 60
+        var h = bookForm.hour
+        if bookForm.period == "PM" && h != 12 { h += 12 }
+        if bookForm.period == "AM" && h == 12 { h = 0 }
+        guard let start = Calendar.current.date(
+            bySettingHour: h, minute: bookForm.minute, second: 0, of: bookForm.date
+        ) else { return nil }
+        let end = start.addingTimeInterval(Double(mins) * 60)
+        return calendarSvc.externalEventsConflicting(start: start, end: end).first
+    }
 
     var morningTimeLabel: String {
         let h = morningHour % 12 == 0 ? 12 : morningHour % 12

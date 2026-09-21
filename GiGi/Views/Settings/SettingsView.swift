@@ -47,7 +47,22 @@ struct SettingsView: View {
                                sub: "Add booked tasks to your calendar")
                     if store.calSync {
                         Divider().background(C.border)
-                        valueRow(label: "Target Calendar", value: store.defaultCalendarName)
+                        valueRow(label: "GiGi Calendar", value: store.gigiCalendarName)
+                        Divider().background(C.border)
+                        HStack(alignment: .top, spacing: 10) {
+                            Image(systemName: "calendar.badge.checkmark")
+                                .foregroundColor(C.primary)
+                                .frame(width: 20)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Conflict detection checks all calendars connected to iOS.")
+                                    .font(.caption)
+                                    .foregroundColor(C.text)
+                                Text("To include Outlook or work events, add your account in iOS Settings → Calendar.")
+                                    .font(.caption)
+                                    .foregroundColor(C.muted)
+                            }
+                        }
+                        .padding(.top, 2)
                     }
                 }
 

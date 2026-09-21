@@ -1,4 +1,5 @@
 import SwiftUI
+import EventKit
 
 struct BookTimeSheet: View {
     @Environment(AppStore.self) var store
@@ -18,6 +19,8 @@ struct BookTimeSheet: View {
             excludeId: store.selectedTaskId
         )
     }
+
+    private var externalConflict: EKEvent? { store.externalConflictingEvent }
 
     private var minDate: Date { Calendar.current.startOfDay(for: Date()) }
 
@@ -117,7 +120,7 @@ struct BookTimeSheet: View {
                         }
                     }
 
-                    // Conflict warning
+                    // GiGi task conflict warning
                     if let c = conflict {
                         HStack(spacing: 10) {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -138,12 +141,31 @@ struct BookTimeSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
+                    // External calendar conflict warning
+                    if let e = externalConflict {
+                        HStack(spacing: 10) {
+                            Image(systemName: "calendar.badge.exclamationmark")
+                                .foregroundColor(C.high)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Calendar conflict: \(e.title ?? "Event")")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(C.text)
+                                Text(externalConflictTimeLabel(e) + "  ·  You can still proceed.")
+                                    .font(.caption2)
+                                    .foregroundColor(C.muted)
+                            }
+                        }
+                        .padding(14)
+                        .background(C.highLight)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
                     // Book button
                     Button {
                         if let id = store.selectedTaskId { store.bookTask(id) }
                         else { store.showBookTime = false }
                     } label: {
-                        Text(conflict != nil ? "Book It Anyway" : "Book It")
+                        Text((conflict != nil || externalConflict != nil) ? "Book It Anyway" : "Book It")
                             .font(.callout.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -178,5 +200,11 @@ struct BookTimeSheet: View {
             .font(.caption2.bold())
             .foregroundColor(C.muted)
             .tracking(0.8)
+    }
+
+    func externalConflictTimeLabel(_ event: EKEvent) -> String {
+        guard let start = event.startDate, let end = event.endDate else { return "" }
+        let f = DateFormatter(); f.dateFormat = "h:mm a"
+        return "\(f.string(from: start)) – \(f.string(from: end))"
     }
 }
