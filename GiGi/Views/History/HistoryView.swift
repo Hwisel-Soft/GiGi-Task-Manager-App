@@ -46,7 +46,7 @@ struct HistoryView: View {
             }
         }
         .background(C.bg)
-        .navigationBarHidden(true)
+        .hideNavigationBar()
     }
 
     var completedList: some View {

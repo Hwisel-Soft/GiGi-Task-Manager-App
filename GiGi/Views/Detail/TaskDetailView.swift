@@ -17,7 +17,9 @@ struct TaskDetailView: View {
                 Color.clear.onAppear { dismiss() }
             }
         }
+        #if os(iOS)
         .toolbar(.hidden, for: .navigationBar)
+        #endif
         .background(C.bg)
     }
 

@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: com.johnnassar
   deploymentTarget:
     iOS: "17.0"
+    macOS: "14.0"
 targets:
   GiGi:
     type: application
@@ -13,7 +14,7 @@ targets:
       path: Generated-Info.plist
       properties:
         CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "13"
+        CFBundleVersion: "25"
         UILaunchScreen: {}
         UIStatusBarStyle: UIStatusBarStyleDefault
         NSCalendarsFullAccessUsageDescription: "GiGi adds your booked tasks to your calendar so you can see them alongside other events."
@@ -30,16 +31,56 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_STRICT_CONCURRENCY: minimal
+        CODE_SIGN_ENTITLEMENTS: GiGi/GiGi.entitlements
       configs:
         Debug:
           CODE_SIGN_STYLE: Automatic
         Release:
           CODE_SIGN_STYLE: Automatic
+
+  GiGiMac:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: GiGi
+    info:
+      path: Generated-Mac-Info.plist
+      properties:
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        NSCalendarsUsageDescription: "GiGi adds your booked tasks to your calendar so you can see them alongside other events."
+        NSMicrophoneUsageDescription: "GiGi uses the microphone to let you dictate tasks by voice."
+        NSSpeechRecognitionUsageDescription: "GiGi uses speech recognition to transcribe your voice into task titles."
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.johnnassar.GiGiMac
+        SWIFT_VERSION: "5.9"
+        DEVELOPMENT_TEAM: 4K75SW3E4S
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SWIFT_STRICT_CONCURRENCY: minimal
+        PRODUCT_NAME: GiGi
+        CODE_SIGN_ENTITLEMENTS: GiGi/GiGi.mac.entitlements
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_STYLE: Automatic
+
 schemes:
   GiGi:
     build:
       targets:
         GiGi: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  GiGiMac:
+    build:
+      targets:
+        GiGiMac: all
     run:
       config: Debug
     archive:

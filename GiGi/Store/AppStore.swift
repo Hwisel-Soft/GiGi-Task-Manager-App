@@ -8,8 +8,26 @@ var sharedDefaults: UserDefaults { UserDefaults(suiteName: appGroupId) ?? .stand
 
 // MARK: - Supporting Types
 
-enum AppTab: String, Hashable {
+enum AppTab: String, Hashable, CaseIterable {
     case tasks, calendar, history, settings
+
+    var title: String {
+        switch self {
+        case .tasks:    "Tasks"
+        case .calendar: "Calendar"
+        case .history:  "History"
+        case .settings: "Settings"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .tasks:    "checklist"
+        case .calendar: "calendar"
+        case .history:  "clock.arrow.circlepath"
+        case .settings: "gearshape"
+        }
+    }
 }
 
 enum HistorySubTab: String, CaseIterable {
@@ -127,6 +145,7 @@ final class AppStore {
     // MARK: Init
     init() {
         AppStore.migrateToSharedDefaultsIfNeeded()
+        AppStore.mergeKVStoreIntoDefaults()
         let ud = sharedDefaults
         let decoder = JSONDecoder()
 
@@ -156,6 +175,7 @@ final class AppStore {
         nextId = max(11, ud.integer(forKey: "gigi.nextId"))
         nextCatId = max(6, ud.integer(forKey: "gigi.nextCatId"))
         calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
+        setupKVStoreSync()
     }
 
     // One-time migration from UserDefaults.standard to shared App Group container.
@@ -195,6 +215,7 @@ final class AppStore {
         ud.set(nextCatId, forKey: "gigi.nextCatId")
         updateBadge()
         scheduleMorningNotification()
+        pushToKVStore()
     }
 
     func updateBadge() {
@@ -207,6 +228,99 @@ final class AppStore {
               let decoded = try? JSONDecoder().decode([GTask].self, from: d) else { return }
         tasks = decoded
         nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
+    }
+
+    // MARK: iCloud Key-Value Sync
+
+    private static let kvSyncKeys = [
+        "gigi.tasks", "gigi.categories", "gigi.darkMode",
+        "gigi.lapsedAlert", "gigi.morningSummary", "gigi.morningHour",
+        "gigi.morningMinute", "gigi.colorfulCards", "gigi.calSync",
+        "gigi.defaultDuration", "gigi.defaultPriority",
+        "gigi.nextId", "gigi.nextCatId"
+    ]
+
+    static func mergeKVStoreIntoDefaults() {
+        let kvs = NSUbiquitousKeyValueStore.default
+        kvs.synchronize()
+        let ud = sharedDefaults
+        let dataKeys: Set<String> = ["gigi.tasks", "gigi.categories"]
+        let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority"]
+        let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
+                                     "gigi.colorfulCards", "gigi.calSync"]
+        let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute",
+                                    "gigi.nextId", "gigi.nextCatId"]
+        for key in kvSyncKeys {
+            guard kvs.object(forKey: key) != nil else { continue }
+            if dataKeys.contains(key) {
+                if let d = kvs.data(forKey: key) { ud.set(d, forKey: key) }
+            } else if stringKeys.contains(key) {
+                if let s = kvs.string(forKey: key) { ud.set(s, forKey: key) }
+            } else if boolKeys.contains(key) {
+                ud.set(kvs.bool(forKey: key), forKey: key)
+            } else if intKeys.contains(key) {
+                ud.set(Int(kvs.longLong(forKey: key)), forKey: key)
+            }
+        }
+    }
+
+    private func pushToKVStore() {
+        let kvs = NSUbiquitousKeyValueStore.default
+        let ud = sharedDefaults
+        if let d = ud.data(forKey: "gigi.tasks") { kvs.set(d, forKey: "gigi.tasks") }
+        if let d = ud.data(forKey: "gigi.categories") { kvs.set(d, forKey: "gigi.categories") }
+        kvs.set(ud.bool(forKey: "gigi.darkMode"), forKey: "gigi.darkMode")
+        kvs.set(ud.bool(forKey: "gigi.lapsedAlert"), forKey: "gigi.lapsedAlert")
+        kvs.set(ud.bool(forKey: "gigi.morningSummary"), forKey: "gigi.morningSummary")
+        kvs.set(Int64(ud.integer(forKey: "gigi.morningHour")), forKey: "gigi.morningHour")
+        kvs.set(Int64(ud.integer(forKey: "gigi.morningMinute")), forKey: "gigi.morningMinute")
+        kvs.set(ud.bool(forKey: "gigi.colorfulCards"), forKey: "gigi.colorfulCards")
+        kvs.set(ud.bool(forKey: "gigi.calSync"), forKey: "gigi.calSync")
+        if let s = ud.string(forKey: "gigi.defaultDuration") { kvs.set(s, forKey: "gigi.defaultDuration") }
+        if let s = ud.string(forKey: "gigi.defaultPriority") { kvs.set(s, forKey: "gigi.defaultPriority") }
+        kvs.set(Int64(ud.integer(forKey: "gigi.nextId")), forKey: "gigi.nextId")
+        kvs.set(Int64(ud.integer(forKey: "gigi.nextCatId")), forKey: "gigi.nextCatId")
+        kvs.synchronize()
+    }
+
+    private func setupKVStoreSync() {
+        NotificationCenter.default.addObserver(
+            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: NSUbiquitousKeyValueStore.default,
+            queue: .main
+        ) { [weak self] notification in
+            guard let self else { return }
+            let reason = notification.userInfo?[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int ?? -1
+            if reason == NSUbiquitousKeyValueStoreQuotaViolationChange { return }
+            MainActor.assumeIsolated {
+                AppStore.mergeKVStoreIntoDefaults()
+                self.reloadFromKVStore()
+            }
+        }
+    }
+
+    private func reloadFromKVStore() {
+        let ud = sharedDefaults
+        let decoder = JSONDecoder()
+        if let d = ud.data(forKey: "gigi.tasks"),
+           let v = try? decoder.decode([GTask].self, from: d) {
+            tasks = v
+        }
+        if let d = ud.data(forKey: "gigi.categories"),
+           let v = try? decoder.decode([GCategory].self, from: d) {
+            categories = v
+        }
+        darkMode = ud.bool(forKey: "gigi.darkMode")
+        lapsedAlert = ud.object(forKey: "gigi.lapsedAlert") as? Bool ?? true
+        morningSummary = ud.object(forKey: "gigi.morningSummary") as? Bool ?? true
+        morningHour = ud.object(forKey: "gigi.morningHour") as? Int ?? 8
+        morningMinute = ud.object(forKey: "gigi.morningMinute") as? Int ?? 0
+        colorfulCards = ud.object(forKey: "gigi.colorfulCards") as? Bool ?? true
+        calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
+        defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
+        defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
+        nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
+        nextCatId = max(nextCatId, ud.integer(forKey: "gigi.nextCatId"))
     }
 
     func autoUpdateAges() {

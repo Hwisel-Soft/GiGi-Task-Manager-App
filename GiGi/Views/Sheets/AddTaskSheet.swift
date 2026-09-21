@@ -55,11 +55,13 @@ struct AddTaskSheet: View {
                         }
                     }
                     .alert("Microphone Access Required", isPresented: $micDenied) {
+                        #if os(iOS)
                         Button("Open Settings") {
                             if let url = URL(string: UIApplication.openSettingsURLString) {
-                                UIApplication.shared.open(url)
+                                gigiOpenURL(url)
                             }
                         }
+                        #endif
                         Button("Cancel", role: .cancel) {}
                     } message: {
                         Text("Enable microphone and speech recognition in Settings to use voice dictation.")
@@ -182,7 +184,7 @@ struct AddTaskSheet: View {
             }
             .background(C.bg)
             .navigationTitle("New Task")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

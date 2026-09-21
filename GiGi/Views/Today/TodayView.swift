@@ -111,7 +111,7 @@ struct TodayView: View {
                 }
             }
             .background(C.bg)
-            .navigationBarHidden(true)
+            .hideNavigationBar()
 
             // FAB
             Button {

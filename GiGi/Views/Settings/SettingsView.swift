@@ -215,7 +215,7 @@ struct SettingsView: View {
             .padding(.bottom, 40)
         }
         .background(C.bg)
-        .navigationBarHidden(true)
+        .hideNavigationBar()
         .onChange(of: store.darkMode) { _, _ in store.save() }
         .onChange(of: store.colorfulCards) { _, _ in store.save() }
         .onChange(of: store.lapsedAlert) { _, _ in store.save() }
@@ -259,8 +259,13 @@ struct SettingsView: View {
     func openBugReport() {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        #if os(iOS)
         let device = UIDevice.current.model
         let os = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+        #else
+        let device = "Mac"
+        let os = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
+        #endif
 
         let body = """
 **Build:** \(version) (\(build))
@@ -283,7 +288,7 @@ struct SettingsView: View {
             URLQueryItem(name: "body", value: body)
         ]
         guard let url = comps.url else { return }
-        UIApplication.shared.open(url)
+        gigiOpenURL(url)
     }
 
     @ViewBuilder

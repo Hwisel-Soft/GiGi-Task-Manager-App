@@ -32,9 +32,11 @@ final class SpeechRecognizer {
         cleanup()
         transcript = ""
 
+        #if os(iOS)
         let session = AVAudioSession.sharedInstance()
         try session.setCategory(.record, mode: .measurement, options: .duckOthers)
         try session.setActive(true, options: .notifyOthersOnDeactivation)
+        #endif
 
         audioEngine = AVAudioEngine()
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
@@ -78,6 +80,8 @@ final class SpeechRecognizer {
         recognitionTask?.finish()
         recognitionTask = nil
         isRecording = false
+        #if os(iOS)
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        #endif
     }
 }

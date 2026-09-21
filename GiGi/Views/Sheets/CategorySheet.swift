@@ -103,7 +103,7 @@ struct CategorySheet: View {
             }
             .background(C.bg)
             .navigationTitle(isNew ? "New Category" : "Edit Category")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

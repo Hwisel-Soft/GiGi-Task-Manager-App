@@ -88,7 +88,7 @@ struct TasksView: View {
                 .scrollIndicators(.visible)
             }
             .background(C.bg)
-            .navigationBarHidden(true)
+            .hideNavigationBar()
 
             Button { store.showAddTask = true } label: {
                 ZStack {

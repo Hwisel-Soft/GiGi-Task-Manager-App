@@ -81,7 +81,7 @@ struct WaitingSheet: View {
             }
             .background(C.bg)
             .navigationTitle("Mark as Waiting")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { store.showWaitingSheet = false }

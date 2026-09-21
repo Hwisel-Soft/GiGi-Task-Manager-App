@@ -48,7 +48,7 @@ struct WaitingView: View {
             }
         }
         .background(C.bg)
-        .navigationBarHidden(true)
+        .hideNavigationBar()
     }
 
     @ViewBuilder

@@ -196,7 +196,7 @@ struct CalendarView: View {
                 .padding(.bottom, store.calDrawerOpen ? 340 : 80)
             }
             .background(C.bg)
-            .navigationBarHidden(true)
+            .hideNavigationBar()
             .onAppear {
                 weekOffset = 0
                 store.calSelDay = Calendar.current.component(.weekday, from: Date()) - 1

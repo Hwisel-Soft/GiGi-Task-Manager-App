@@ -58,7 +58,7 @@ struct SiriInfoModal: View {
             }
             .padding(24)
             .background(C.bg)
-            .navigationBarHidden(true)
+            .hideNavigationBar()
         }
         .presentationDetents([.medium])
         .presentationBackground(C.bg)
@@ -122,7 +122,7 @@ struct MicInfoModal: View {
             }
             .padding(24)
             .background(C.bg)
-            .navigationBarHidden(true)
+            .hideNavigationBar()
         }
         .presentationDetents([.medium])
         .presentationBackground(C.bg)

@@ -49,23 +49,25 @@ struct NudgeSheet: View {
 
                     // Action buttons
                     VStack(spacing: 10) {
+                        #if os(iOS)
                         nudgeButton(label: "💬 Messages", bg: C.green) {
                             let encoded = nudgeMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                             if let url = URL(string: "sms:?body=\(encoded)") {
-                                UIApplication.shared.open(url)
+                                gigiOpenURL(url)
                             }
                             store.showNudgeSheet = false
                         }
+                        #endif
                         nudgeButton(label: "✉ Mail", bg: C.primary) {
                             let subject = "Following up: \(t.title)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                             let body = nudgeMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                             if let url = URL(string: "mailto:?subject=\(subject)&body=\(body)") {
-                                UIApplication.shared.open(url)
+                                gigiOpenURL(url)
                             }
                             store.showNudgeSheet = false
                         }
                         nudgeButton(label: "📋 Copy", bg: C.card, fgColor: C.text, bordered: true) {
-                            UIPasteboard.general.string = nudgeMessage
+                            gigiCopyToClipboard(nudgeMessage)
                             store.showNudgeSheet = false
                         }
                     }
@@ -75,7 +77,7 @@ struct NudgeSheet: View {
             .padding(24)
             .background(C.bg)
             .navigationTitle("Nudge")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { store.showNudgeSheet = false }

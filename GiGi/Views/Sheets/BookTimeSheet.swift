@@ -58,11 +58,16 @@ struct BookTimeSheet: View {
                                 Text("\(h)").tag(h)
                             }
                         }
+                        #if os(iOS)
                         .pickerStyle(.wheel)
                         .frame(width: 70, height: 100)
                         .clipped()
                         .background(C.card)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        #else
+                        .pickerStyle(.menu)
+                        .frame(width: 80)
+                        #endif
 
                         Text(":")
                             .font(.title2.bold())
@@ -74,11 +79,16 @@ struct BookTimeSheet: View {
                                 Text(String(format: "%02d", m)).tag(m)
                             }
                         }
+                        #if os(iOS)
                         .pickerStyle(.wheel)
                         .frame(width: 70, height: 100)
                         .clipped()
                         .background(C.card)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        #else
+                        .pickerStyle(.menu)
+                        .frame(width: 80)
+                        #endif
 
                         Spacer()
 
@@ -182,7 +192,7 @@ struct BookTimeSheet: View {
             }
             .background(C.bg)
             .navigationTitle("Book Time")
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationTitle()
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { store.showBookTime = false }
