@@ -74,19 +74,27 @@ struct BookTimeSheet: View {
                             .foregroundColor(C.text)
 
                         // Minute picker
+                        #if os(iOS)
                         Picker("Minute", selection: $store.bookForm.minute) {
                             ForEach([0, 15, 30, 45], id: \.self) { m in
                                 Text(String(format: "%02d", m)).tag(m)
                             }
                         }
-                        #if os(iOS)
                         .pickerStyle(.wheel)
                         .frame(width: 70, height: 100)
                         .clipped()
                         .background(C.card)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         #else
-                        .pickerStyle(.menu)
+                        // Use Menu instead of Picker on macOS — SwiftUI Picker drops
+                        // tag 0 on macOS, showing the label "Minute" instead of "00".
+                        Menu(String(format: "%02d", store.bookForm.minute)) {
+                            ForEach([0, 15, 30, 45], id: \.self) { m in
+                                Button(String(format: "%02d", m)) {
+                                    store.bookForm.minute = m
+                                }
+                            }
+                        }
                         .frame(width: 80)
                         #endif
 
