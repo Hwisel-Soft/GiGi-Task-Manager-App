@@ -244,17 +244,29 @@ final class AppStore {
         let kvs = NSUbiquitousKeyValueStore.default
         kvs.synchronize()
         let ud = sharedDefaults
-        let dataKeys: Set<String> = ["gigi.tasks", "gigi.categories"]
+
+        // Only pull task data from iCloud if iCloud has a higher nextId than local.
+        // This prevents iCloud's snapshot from overwriting tasks added locally
+        // (e.g. via Siri) while the app was in the background.
+        let kvNextId = kvs.object(forKey: "gigi.nextId") != nil
+            ? Int(kvs.longLong(forKey: "gigi.nextId")) : 0
+        let localNextId = ud.integer(forKey: "gigi.nextId")
+        if kvNextId > localNextId {
+            if let d = kvs.data(forKey: "gigi.tasks") { ud.set(d, forKey: "gigi.tasks") }
+            if let d = kvs.data(forKey: "gigi.categories") { ud.set(d, forKey: "gigi.categories") }
+            ud.set(kvNextId, forKey: "gigi.nextId")
+            let kvNextCatId = Int(kvs.longLong(forKey: "gigi.nextCatId"))
+            if kvNextCatId > 0 { ud.set(kvNextCatId, forKey: "gigi.nextCatId") }
+        }
+
+        // Always merge settings from iCloud if present
         let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority"]
         let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
                                      "gigi.colorfulCards", "gigi.calSync"]
-        let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute",
-                                    "gigi.nextId", "gigi.nextCatId"]
+        let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute"]
         for key in kvSyncKeys {
             guard kvs.object(forKey: key) != nil else { continue }
-            if dataKeys.contains(key) {
-                if let d = kvs.data(forKey: key) { ud.set(d, forKey: key) }
-            } else if stringKeys.contains(key) {
+            if stringKeys.contains(key) {
                 if let s = kvs.string(forKey: key) { ud.set(s, forKey: key) }
             } else if boolKeys.contains(key) {
                 ud.set(kvs.bool(forKey: key), forKey: key)

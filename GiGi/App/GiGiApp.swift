@@ -53,8 +53,7 @@ struct RootView: View {
             if phase == .active {
                 store.reloadTasksFromUserDefaults()
                 store.autoUpdateAges()
-                store.scheduleMorningNotification()
-                store.updateBadge()
+                store.save() // pushes any Siri-added tasks to iCloud + updates badge/notifications
             }
         }
         .task {
