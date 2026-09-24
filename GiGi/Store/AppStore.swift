@@ -78,6 +78,13 @@ struct CatForm {
 
 // MARK: - AppStore
 
+enum TaskSort: String, CaseIterable {
+    case priority = "Priority"
+    case dueTime = "Due time"
+    case scheduledDate = "Scheduled date"
+    case dateAdded = "Date added"
+}
+
 @MainActor
 @Observable
 final class AppStore {
@@ -98,6 +105,7 @@ final class AppStore {
     var calSync: Bool
     var defaultDuration: String
     var defaultPriority: Priority
+    var defaultTaskSort: TaskSort
 
     // MARK: Navigation
     var selectedTab: AppTab = .tasks
@@ -172,6 +180,7 @@ final class AppStore {
         calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
         defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
+        defaultTaskSort = TaskSort(rawValue: ud.string(forKey: "gigi.defaultTaskSort") ?? "") ?? .priority
         nextId = max(11, ud.integer(forKey: "gigi.nextId"))
         nextCatId = max(6, ud.integer(forKey: "gigi.nextCatId"))
         calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
@@ -211,6 +220,7 @@ final class AppStore {
         ud.set(calSync, forKey: "gigi.calSync")
         ud.set(defaultDuration, forKey: "gigi.defaultDuration")
         ud.set(defaultPriority.rawValue, forKey: "gigi.defaultPriority")
+        ud.set(defaultTaskSort.rawValue, forKey: "gigi.defaultTaskSort")
         ud.set(nextId, forKey: "gigi.nextId")
         ud.set(nextCatId, forKey: "gigi.nextCatId")
         updateBadge()
@@ -236,7 +246,7 @@ final class AppStore {
         "gigi.tasks", "gigi.categories", "gigi.darkMode",
         "gigi.lapsedAlert", "gigi.morningSummary", "gigi.morningHour",
         "gigi.morningMinute", "gigi.colorfulCards", "gigi.calSync",
-        "gigi.defaultDuration", "gigi.defaultPriority",
+        "gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort",
         "gigi.nextId", "gigi.nextCatId"
     ]
 
@@ -273,7 +283,7 @@ final class AppStore {
         }
 
         // Settings: iCloud always wins if present
-        let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority"]
+        let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort"]
         let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
                                      "gigi.colorfulCards", "gigi.calSync"]
         let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute"]
@@ -306,6 +316,7 @@ final class AppStore {
         kvs.set(ud.bool(forKey: "gigi.calSync"), forKey: "gigi.calSync")
         if let s = ud.string(forKey: "gigi.defaultDuration") { kvs.set(s, forKey: "gigi.defaultDuration") }
         if let s = ud.string(forKey: "gigi.defaultPriority") { kvs.set(s, forKey: "gigi.defaultPriority") }
+        if let s = ud.string(forKey: "gigi.defaultTaskSort") { kvs.set(s, forKey: "gigi.defaultTaskSort") }
         kvs.set(Int64(ud.integer(forKey: "gigi.nextId")), forKey: "gigi.nextId")
         kvs.set(Int64(ud.integer(forKey: "gigi.nextCatId")), forKey: "gigi.nextCatId")
         kvs.synchronize()
@@ -347,6 +358,7 @@ final class AppStore {
         calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
         defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
+        defaultTaskSort = TaskSort(rawValue: ud.string(forKey: "gigi.defaultTaskSort") ?? "") ?? .priority
         nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
         nextCatId = max(nextCatId, ud.integer(forKey: "gigi.nextCatId"))
     }
@@ -372,8 +384,7 @@ final class AppStore {
                let bd = tasks[i].bookedDate,
                let bookedDay = isoFmt.date(from: bd),
                cal.startOfDay(for: bookedDay) < today {
-                let tomorrow = cal.date(byAdding: .day, value: 1, to: today)!
-                tasks[i].bookedDate = isoFmt.string(from: tomorrow)
+                tasks[i].bookedDate = isoFmt.string(from: today)
                 tasks[i].age += 1
                 tasks[i].autoRolled = true
                 notifSvc.cancelSessionEnd(taskId: tasks[i].id)
@@ -899,7 +910,7 @@ final class AppStore {
         let em = correctedEndMins % 60
         let cal = Calendar.current
         guard let endDate = cal.date(bySettingHour: eh24, minute: em, second: 0, of: dayDate) else { return }
-        notifSvc.scheduleSessionEnd(taskId: task.id, title: task.title, endDate: endDate)
+        notifSvc.scheduleSessionEnd(taskId: task.id, title: task.title, endDate: endDate, badgeCount: tasksAlertCount + 1)
     }
 
     func cancelMorningNotification() {

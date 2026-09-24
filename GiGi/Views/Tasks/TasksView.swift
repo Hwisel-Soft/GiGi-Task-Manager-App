@@ -8,13 +8,6 @@ enum TaskFilter: String, CaseIterable {
     case waiting = "Waiting"
 }
 
-enum TaskSort: String, CaseIterable {
-    case priority = "Priority"
-    case dueTime = "Due time"
-    case scheduledDate = "Scheduled date"
-    case dateAdded = "Date added"
-}
-
 struct TasksView: View {
     @Environment(AppStore.self) var store
     private var C: GColors { store.C }
@@ -89,6 +82,7 @@ struct TasksView: View {
             }
             .background(C.bg)
             .hideNavigationBar()
+            .onAppear { sort = store.defaultTaskSort }
 
             Button { store.showAddTask = true } label: {
                 ZStack {

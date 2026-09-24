@@ -176,6 +176,19 @@ struct SettingsView: View {
                         }
                         .pickerStyle(.menu)
                     }
+                    Divider().background(C.border)
+                    HStack {
+                        Text("Default Sort")
+                            .font(.subheadline)
+                            .foregroundColor(C.text)
+                        Spacer()
+                        Picker("", selection: $store.defaultTaskSort) {
+                            ForEach(TaskSort.allCases, id: \.self) { s in
+                                Text(s.rawValue).tag(s)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
                 }
 
                 // App
@@ -211,6 +224,16 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
                 }
+
+                // About
+                settingsCard {
+                    sectionHeader("About")
+                    linkRow(label: "Send Feedback", icon: "envelope", url: Self.feedbackURL)
+                    Divider().background(C.border)
+                    linkRow(label: "Privacy Policy", icon: "hand.raised", url: Self.privacyPolicyURL)
+                    Divider().background(C.border)
+                    linkRow(label: "Terms of Use", icon: "doc.text", url: Self.termsOfUseURL)
+                }
             }
             .padding(.bottom, 40)
         }
@@ -232,6 +255,7 @@ struct SettingsView: View {
         }
         .onChange(of: store.defaultDuration) { _, _ in store.save() }
         .onChange(of: store.defaultPriority) { _, _ in store.save() }
+        .onChange(of: store.defaultTaskSort) { _, _ in store.save() }
     }
 
     var morningTimeBinding: Binding<Date> {
@@ -330,6 +354,30 @@ struct SettingsView: View {
                 .tint(C.primary)
                 .labelsHidden()
         }
+    }
+
+    // MARK: - URL constants (update before submitting to App Store)
+    private static let feedbackURL = URL(string: "mailto:John@hwisel.com?subject=GiGi%20Feedback")!
+    private static let privacyPolicyURL = URL(string: "https://hwisel.com/gigi/privacy")!
+    private static let termsOfUseURL = URL(string: "https://hwisel.com/gigi/terms")!
+
+    @ViewBuilder
+    func linkRow(label: String, icon: String, url: URL) -> some View {
+        Link(destination: url) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(C.primary)
+                    .frame(width: 20)
+                Text(label)
+                    .font(.subheadline)
+                    .foregroundColor(C.text)
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundColor(C.muted)
+            }
+        }
+        .buttonStyle(.plain)
     }
 
     @ViewBuilder

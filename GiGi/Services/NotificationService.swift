@@ -44,7 +44,7 @@ final class NotificationService {
             .removePendingNotificationRequests(withIdentifiers: [Self.morningId])
     }
 
-    func scheduleSessionEnd(taskId: Int, title: String, endDate: Date) {
+    func scheduleSessionEnd(taskId: Int, title: String, endDate: Date, badgeCount: Int) {
         guard endDate > Date() else { return }
         let center = UNUserNotificationCenter.current()
         let id = Self.sessionEndId(taskId)
@@ -53,6 +53,7 @@ final class NotificationService {
         content.title = "Session ended — \(title)"
         content.body = "Did you finish it? Open GiGi to log your progress."
         content.sound = .default
+        content.badge = NSNumber(value: badgeCount)
         let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: endDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
