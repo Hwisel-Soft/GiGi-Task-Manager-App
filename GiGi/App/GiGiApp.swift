@@ -51,9 +51,10 @@ struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
+                AppStore.mergeKVStoreIntoDefaults() // pull remote changes before overwriting
                 store.reloadTasksFromUserDefaults()
                 store.autoUpdateAges()
-                store.save() // pushes any Siri-added tasks to iCloud + updates badge/notifications
+                store.save()
             }
         }
         .task {
