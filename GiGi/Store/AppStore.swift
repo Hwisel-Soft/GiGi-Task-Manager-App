@@ -244,22 +244,35 @@ final class AppStore {
         let kvs = NSUbiquitousKeyValueStore.default
         kvs.synchronize()
         let ud = sharedDefaults
+        let decoder = JSONDecoder()
+        let encoder = JSONEncoder()
 
-        // Only pull task data from iCloud if iCloud has a higher nextId than local.
-        // This prevents iCloud's snapshot from overwriting tasks added locally
-        // (e.g. via Siri) while the app was in the background.
-        let kvNextId = kvs.object(forKey: "gigi.nextId") != nil
-            ? Int(kvs.longLong(forKey: "gigi.nextId")) : 0
-        let localNextId = ud.integer(forKey: "gigi.nextId")
-        if kvNextId > localNextId {
-            if let d = kvs.data(forKey: "gigi.tasks") { ud.set(d, forKey: "gigi.tasks") }
-            if let d = kvs.data(forKey: "gigi.categories") { ud.set(d, forKey: "gigi.categories") }
-            ud.set(kvNextId, forKey: "gigi.nextId")
-            let kvNextCatId = Int(kvs.longLong(forKey: "gigi.nextCatId"))
-            if kvNextCatId > 0 { ud.set(kvNextCatId, forKey: "gigi.nextCatId") }
+        // Tasks: iCloud wins for shared task IDs; preserve local-only real tasks (ID >= 11).
+        // IDs 1-10 are sample tasks and are never merged from local into iCloud data.
+        // This lets completions/edits sync while keeping tasks added via Siri offline.
+        if kvs.object(forKey: "gigi.tasks") != nil {
+            let icloudTasks = kvs.data(forKey: "gigi.tasks")
+                .flatMap { try? decoder.decode([GTask].self, from: $0) } ?? []
+            let localTasks = ud.data(forKey: "gigi.tasks")
+                .flatMap { try? decoder.decode([GTask].self, from: $0) } ?? []
+            let icloudIds = Set(icloudTasks.map { $0.id })
+            var merged = icloudTasks
+            for task in localTasks where !icloudIds.contains(task.id) && task.id >= 11 {
+                merged.append(task)
+            }
+            if let d = try? encoder.encode(merged) { ud.set(d, forKey: "gigi.tasks") }
+            let kvNextId = Int(kvs.longLong(forKey: "gigi.nextId"))
+            ud.set(max(ud.integer(forKey: "gigi.nextId"), kvNextId), forKey: "gigi.nextId")
         }
 
-        // Always merge settings from iCloud if present
+        // Categories: iCloud always wins
+        if let d = kvs.data(forKey: "gigi.categories") { ud.set(d, forKey: "gigi.categories") }
+        let kvNextCatId = Int(kvs.longLong(forKey: "gigi.nextCatId"))
+        if kvNextCatId > 0 {
+            ud.set(max(ud.integer(forKey: "gigi.nextCatId"), kvNextCatId), forKey: "gigi.nextCatId")
+        }
+
+        // Settings: iCloud always wins if present
         let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority"]
         let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
                                      "gigi.colorfulCards", "gigi.calSync"]

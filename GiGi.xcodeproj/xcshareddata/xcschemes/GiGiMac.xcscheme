@@ -55,6 +55,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "90559A3C81F69D2A2692090C"
             BuildableName = "GiGi.app"
+            BlueprintName = "GiGiMac"
             ReferencedContainer = "container:GiGi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
