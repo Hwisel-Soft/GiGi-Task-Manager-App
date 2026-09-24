@@ -225,15 +225,6 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
 
-                // About
-                settingsCard {
-                    sectionHeader("About")
-                    linkRow(label: "Send Feedback", icon: "envelope", url: Self.feedbackURL)
-                    Divider().background(C.border)
-                    linkRow(label: "Privacy Policy", icon: "hand.raised", url: Self.privacyPolicyURL)
-                    Divider().background(C.border)
-                    linkRow(label: "Terms of Use", icon: "doc.text", url: Self.termsOfUseURL)
-                }
             }
             .padding(.bottom, 40)
         }
