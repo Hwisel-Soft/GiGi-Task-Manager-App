@@ -84,4 +84,31 @@ final class NotificationService {
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(withIdentifiers: [Self.followUpId(taskId)])
     }
+
+    // MARK: Weekly Stats
+
+    static let weeklyId = "gigi.weekly.stats"
+
+    func scheduleWeeklySummary(weekday: Int, hour: Int, minute: Int, body: String) {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [Self.weeklyId])
+
+        let content = UNMutableNotificationContent()
+        content.title = "Your week in GiGi"
+        content.body = body
+        content.sound = .default
+
+        var comps = DateComponents()
+        comps.weekday = weekday   // 1 = Sunday … 7 = Saturday
+        comps.hour = hour
+        comps.minute = minute
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
+        let request = UNNotificationRequest(identifier: Self.weeklyId, content: content, trigger: trigger)
+        center.add(request)
+    }
+
+    func cancelWeeklySummary() {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: [Self.weeklyId])
+    }
 }

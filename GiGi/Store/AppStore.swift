@@ -101,6 +101,10 @@ final class AppStore {
     var morningSummary: Bool
     var morningHour: Int    // 0-23
     var morningMinute: Int  // 0-59
+    var weeklyStats: Bool
+    var weeklyDay: Int      // 1=Sun … 7=Sat
+    var weeklyHour: Int     // 0-23
+    var weeklyMinute: Int   // 0-59
     var colorfulCards: Bool
     var calSync: Bool
     var defaultDuration: String
@@ -179,6 +183,10 @@ final class AppStore {
         morningSummary = ud.object(forKey: "gigi.morningSummary") as? Bool ?? true
         morningHour = ud.object(forKey: "gigi.morningHour") as? Int ?? 8
         morningMinute = ud.object(forKey: "gigi.morningMinute") as? Int ?? 0
+        weeklyStats = ud.object(forKey: "gigi.weeklyStats") as? Bool ?? true
+        weeklyDay = ud.object(forKey: "gigi.weeklyDay") as? Int ?? 1
+        weeklyHour = ud.object(forKey: "gigi.weeklyHour") as? Int ?? 18
+        weeklyMinute = ud.object(forKey: "gigi.weeklyMinute") as? Int ?? 0
         colorfulCards = ud.object(forKey: "gigi.colorfulCards") as? Bool ?? true
         calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
@@ -220,6 +228,10 @@ final class AppStore {
         ud.set(morningSummary, forKey: "gigi.morningSummary")
         ud.set(morningHour, forKey: "gigi.morningHour")
         ud.set(morningMinute, forKey: "gigi.morningMinute")
+        ud.set(weeklyStats, forKey: "gigi.weeklyStats")
+        ud.set(weeklyDay, forKey: "gigi.weeklyDay")
+        ud.set(weeklyHour, forKey: "gigi.weeklyHour")
+        ud.set(weeklyMinute, forKey: "gigi.weeklyMinute")
         ud.set(colorfulCards, forKey: "gigi.colorfulCards")
         ud.set(calSync, forKey: "gigi.calSync")
         ud.set(defaultDuration, forKey: "gigi.defaultDuration")
@@ -235,6 +247,7 @@ final class AppStore {
             do { try await Task.sleep(for: .seconds(1.5)) } catch { return }
             updateBadge()
             scheduleMorningNotification()
+            scheduleWeeklyStatsNotification()
             pushToKVStore()
         }
     }
@@ -256,7 +269,8 @@ final class AppStore {
     private static let kvSyncKeys = [
         "gigi.tasks", "gigi.categories", "gigi.darkMode",
         "gigi.lapsedAlert", "gigi.morningSummary", "gigi.morningHour",
-        "gigi.morningMinute", "gigi.colorfulCards", "gigi.calSync",
+        "gigi.morningMinute", "gigi.weeklyStats", "gigi.weeklyDay",
+        "gigi.weeklyHour", "gigi.weeklyMinute", "gigi.colorfulCards", "gigi.calSync",
         "gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort",
         "gigi.defaultCategory", "gigi.nextId", "gigi.nextCatId"
     ]
@@ -299,8 +313,9 @@ final class AppStore {
         // Settings: iCloud always wins if present
         let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort", "gigi.defaultCategory"]
         let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
-                                     "gigi.colorfulCards", "gigi.calSync"]
-        let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute"]
+                                     "gigi.weeklyStats", "gigi.colorfulCards", "gigi.calSync"]
+        let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute",
+                                    "gigi.weeklyDay", "gigi.weeklyHour", "gigi.weeklyMinute"]
         for key in kvSyncKeys {
             guard kvs.object(forKey: key) != nil else { continue }
             if stringKeys.contains(key) {
@@ -326,6 +341,10 @@ final class AppStore {
         kvs.set(ud.bool(forKey: "gigi.morningSummary"), forKey: "gigi.morningSummary")
         kvs.set(Int64(ud.integer(forKey: "gigi.morningHour")), forKey: "gigi.morningHour")
         kvs.set(Int64(ud.integer(forKey: "gigi.morningMinute")), forKey: "gigi.morningMinute")
+        kvs.set(ud.bool(forKey: "gigi.weeklyStats"), forKey: "gigi.weeklyStats")
+        kvs.set(Int64(ud.integer(forKey: "gigi.weeklyDay")), forKey: "gigi.weeklyDay")
+        kvs.set(Int64(ud.integer(forKey: "gigi.weeklyHour")), forKey: "gigi.weeklyHour")
+        kvs.set(Int64(ud.integer(forKey: "gigi.weeklyMinute")), forKey: "gigi.weeklyMinute")
         kvs.set(ud.bool(forKey: "gigi.colorfulCards"), forKey: "gigi.colorfulCards")
         kvs.set(ud.bool(forKey: "gigi.calSync"), forKey: "gigi.calSync")
         if let s = ud.string(forKey: "gigi.defaultDuration") { kvs.set(s, forKey: "gigi.defaultDuration") }
@@ -377,6 +396,10 @@ final class AppStore {
         morningSummary = ud.object(forKey: "gigi.morningSummary") as? Bool ?? true
         morningHour = ud.object(forKey: "gigi.morningHour") as? Int ?? 8
         morningMinute = ud.object(forKey: "gigi.morningMinute") as? Int ?? 0
+        weeklyStats = ud.object(forKey: "gigi.weeklyStats") as? Bool ?? true
+        weeklyDay = ud.object(forKey: "gigi.weeklyDay") as? Int ?? 1
+        weeklyHour = ud.object(forKey: "gigi.weeklyHour") as? Int ?? 18
+        weeklyMinute = ud.object(forKey: "gigi.weeklyMinute") as? Int ?? 0
         colorfulCards = ud.object(forKey: "gigi.colorfulCards") as? Bool ?? true
         calSync = ud.object(forKey: "gigi.calSync") as? Bool ?? true
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
@@ -957,6 +980,82 @@ final class AppStore {
 
     func cancelMorningNotification() {
         notifSvc.cancelMorningSummary()
+    }
+
+    // MARK: Weekly Stats Notification
+
+    var weeklyTimeLabel: String {
+        let h = weeklyHour % 12 == 0 ? 12 : weeklyHour % 12
+        let m = String(format: "%02d", weeklyMinute)
+        let period = weeklyHour < 12 ? "AM" : "PM"
+        return "\(h):\(m) \(period)"
+    }
+
+    static let weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+    private func weeklyStatsBody() -> String {
+        let isoFmt = ISO8601DateFormatter()
+        isoFmt.formatOptions = [.withFullDate]
+        isoFmt.timeZone = .current
+        let cal = Calendar.current
+        let now = Date()
+        let weekAgo = cal.date(byAdding: .day, value: -7, to: now) ?? now
+
+        let completedThisWeek = tasks.filter { task in
+            guard task.state == .completed,
+                  let label = task.completedDateLabel,
+                  let date = isoFmt.date(from: label) else { return false }
+            return date >= cal.startOfDay(for: weekAgo)
+        }
+
+        let count = completedThisWeek.count
+        let pending = tasks.filter {
+            $0.state == .booked || $0.state == .unscheduled || $0.state == .waiting
+        }.count
+
+        guard count > 0 else {
+            let p = pending > 0 ? " \(pending) task\(pending == 1 ? "" : "s") still pending." : ""
+            return "No tasks completed this week.\(p)"
+        }
+
+        let rate = String(format: "%.1f", Double(count) / 7.0)
+        var body = "\(count) task\(count == 1 ? "" : "s") completed — \(rate)/day avg."
+
+        var catCounts: [String: Int] = [:]
+        for task in completedThisWeek where !task.category.isEmpty {
+            catCounts[task.category, default: 0] += 1
+        }
+        if let top = catCounts.max(by: { $0.value < $1.value }), catCounts.count > 1 {
+            body += " Top: \(top.key)."
+        }
+        if pending > 0 {
+            body += " \(pending) still pending."
+        }
+        return body
+    }
+
+    func scheduleWeeklyStatsNotification() {
+        guard weeklyStats else {
+            notifSvc.cancelWeeklySummary()
+            return
+        }
+        notifSvc.scheduleWeeklySummary(weekday: weeklyDay, hour: weeklyHour, minute: weeklyMinute, body: weeklyStatsBody())
+    }
+
+    func requestWeeklyStatsNotificationIfNeeded() {
+        guard weeklyStats else { return }
+        Task {
+            let granted = await notifSvc.requestPermission()
+            if !granted {
+                await MainActor.run { weeklyStats = false; save() }
+            } else {
+                await MainActor.run { scheduleWeeklyStatsNotification() }
+            }
+        }
+    }
+
+    func cancelWeeklyStatsNotification() {
+        notifSvc.cancelWeeklySummary()
     }
 
     private func removeCalendarEvent(for task: GTask) {

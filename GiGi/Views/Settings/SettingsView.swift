@@ -38,6 +38,35 @@ struct SettingsView: View {
                         }
                         notificationPreview
                     }
+                    Divider().background(C.border)
+                    toggleRow(label: "Weekly Stats",
+                              value: $store.weeklyStats,
+                              sub: store.weeklyStats ? "Every \(AppStore.weekdayNames[(store.weeklyDay - 1 + 7) % 7]) at \(store.weeklyTimeLabel)" : "Your accomplishments, once a week")
+                    if store.weeklyStats {
+                        Divider().background(C.border)
+                        HStack {
+                            Text("Day")
+                                .font(.subheadline)
+                                .foregroundColor(C.text)
+                            Spacer()
+                            Picker("", selection: $store.weeklyDay) {
+                                ForEach(1...7, id: \.self) { d in
+                                    Text(AppStore.weekdayNames[d - 1]).tag(d)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                        }
+                        Divider().background(C.border)
+                        HStack {
+                            Text("Time")
+                                .font(.subheadline)
+                                .foregroundColor(C.text)
+                            Spacer()
+                            DatePicker("", selection: weeklyTimeBinding, displayedComponents: .hourAndMinute)
+                                .labelsHidden()
+                                .tint(C.primary)
+                        }
+                    }
                 }
 
                 // Calendar
@@ -258,10 +287,34 @@ struct SettingsView: View {
             store.save()
             if newVal { store.requestCalendarAccessIfNeeded() }
         }
+        .onChange(of: store.weeklyStats) { _, newVal in
+            store.save()
+            if newVal { store.requestWeeklyStatsNotificationIfNeeded() }
+            else { store.cancelWeeklyStatsNotification() }
+        }
+        .onChange(of: store.weeklyDay) { _, _ in store.save(); store.scheduleWeeklyStatsNotification() }
+        .onChange(of: store.weeklyHour) { _, _ in store.save(); store.scheduleWeeklyStatsNotification() }
+        .onChange(of: store.weeklyMinute) { _, _ in store.save(); store.scheduleWeeklyStatsNotification() }
         .onChange(of: store.defaultDuration) { _, _ in store.save() }
         .onChange(of: store.defaultPriority) { _, _ in store.save() }
         .onChange(of: store.defaultTaskSort) { _, _ in store.save() }
         .onChange(of: store.defaultCategory) { _, _ in store.save() }
+    }
+
+    var weeklyTimeBinding: Binding<Date> {
+        Binding(
+            get: {
+                var c = DateComponents()
+                c.hour = store.weeklyHour
+                c.minute = store.weeklyMinute
+                return Calendar.current.date(from: c) ?? Date()
+            },
+            set: { d in
+                let c = Calendar.current.dateComponents([.hour, .minute], from: d)
+                store.weeklyHour = c.hour ?? 18
+                store.weeklyMinute = c.minute ?? 0
+            }
+        )
     }
 
     var morningTimeBinding: Binding<Date> {
