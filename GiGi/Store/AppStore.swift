@@ -443,8 +443,11 @@ final class AppStore {
         let nowMins = Calendar.current.component(.hour, from: now) * 60
                     + Calendar.current.component(.minute, from: now)
         return tasks.filter { t in
-            guard t.state == .booked,
-                  let bd = t.bookedDate, bd == todayStr,
+            guard t.state == .booked else { return false }
+            // Carried-forward tasks always need attention regardless of time
+            if t.autoRolled == true { return true }
+            // Time-based: end time passed today
+            guard let bd = t.bookedDate, bd == todayStr,
                   t.endTime != nil, t.period != nil else { return false }
             return nowMins > endTimeMinutes(t)
         }
@@ -458,6 +461,8 @@ final class AppStore {
                     + Calendar.current.component(.minute, from: now)
         return tasks.filter { t in
             guard t.state == .booked else { return false }
+            // Carried-forward tasks belong in Lapsed, not Scheduled
+            if t.autoRolled == true { return false }
             if let bd = t.bookedDate, bd == todayStr,
                t.endTime != nil, t.period != nil,
                nowMins > endTimeMinutes(t) { return false }

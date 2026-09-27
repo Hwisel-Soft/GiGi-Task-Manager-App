@@ -156,6 +156,7 @@ struct TaskCardView: View {
     private var cardBackground: Color {
         guard showStateBadge else { return C.card }
         if store.isLapsed(task) { return C.highLight }
+        if task.autoRolled == true { return C.medLight }
         if task.state == .waiting && store.isFollowUpDue(task) { return C.medLight }
         return C.card
     }
@@ -181,9 +182,11 @@ struct TaskCardView: View {
     @ViewBuilder
     private var stateBadgeView: some View {
         let lapsed = store.isLapsed(task)
+        let carried = task.autoRolled == true && !lapsed
         let followUpOverdue = task.state == .waiting && store.isFollowUpDue(task)
         let (label, fg, bg): (String, Color, Color) = {
             if lapsed { return ("Lapsed", C.high, C.highLight) }
+            if carried { return ("Missed", C.med, C.medLight) }
             if followUpOverdue { return ("Follow up", C.med, C.medLight) }
             switch task.state {
             case .booked: return ("Booked", C.green, C.greenLight)
