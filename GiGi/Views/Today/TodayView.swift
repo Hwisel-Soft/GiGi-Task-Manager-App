@@ -115,7 +115,7 @@ struct TodayView: View {
 
             // FAB
             Button {
-                store.showAddTask = true
+                store.openAddTask()
             } label: {
                 ZStack {
                     Circle()

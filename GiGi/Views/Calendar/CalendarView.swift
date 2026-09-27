@@ -208,7 +208,7 @@ struct CalendarView: View {
             // FAB
             Button {
                 store.calendarAddMode = true
-                store.showAddTask = true
+                store.openAddTask()
             } label: {
                 ZStack {
                     Circle()

@@ -106,6 +106,7 @@ final class AppStore {
     var defaultDuration: String
     var defaultPriority: Priority
     var defaultTaskSort: TaskSort
+    var defaultCategory: String
 
     // MARK: Navigation
     var selectedTab: AppTab = .tasks
@@ -183,6 +184,7 @@ final class AppStore {
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
         defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
         defaultTaskSort = TaskSort(rawValue: ud.string(forKey: "gigi.defaultTaskSort") ?? "") ?? .priority
+        defaultCategory = ud.string(forKey: "gigi.defaultCategory") ?? ""
         nextId = max(11, ud.integer(forKey: "gigi.nextId"))
         nextCatId = max(6, ud.integer(forKey: "gigi.nextCatId"))
         calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
@@ -223,6 +225,7 @@ final class AppStore {
         ud.set(defaultDuration, forKey: "gigi.defaultDuration")
         ud.set(defaultPriority.rawValue, forKey: "gigi.defaultPriority")
         ud.set(defaultTaskSort.rawValue, forKey: "gigi.defaultTaskSort")
+        ud.set(defaultCategory, forKey: "gigi.defaultCategory")
         ud.set(nextId, forKey: "gigi.nextId")
         ud.set(nextCatId, forKey: "gigi.nextCatId")
         // Debounce badge update, notification scheduling, and iCloud push —
@@ -255,7 +258,7 @@ final class AppStore {
         "gigi.lapsedAlert", "gigi.morningSummary", "gigi.morningHour",
         "gigi.morningMinute", "gigi.colorfulCards", "gigi.calSync",
         "gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort",
-        "gigi.nextId", "gigi.nextCatId"
+        "gigi.defaultCategory", "gigi.nextId", "gigi.nextCatId"
     ]
 
     static func mergeKVStoreIntoDefaults() {
@@ -294,7 +297,7 @@ final class AppStore {
         }
 
         // Settings: iCloud always wins if present
-        let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort"]
+        let stringKeys: Set<String> = ["gigi.defaultDuration", "gigi.defaultPriority", "gigi.defaultTaskSort", "gigi.defaultCategory"]
         let boolKeys: Set<String> = ["gigi.darkMode", "gigi.lapsedAlert", "gigi.morningSummary",
                                      "gigi.colorfulCards", "gigi.calSync"]
         let intKeys: Set<String> = ["gigi.morningHour", "gigi.morningMinute"]
@@ -328,6 +331,7 @@ final class AppStore {
         if let s = ud.string(forKey: "gigi.defaultDuration") { kvs.set(s, forKey: "gigi.defaultDuration") }
         if let s = ud.string(forKey: "gigi.defaultPriority") { kvs.set(s, forKey: "gigi.defaultPriority") }
         if let s = ud.string(forKey: "gigi.defaultTaskSort") { kvs.set(s, forKey: "gigi.defaultTaskSort") }
+        kvs.set(ud.string(forKey: "gigi.defaultCategory") ?? "", forKey: "gigi.defaultCategory")
         kvs.set(Int64(ud.integer(forKey: "gigi.nextId")), forKey: "gigi.nextId")
         kvs.set(Int64(ud.integer(forKey: "gigi.nextCatId")), forKey: "gigi.nextCatId")
         kvs.synchronize()
@@ -378,6 +382,7 @@ final class AppStore {
         defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
         defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
         defaultTaskSort = TaskSort(rawValue: ud.string(forKey: "gigi.defaultTaskSort") ?? "") ?? .priority
+        defaultCategory = ud.string(forKey: "gigi.defaultCategory") ?? ""
         nextId = max(nextId, ud.integer(forKey: "gigi.nextId"))
         nextCatId = max(nextCatId, ud.integer(forKey: "gigi.nextCatId"))
     }
@@ -551,6 +556,14 @@ final class AppStore {
     }
 
     // MARK: Navigation
+    func openAddTask() {
+        addForm = AddForm()
+        addForm.category = defaultCategory
+        addForm.priority = defaultPriority
+        addForm.duration = defaultDuration
+        showAddTask = true
+    }
+
     func openTask(_ id: Int) {
         swipedTaskId = nil
         selectedTaskId = id
@@ -700,6 +713,9 @@ final class AppStore {
         nextId += 1
         showAddTask = false
         addForm = AddForm()
+        addForm.category = defaultCategory
+        addForm.priority = defaultPriority
+        addForm.duration = defaultDuration
         if calendarAddMode {
             calendarAddMode = false
             openBookTime(for: t.id)
@@ -830,6 +846,7 @@ final class AppStore {
                 for i in tasks.indices where tasks[i].category == old {
                     tasks[i].category = name
                 }
+                if defaultCategory == old { defaultCategory = name }
             }
         } else {
             categories.append(GCategory(id: nextCatId, name: name, color: catForm.color))
@@ -846,6 +863,7 @@ final class AppStore {
         categories.removeAll(where: { $0.id == id })
         if let n = catName {
             for i in tasks.indices where tasks[i].category == n { tasks[i].category = "" }
+            if defaultCategory == n { defaultCategory = "" }
         }
         showCategorySheet = false
         catForm = CatForm()

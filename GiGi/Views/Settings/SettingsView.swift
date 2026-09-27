@@ -189,6 +189,20 @@ struct SettingsView: View {
                         }
                         .pickerStyle(.menu)
                     }
+                    Divider().background(C.border)
+                    HStack {
+                        Text("Default Category")
+                            .font(.subheadline)
+                            .foregroundColor(C.text)
+                        Spacer()
+                        Picker("", selection: $store.defaultCategory) {
+                            Text("None").tag("")
+                            ForEach(store.categories) { cat in
+                                Text(cat.name).tag(cat.name)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
                 }
 
                 // App
@@ -247,6 +261,7 @@ struct SettingsView: View {
         .onChange(of: store.defaultDuration) { _, _ in store.save() }
         .onChange(of: store.defaultPriority) { _, _ in store.save() }
         .onChange(of: store.defaultTaskSort) { _, _ in store.save() }
+        .onChange(of: store.defaultCategory) { _, _ in store.save() }
     }
 
     var morningTimeBinding: Binding<Date> {

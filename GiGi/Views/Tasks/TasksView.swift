@@ -84,7 +84,7 @@ struct TasksView: View {
             .hideNavigationBar()
             .onAppear { sort = store.defaultTaskSort }
 
-            Button { store.showAddTask = true } label: {
+            Button { store.openAddTask() } label: {
                 ZStack {
                     Circle()
                         .fill(LinearGradient(

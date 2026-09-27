@@ -43,7 +43,7 @@ struct MainTabView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button { store.showAddTask = true } label: {
+                    Button { store.openAddTask() } label: {
                         Label("New Task", systemImage: "plus")
                     }
                     .keyboardShortcut("n", modifiers: .command)
