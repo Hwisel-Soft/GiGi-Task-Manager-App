@@ -295,26 +295,27 @@ struct TaskDetailView: View {
         .background(C.bg)
     }
 
-    func bookedDateFull(_ iso: String) -> String {
+    private static let isoFmt: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()
         f.formatOptions = [.withFullDate]
         f.timeZone = .current
-        guard let d = f.date(from: iso) else { return iso }
+        return f
+    }()
+    private static let fullDateFmt: DateFormatter = { let f = DateFormatter(); f.dateStyle = .full; f.timeStyle = .none; return f }()
+    private static let mediumDateFmt: DateFormatter = { let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none; return f }()
+
+    func bookedDateFull(_ iso: String) -> String {
+        guard let d = Self.isoFmt.date(from: iso) else { return iso }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Today" }
         if cal.isDateInTomorrow(d) { return "Tomorrow" }
         if cal.isDateInYesterday(d) { return "Yesterday" }
-        let df = DateFormatter(); df.dateStyle = .full; df.timeStyle = .none
-        return df.string(from: d)
+        return Self.fullDateFmt.string(from: d)
     }
 
     func formattedCreatedDate(_ iso: String) -> String {
-        let isoFmt = ISO8601DateFormatter()
-        isoFmt.formatOptions = [.withFullDate]
-        isoFmt.timeZone = .current
-        guard let d = isoFmt.date(from: iso) else { return iso }
-        let f = DateFormatter(); f.dateStyle = .medium; f.timeStyle = .none
-        return f.string(from: d)
+        guard let d = Self.isoFmt.date(from: iso) else { return iso }
+        return Self.mediumDateFmt.string(from: d)
     }
 
     @ViewBuilder func stateBadge(_ task: GTask) -> some View {

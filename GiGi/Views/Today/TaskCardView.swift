@@ -34,7 +34,7 @@ struct TaskCardView: View {
             cardFace
                 .offset(x: offset)
                 .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: offset)
-                .gesture(dragGesture)
+                .simultaneousGesture(dragGesture)
                 .onTapGesture {
                     if isOpen { close() } else { store.openTask(task.id) }
                 }
@@ -268,54 +268,45 @@ struct TaskCardView: View {
         }
     }
 
+    private static let isoFmt: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = .current
+        return f
+    }()
+    private static let dayOfWeekFmt: DateFormatter = { let f = DateFormatter(); f.dateFormat = "EEE"; return f }()
+    private static let scheduleLabelFmt: DateFormatter = { let f = DateFormatter(); f.dateFormat = "EEE MMM d"; return f }()
+    private static let sameYearFmt: DateFormatter = { let f = DateFormatter(); f.dateFormat = "MMM d"; return f }()
+    private static let fullYearFmt: DateFormatter = { let f = DateFormatter(); f.dateFormat = "MMM d, yyyy"; return f }()
+
     func formattedDeadline(_ dl: String) -> String {
-        if dl.contains("-") {
-            let f = ISO8601DateFormatter()
-            f.formatOptions = [.withFullDate]
-            f.timeZone = .current
-            if let d = f.date(from: dl) {
-                let days = daysUntilDeadline(dl)
-                if days == 0 { return "today" }
-                if days == 1 { return "tomorrow" }
-                let df = DateFormatter(); df.dateFormat = "EEE"
-                return df.string(from: d)
-            }
-        }
-        return dl
+        guard dl.contains("-"), let d = Self.isoFmt.date(from: dl) else { return dl }
+        let days = daysUntilDeadline(dl)
+        if days == 0 { return "today" }
+        if days == 1 { return "tomorrow" }
+        return Self.dayOfWeekFmt.string(from: d)
     }
 
     func shortCreatedDate(_ iso: String) -> String {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withFullDate]
-        f.timeZone = .current
-        guard let d = f.date(from: iso) else { return "" }
+        guard let d = Self.isoFmt.date(from: iso) else { return "" }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Added today" }
         if cal.isDateInYesterday(d) { return "Added yesterday" }
-        let df = DateFormatter()
-        df.dateFormat = cal.component(.year, from: d) == cal.component(.year, from: Date()) ? "MMM d" : "MMM d, yyyy"
-        return "Added \(df.string(from: d))"
+        let fmt = cal.component(.year, from: d) == cal.component(.year, from: Date()) ? Self.sameYearFmt : Self.fullYearFmt
+        return "Added \(fmt.string(from: d))"
     }
 
     func scheduledDateLabel(_ iso: String) -> String {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withFullDate]
-        f.timeZone = .current
-        guard let d = f.date(from: iso) else { return "" }
+        guard let d = Self.isoFmt.date(from: iso) else { return "" }
         let cal = Calendar.current
         if cal.isDateInToday(d) { return "Today" }
         if cal.isDateInTomorrow(d) { return "Tomorrow" }
         if cal.isDateInYesterday(d) { return "Yesterday" }
-        let df = DateFormatter()
-        df.dateFormat = "EEE MMM d"
-        return df.string(from: d)
+        return Self.scheduleLabelFmt.string(from: d)
     }
 
     func daysUntilDeadline(_ dl: String) -> Int {
-        let f = ISO8601DateFormatter()
-        f.formatOptions = [.withFullDate]
-        f.timeZone = .current
-        guard let d = f.date(from: dl) else { return Int.max }
+        guard let d = Self.isoFmt.date(from: dl) else { return Int.max }
         let cal = Calendar.current
         let start = cal.startOfDay(for: Date())
         let end = cal.startOfDay(for: d)

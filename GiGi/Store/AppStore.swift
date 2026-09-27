@@ -144,6 +144,8 @@ final class AppStore {
     // MARK: Swipe
     var swipedTaskId: Int? = nil
 
+    @ObservationIgnored private var saveSideEffectsTask: Task<Void, Never>?
+
     // MARK: Lapsed
     var dismissedLapseIds: [Int] = []
 
@@ -223,9 +225,15 @@ final class AppStore {
         ud.set(defaultTaskSort.rawValue, forKey: "gigi.defaultTaskSort")
         ud.set(nextId, forKey: "gigi.nextId")
         ud.set(nextCatId, forKey: "gigi.nextCatId")
-        updateBadge()
-        scheduleMorningNotification()
-        pushToKVStore()
+        // Debounce badge update, notification scheduling, and iCloud push —
+        // these are expensive and don't need to block each user interaction.
+        saveSideEffectsTask?.cancel()
+        saveSideEffectsTask = Task {
+            do { try await Task.sleep(for: .seconds(1.5)) } catch { return }
+            updateBadge()
+            scheduleMorningNotification()
+            pushToKVStore()
+        }
     }
 
     func updateBadge() {
