@@ -9,10 +9,11 @@ var sharedDefaults: UserDefaults { UserDefaults(suiteName: appGroupId) ?? .stand
 // MARK: - Supporting Types
 
 enum AppTab: String, Hashable, CaseIterable {
-    case tasks, calendar, history, settings
+    case today, tasks, calendar, history, settings
 
     var title: String {
         switch self {
+        case .today:    "Today"
         case .tasks:    "Tasks"
         case .calendar: "Calendar"
         case .history:  "History"
@@ -22,6 +23,7 @@ enum AppTab: String, Hashable, CaseIterable {
 
     var icon: String {
         switch self {
+        case .today:    "sun.max"
         case .tasks:    "checklist"
         case .calendar: "calendar"
         case .history:  "clock.arrow.circlepath"
@@ -113,7 +115,7 @@ final class AppStore {
     var defaultCategory: String
 
     // MARK: Navigation
-    var selectedTab: AppTab = .tasks
+    var selectedTab: AppTab = .today
     var selectedTaskId: Int? = nil
     var showDetail: Bool = false
 

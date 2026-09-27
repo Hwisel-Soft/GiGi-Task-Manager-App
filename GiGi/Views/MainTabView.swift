@@ -28,6 +28,9 @@ struct MainTabView: View {
         } detail: {
             NavigationStack {
                 switch store.selectedTab {
+                case .today:
+                    TodayView()
+                        .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
                 case .tasks:
                     TasksView()
                         .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
@@ -59,6 +62,10 @@ struct MainTabView: View {
     var iosLayout: some View {
         @Bindable var store = store
         return TabView(selection: $store.selectedTab) {
+            TodayView()
+                .tabItem { Label("Today", systemImage: "sun.max") }
+                .tag(AppTab.today)
+
             NavigationStack {
                 TasksView()
                     .navigationDestination(isPresented: $store.showDetail) {

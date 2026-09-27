@@ -67,90 +67,68 @@ struct TaskCardView: View {
     }
 
     var cardFace: some View {
-        HStack(spacing: 0) {
-            // Priority bar
-            Rectangle()
-                .fill(C.priorityColor(task.priority))
-                .frame(width: 4)
-                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 4, bottomLeadingRadius: 4))
+        HStack(spacing: 11) {
+            // Checkbox
+            Circle()
+                .strokeBorder(
+                    task.priority == .high ? C.high : C.border,
+                    lineWidth: 1.5
+                )
+                .frame(width: 20, height: 20)
 
             // Content
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(task.title)
-                    .font(.subheadline.bold())
+                    .font(.subheadline.weight(.semibold))
                     .foregroundColor(C.text)
                     .lineLimit(1)
 
-                HStack(spacing: 6) {
+                // Meta row
+                HStack(spacing: 5) {
                     if let s = task.startTime, let e = task.endTime, let p = task.period {
                         let dateLabel = task.bookedDate.map { scheduledDateLabel($0) } ?? ""
                         let timeLabel = dateLabel.isEmpty ? "\(s)–\(e) \(p)" : "\(dateLabel) · \(s)–\(e) \(p)"
                         Text(timeLabel)
-                            .font(.caption.weight(.semibold))
                             .foregroundColor(store.isLapsed(task) ? C.high : C.primary)
+                            .fontWeight(.semibold)
                     }
                     if task.age > 0 {
-                        Text("\(task.age)d")
-                            .font(.caption2.bold())
-                            .foregroundColor(C.med)
+                        Text("·").foregroundColor(C.border)
+                        Text("\(task.age)d").foregroundColor(C.med).bold()
                     }
                     if task.autoRolled == true {
-                        Text("↻ Rolled")
-                            .font(.caption2.bold())
-                            .foregroundColor(C.med)
-                    }
-                    if let cd = task.createdDate {
-                        Text(shortCreatedDate(cd))
-                            .font(.caption2)
-                            .foregroundColor(C.muted)
+                        Text("↻").foregroundColor(C.med)
                     }
                     if let dl = task.deadline, daysUntilDeadline(dl) <= 3 {
-                        Text("Due \(formattedDeadline(dl))")
-                            .font(.caption2.bold())
-                            .foregroundColor(C.high)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 1)
-                            .background(C.highLight)
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                        Text("·").foregroundColor(C.border)
+                        Text("Due \(formattedDeadline(dl))").foregroundColor(C.high).bold()
                     }
                     if !task.category.isEmpty {
-                        HStack(spacing: 4) {
-                            Circle()
-                                .fill(store.categoryColor(task.category))
-                                .frame(width: 6, height: 6)
-                            Text(task.category)
-                                .font(.caption2)
-                                .foregroundColor(C.muted)
-                        }
+                        Text("·").foregroundColor(C.border)
+                        Text(task.category).foregroundColor(C.muted)
                     }
                 }
+                .font(.caption2)
 
                 if showStateBadge {
-                    HStack(spacing: 6) {
-                        priorityPill
-                        stateBadgeView
-                    }
-                    .padding(.top, 2)
+                    stateBadgeView.padding(.top, 2)
                 }
             }
-            .padding(.horizontal, 13)
-            .padding(.vertical, 13)
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Overflow button
-            Button {
-                if isOpen { close() } else { open() }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .font(.callout.weight(.medium))
-                    .foregroundColor(C.muted)
-                    .padding(.horizontal, 14)
-                    .frame(maxHeight: .infinity)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("More actions")
+            // Priority badge (always visible)
+            priorityBadgeCompact
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .background(cardBackground)
+        .overlay(alignment: .leading) {
+            if task.priority == .high {
+                Rectangle()
+                    .fill(C.high)
+                    .frame(width: 3)
+            }
+        }
     }
 
     private var cardBackground: Color {
@@ -177,6 +155,24 @@ struct TaskCardView: View {
             .padding(.vertical, 2)
             .background(bg)
             .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    @ViewBuilder
+    private var priorityBadgeCompact: some View {
+        let (label, fg, bg): (String, Color, Color) = {
+            switch task.priority {
+            case .high:   return ("High", C.high, C.highLight)
+            case .medium: return ("Med", C.primary, C.primaryLight)
+            case .low:    return ("Low", C.muted, C.border)
+            }
+        }()
+        Text(label)
+            .font(.caption2.bold())
+            .foregroundColor(fg)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(bg)
+            .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 
     @ViewBuilder

@@ -38,33 +38,33 @@ struct GColors {
     let purpleLight: Color
 
     static let light = GColors(
-        primary:     Color(hex: "#3D5AFE"),
-        primaryDark: Color(hex: "#2942CC"),
-        primaryLight:Color(hex: "#EEF1FF"),
+        primary:     Color(hex: "#1547CC"),
+        primaryDark: Color(hex: "#0E32A0"),
+        primaryLight:Color(hex: "#E0E8FF"),
         pink:        Color(hex: "#FF6B9D"),
         pinkLight:   Color(hex: "#FFF0F5"),
-        high:        Color(hex: "#C62828"), // darkened for 5.6:1 AA contrast
+        high:        Color(hex: "#C62828"),
         highLight:   Color(hex: "#FEF2F2"),
-        med:         Color(hex: "#9B5000"), // darkened for 5.7:1 AA contrast
+        med:         Color(hex: "#9B5000"),
         medLight:    Color(hex: "#FFF3E0"),
-        low:         Color(hex: "#6B6B6B"), // darkened for 4.7:1 AA contrast
+        low:         Color(hex: "#6B6B6B"),
         lowLight:    Color(hex: "#F5F5F5"),
-        bg:          Color(hex: "#F4F5FF"),
+        bg:          Color(hex: "#F0F2FF"),
         card:        Color(hex: "#FFFFFF"),
         text:        Color(hex: "#0D0D2B"),
         sub:         Color(hex: "#4A4A6A"),
-        muted:       Color(hex: "#6E6E8C"), // darkened for 4.6:1 AA contrast
-        border:      Color(hex: "#EEEEF5"),
-        green:       Color(hex: "#2E7D32"), // darkened for 5.0:1 AA contrast
+        muted:       Color(hex: "#6E6E8C"),
+        border:      Color(hex: "#E4E8F5"),
+        green:       Color(hex: "#2E7D32"),
         greenLight:  Color(hex: "#F0FAF0"),
         purple:      Color(hex: "#9C27B0"),
         purpleLight: Color(hex: "#F5EEFF")
     )
 
     static let dark = GColors(
-        primary:     Color(hex: "#738FFF"),
-        primaryDark: Color(hex: "#5270FF"),
-        primaryLight:Color(.sRGB, red: 0.451, green: 0.561, blue: 1, opacity: 0.18),
+        primary:     Color(hex: "#5A82FF"),
+        primaryDark: Color(hex: "#3D63E8"),
+        primaryLight:Color(.sRGB, red: 0.30, green: 0.48, blue: 1.0, opacity: 0.18),
         pink:        Color(hex: "#FF6B9D"),
         pinkLight:   Color(.sRGB, red: 1, green: 0.420, blue: 0.616, opacity: 0.15),
         high:        Color(hex: "#FF6B6B"),
