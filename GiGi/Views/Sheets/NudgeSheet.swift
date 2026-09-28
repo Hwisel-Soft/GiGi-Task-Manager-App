@@ -85,9 +85,11 @@ struct NudgeSheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        #endif
     }
 
     @ViewBuilder

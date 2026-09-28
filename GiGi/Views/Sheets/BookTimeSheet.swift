@@ -208,9 +208,11 @@ struct BookTimeSheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        #endif
     }
 
     @ViewBuilder func sectionLabel(_ s: String) -> some View {

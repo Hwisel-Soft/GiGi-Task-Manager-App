@@ -115,9 +115,11 @@ struct CategorySheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        #endif
     }
 
     @ViewBuilder func fieldLabel(_ s: String) -> some View {

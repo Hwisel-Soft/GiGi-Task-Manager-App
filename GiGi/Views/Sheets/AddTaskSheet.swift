@@ -195,9 +195,11 @@ struct AddTaskSheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.fraction(0.88)])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        #endif
         .onDisappear { speechRec.stop() }
     }
 

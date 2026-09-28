@@ -89,9 +89,11 @@ struct WaitingSheet: View {
                 }
             }
         }
+        #if os(iOS)
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
         .presentationBackground(C.bg)
+        #endif
         .onAppear {
             if store.waitForm.followUpDate.isEmpty {
                 let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
