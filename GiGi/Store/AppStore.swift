@@ -697,6 +697,19 @@ final class AppStore {
         goBack()
     }
 
+    func extendFollowUp(_ id: Int, to date: Date) {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let dateStr = isoFmt.string(from: date)
+        update(id) { t in
+            t.followUpDate = dateStr
+        }
+        if let task = tasks.first(where: { $0.id == id }),
+           let waitingOn = task.waitingOn {
+            notifSvc.cancelFollowUp(taskId: id)
+            notifSvc.scheduleFollowUp(taskId: id, title: task.title, waitingOn: waitingOn, date: date)
+        }
+    }
+
     func carryForward(_ id: Int) {
         if let task = tasks.first(where: { $0.id == id }) { removeCalendarEvent(for: task) }
         notifSvc.cancelSessionEnd(taskId: id)

@@ -6,6 +6,8 @@ struct TaskDetailView: View {
     private var C: GColors { store.C }
 
     @State private var showDeleteConfirm = false
+    @State private var showExtendPicker = false
+    @State private var extendDate: Date = Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
 
     private var task: GTask? { store.selectedTask() }
 
@@ -171,6 +173,57 @@ struct TaskDetailView: View {
                                 .accessibilityHint("Mark as unblocked, move back to unscheduled")
                             }
                             .padding(.top, 14)
+
+                            // Extend follow-up row
+                            Divider().padding(.top, 10)
+                            Button {
+                                if !showExtendPicker {
+                                    let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+                                    extendDate = isoFmt.date(from: task.followUpDate ?? "") ??
+                                        (Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date())
+                                }
+                                showExtendPicker.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "calendar.badge.clock")
+                                        .font(.footnote)
+                                    Text(followUpLabel(task))
+                                        .font(.footnote.weight(.semibold))
+                                    Spacer()
+                                    Image(systemName: showExtendPicker ? "chevron.up" : "chevron.down")
+                                        .font(.caption2)
+                                }
+                                .foregroundColor(C.purple)
+                                .padding(.top, 10)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Change the follow-up reminder date")
+
+                            if showExtendPicker {
+                                let tomorrow = Calendar.current.date(byAdding: .day, value: 1,
+                                    to: Calendar.current.startOfDay(for: Date())) ?? Date()
+                                VStack(spacing: 10) {
+                                    DatePicker("", selection: $extendDate, in: tomorrow..., displayedComponents: .date)
+                                        .datePickerStyle(.compact)
+                                        .labelsHidden()
+                                        .tint(C.purple)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Button {
+                                        store.extendFollowUp(task.id, to: extendDate)
+                                        showExtendPicker = false
+                                    } label: {
+                                        Text("Set Follow-up Date")
+                                            .font(.footnote.weight(.heavy))
+                                            .foregroundColor(.white)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 10)
+                                            .background(C.purple)
+                                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .padding(.top, 6)
+                            }
                         }
                         .padding(16)
                         .background(C.purpleLight)
@@ -343,5 +396,14 @@ struct TaskDetailView: View {
             .foregroundColor(C.muted)
             .tracking(0.8)
             .padding(.bottom, 8)
+    }
+
+    func followUpLabel(_ task: GTask) -> String {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        guard let dateStr = task.followUpDate, let date = isoFmt.date(from: dateStr) else {
+            return "Set Follow-up Date"
+        }
+        let df = DateFormatter(); df.dateStyle = .medium; df.timeStyle = .none
+        return "Follow-up: \(df.string(from: date))"
     }
 }
