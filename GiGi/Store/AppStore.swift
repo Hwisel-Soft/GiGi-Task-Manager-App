@@ -223,6 +223,21 @@ final class AppStore {
     func save() {
         let ud = sharedDefaults
         let encoder = JSONEncoder()
+
+        // Absorb any tasks written to sharedDefaults by an AppIntent (Siri/Shortcuts)
+        // while this process was running. AppIntents run in-process and write directly
+        // to sharedDefaults without going through AppStore, so a plain save() would
+        // overwrite their work. Merging first ensures they survive.
+        if let d = ud.data(forKey: "gigi.tasks"),
+           let stored = try? JSONDecoder().decode([GTask].self, from: d) {
+            let inMemoryIds = Set(tasks.map { $0.id })
+            let external = stored.filter { !inMemoryIds.contains($0.id) && $0.id >= 11 }
+            if !external.isEmpty {
+                tasks.append(contentsOf: external)
+                nextId = max(nextId, (stored.map { $0.id }.max() ?? 0) + 1)
+            }
+        }
+
         if let d = try? encoder.encode(tasks) { ud.set(d, forKey: "gigi.tasks") }
         if let d = try? encoder.encode(categories) { ud.set(d, forKey: "gigi.categories") }
         ud.set(darkMode, forKey: "gigi.darkMode")

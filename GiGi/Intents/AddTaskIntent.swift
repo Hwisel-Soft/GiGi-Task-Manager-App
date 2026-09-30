@@ -11,7 +11,6 @@ struct AddTaskIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let ud = sharedDefaults
-        let nextId = max(11, ud.integer(forKey: "gigi.nextId"))
         let defaultPriority = Priority(rawValue: ud.string(forKey: "gigi.defaultPriority") ?? "") ?? .medium
         let defaultDuration = ud.string(forKey: "gigi.defaultDuration") ?? "30m"
 
@@ -20,6 +19,12 @@ struct AddTaskIntent: AppIntent {
            let decoded = try? JSONDecoder().decode([GTask].self, from: data) {
             tasks = decoded
         }
+
+        // Derive next ID from the actual max in the stored list to avoid collisions
+        // when gigi.nextId in sharedDefaults is stale (e.g. first Siri use after install).
+        let storedNextId = ud.integer(forKey: "gigi.nextId")
+        let maxExistingId = tasks.map { $0.id }.max() ?? 10
+        let nextId = max(11, max(storedNextId, maxExistingId + 1))
 
         let fmt = ISO8601DateFormatter()
         fmt.formatOptions = [.withFullDate]
