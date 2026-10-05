@@ -1,0 +1,26 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Add task in ${applicationName}" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πρόσθεσε εργασία στο ${applicationName}" } }
+      }
+    },
+    "New task in ${applicationName}" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία στο ${applicationName}" } }
+      }
+    },
+    "Create task in ${applicationName}" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Δημιούργησε εργασία στο ${applicationName}" } }
+      }
+    },
+    "Add Task" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

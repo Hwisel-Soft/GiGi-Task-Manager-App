@@ -38,6 +38,8 @@
 		4BDEF7752A34A2D885E71316 /* WaitingSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F3129528D15C8D9788BCFB /* WaitingSheet.swift */; };
 		4CC9B42E8C0ED163352391D3 /* CalendarSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A58419A1268D09D6E757CE9 /* CalendarSyncService.swift */; };
 		511BA29EA0B981A8B82FD740 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB90C7D713FE7D39EBFBF9BE /* AppStore.swift */; };
+		572D023C71072A138CC84A0E /* AppShortcutsLocalizations.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DAA34E6A58989CC1A6A44345 /* AppShortcutsLocalizations.xcstrings */; };
+		5BD7FE0A427A985B6C985B41 /* AppShortcutsLocalizations.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DAA34E6A58989CC1A6A44345 /* AppShortcutsLocalizations.xcstrings */; };
 		60BB8597178233E3CE583C08 /* AddTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BA4C279BDC57A2103DEE6C /* AddTaskIntent.swift */; };
 		635511FAF6D43E908112B2C2 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB4A1EE6E512439E3F7A83F /* TaskDetailView.swift */; };
 		6518AC3078ECE662F8177C09 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15408D98CBFB22B8D3105BF7 /* CalendarView.swift */; };
@@ -95,6 +97,7 @@
 		D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 		D662B87A2B18598A86E275CB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D726CBF953B43D3B0FF7EB9C /* AddTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskSheet.swift; sourceTree = "<group>"; };
+		DAA34E6A58989CC1A6A44345 /* AppShortcutsLocalizations.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = AppShortcutsLocalizations.xcstrings; sourceTree = "<group>"; };
 		E07907259B486151E950DC08 /* WaitingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingView.swift; sourceTree = "<group>"; };
 		E2F3129528D15C8D9788BCFB /* WaitingSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingSheet.swift; sourceTree = "<group>"; };
 		E6E2CBAAC4C35BA19936597F /* GTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GTask.swift; sourceTree = "<group>"; };
@@ -280,6 +283,7 @@
 		EC975996737E1C7F4859DF7C /* GiGi */ = {
 			isa = PBXGroup;
 			children = (
+				DAA34E6A58989CC1A6A44345 /* AppShortcutsLocalizations.xcstrings */,
 				AC59BD98258EB299E005AEE3 /* Assets.xcassets */,
 				047D2C367AD1615EF6D7001B /* GiGi.entitlements */,
 				789B98A341E1095D9429DD52 /* GiGi.mac.entitlements */,
@@ -379,6 +383,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				572D023C71072A138CC84A0E /* AppShortcutsLocalizations.xcstrings in Resources */,
 				343BF49A917D6E18FD540533 /* Assets.xcassets in Resources */,
 				0C7AF1E0CA8416F8693909E2 /* Localizable.xcstrings in Resources */,
 			);
@@ -388,6 +393,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BD7FE0A427A985B6C985B41 /* AppShortcutsLocalizations.xcstrings in Resources */,
 				3BDB2D18366214C190D2981B /* Assets.xcassets in Resources */,
 				7E8A25F6F0AE9BD2F647BE57 /* Localizable.xcstrings in Resources */,
 			);
