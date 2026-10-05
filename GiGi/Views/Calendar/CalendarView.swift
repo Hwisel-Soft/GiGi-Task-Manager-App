@@ -60,12 +60,19 @@ struct CalendarView: View {
         return store.lapsedTasks.filter { $0.bookedDate == dateStr }
     }
 
+    private var overdueWaitingForSelectedDay: [GTask] {
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let todayStr = isoFmt.string(from: Date())
+        guard selectedDayISO == todayStr else { return [] }
+        return store.waitingTasks.filter { store.isFollowUpDue($0) }
+    }
+
     private var totalPlannedForSelectedDay: Int {
         let dateStr = selectedDayISO
         let booked = tasksForSelectedDay.count
         let lapsed = store.lapsedTasks.filter { $0.bookedDate == dateStr }.count
         let completed = store.completedTasks.filter { $0.completedDateLabel == dateStr }.count
-        return booked + lapsed + completed
+        return booked + lapsed + completed + overdueWaitingForSelectedDay.count
     }
 
     private var colorfulBgs: [Color] {
@@ -162,7 +169,7 @@ struct CalendarView: View {
 
                 // Task list for selected day
                 ScrollView {
-                    if tasksForSelectedDay.isEmpty && completedForSelectedDay.isEmpty && lapsedForSelectedDay.isEmpty {
+                    if tasksForSelectedDay.isEmpty && completedForSelectedDay.isEmpty && lapsedForSelectedDay.isEmpty && overdueWaitingForSelectedDay.isEmpty {
                         VStack(spacing: 12) {
                             Text(dayEmoji).font(.system(size: 48))
                             Text(dayEmptyTitle)
@@ -182,6 +189,10 @@ struct CalendarView: View {
                             }
                             ForEach(Array(lapsedForSelectedDay.enumerated()), id: \.element.id) { idx, task in
                                 calTaskCard(task, bgIndex: idx % colorfulBgs.count, lapsed: true)
+                                    .onTapGesture { store.openTask(task.id) }
+                            }
+                            ForEach(Array(overdueWaitingForSelectedDay.enumerated()), id: \.element.id) { idx, task in
+                                calTaskCard(task, bgIndex: idx % colorfulBgs.count, waiting: true)
                                     .onTapGesture { store.openTask(task.id) }
                             }
                             ForEach(Array(completedForSelectedDay.enumerated()), id: \.element.id) { idx, task in
@@ -231,11 +242,11 @@ struct CalendarView: View {
     }
 
     @ViewBuilder
-    func calTaskCard(_ task: GTask, bgIndex: Int, completed: Bool = false, lapsed: Bool = false) -> some View {
+    func calTaskCard(_ task: GTask, bgIndex: Int, completed: Bool = false, lapsed: Bool = false, waiting: Bool = false) -> some View {
         let bg = store.colorfulCards ? colorfulBgs[bgIndex] : C.card
         let isAutoRolled = task.autoRolled == true
-        let iconName = completed ? "checkmark" : (lapsed ? "exclamationmark.circle" : "clock")
-        let iconColor = completed ? C.green : (lapsed ? C.high : C.priorityColor(task.priority))
+        let iconName = completed ? "checkmark" : (lapsed ? "exclamationmark.circle" : (waiting ? "clock.badge.questionmark" : "clock"))
+        let iconColor = completed ? C.green : (lapsed ? C.high : (waiting ? C.purple : C.priorityColor(task.priority)))
         HStack(spacing: 12) {
             ZStack {
                 Circle()
@@ -256,6 +267,11 @@ struct CalendarView: View {
                         .font(.caption.weight(.semibold))
                         .foregroundColor(C.muted)
                 }
+                if waiting {
+                    Text("Follow-up overdue · \(task.waitingOn ?? "someone")")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundColor(C.purple)
+                }
                 if lapsed {
                     Text("Lapsed")
                         .font(.caption2.weight(.semibold))
@@ -270,12 +286,15 @@ struct CalendarView: View {
             Spacer()
         }
         .padding(14)
-        .background(lapsed ? C.highLight : (completed ? C.card.opacity(0.5) : bg))
+        .background(lapsed ? C.highLight : (waiting ? C.purpleLight : (completed ? C.card.opacity(0.5) : bg)))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay {
             if lapsed {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(C.high.opacity(0.4), lineWidth: 1.5)
+            } else if waiting {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(C.purple.opacity(0.4), lineWidth: 1.5)
             } else if isAutoRolled {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [5]))

@@ -14,6 +14,7 @@
 		07C958060F947794B978068E /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */; };
 		0A8DE8A8A2C53E863172390D /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E752A05355624F5DAE878FBB /* SpeechRecognizer.swift */; };
 		0B3B081630F8307E26455465 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E752A05355624F5DAE878FBB /* SpeechRecognizer.swift */; };
+		0C7AF1E0CA8416F8693909E2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D1ADBB835FA62AACB9ABB715 /* Localizable.xcstrings */; };
 		0FFF0C6F7EFBAB4003499011 /* LapsedSessionModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837E4A31F544F28AAB6EE6F6 /* LapsedSessionModal.swift */; };
 		138DA51CEFA65D77A40519B0 /* GTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E2CBAAC4C35BA19936597F /* GTask.swift */; };
 		17D7C9E6A5592BF0ACD0974F /* AddTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BA4C279BDC57A2103DEE6C /* AddTaskIntent.swift */; };
@@ -44,6 +45,7 @@
 		6BCF21450333707A690F3F54 /* PlatformHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6BB13ED33EA9DC2F7A30916 /* PlatformHelpers.swift */; };
 		78A6042848BD316CA53300C9 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB4A1EE6E512439E3F7A83F /* TaskDetailView.swift */; };
 		7D7EDA57D6A5820963E9E873 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDEACCC8A4B63B27CDD8CAA /* HistoryView.swift */; };
+		7E8A25F6F0AE9BD2F647BE57 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D1ADBB835FA62AACB9ABB715 /* Localizable.xcstrings */; };
 		80914959956DFA87A0F2018A /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */; };
 		81BEE27D3108C275BBC2C880 /* InfoModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C38D90858EBCA14B6DED9A5 /* InfoModals.swift */; };
 		82AD8AFFFECE40D0CCEE3D7F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDEACCC8A4B63B27CDD8CAA /* HistoryView.swift */; };
@@ -89,6 +91,7 @@
 		AC59BD98258EB299E005AEE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B843B6AAB8E1114C3E21B018 /* GiGiMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GiGiMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
+		D1ADBB835FA62AACB9ABB715 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
 		D662B87A2B18598A86E275CB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D726CBF953B43D3B0FF7EB9C /* AddTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskSheet.swift; sourceTree = "<group>"; };
@@ -280,6 +283,7 @@
 				AC59BD98258EB299E005AEE3 /* Assets.xcassets */,
 				047D2C367AD1615EF6D7001B /* GiGi.entitlements */,
 				789B98A341E1095D9429DD52 /* GiGi.mac.entitlements */,
+				D1ADBB835FA62AACB9ABB715 /* Localizable.xcstrings */,
 				97341CB84C73FF7C94014785 /* App */,
 				11A086F2460F1232BB68F86A /* Design */,
 				AED1490BC7A1A8B52ED4F81B /* Intents */,
@@ -354,6 +358,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				el,
 				en,
 			);
 			mainGroup = 059F58954DAAEB0A25BBAD11;
@@ -375,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				343BF49A917D6E18FD540533 /* Assets.xcassets in Resources */,
+				0C7AF1E0CA8416F8693909E2 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BDB2D18366214C190D2981B /* Assets.xcassets in Resources */,
+				7E8A25F6F0AE9BD2F647BE57 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

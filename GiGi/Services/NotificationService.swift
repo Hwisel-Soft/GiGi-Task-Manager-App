@@ -27,7 +27,7 @@ final class NotificationService {
         center.removePendingNotificationRequests(withIdentifiers: [Self.morningId])
 
         let content = UNMutableNotificationContent()
-        content.title = "Good morning from GiGi"
+        content.title = String(localized: "Good morning from GiGi")
         content.body = body
         content.sound = .default
 
@@ -50,8 +50,8 @@ final class NotificationService {
         let id = Self.sessionEndId(taskId)
         center.removePendingNotificationRequests(withIdentifiers: [id])
         let content = UNMutableNotificationContent()
-        content.title = "Session ended — \(title)"
-        content.body = "Did you finish it? Open GiGi to log your progress."
+        content.title = String(format: String(localized: "Session ended — %@"), title)
+        content.body = String(localized: "Did you finish it? Open GiGi to log your progress.")
         content.sound = .default
         content.badge = NSNumber(value: badgeCount)
         let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: endDate)
@@ -72,8 +72,8 @@ final class NotificationService {
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: [Self.followUpId(taskId)])
         let content = UNMutableNotificationContent()
-        content.title = "Follow up: \(title)"
-        content.body = "Time to check in with \(waitingOn)."
+        content.title = String(format: String(localized: "Follow up: %@"), title)
+        content.body = String(format: String(localized: "Time to check in with %@."), waitingOn)
         content.sound = .default
         let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
@@ -94,7 +94,7 @@ final class NotificationService {
         center.removePendingNotificationRequests(withIdentifiers: [Self.weeklyId])
 
         let content = UNMutableNotificationContent()
-        content.title = "Your week in GiGi"
+        content.title = String(localized: "Your week in GiGi")
         content.body = body
         content.sound = .default
 

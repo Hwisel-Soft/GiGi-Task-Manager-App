@@ -985,10 +985,12 @@ final class AppStore {
         let unsched = unscheduledTasks.count
         let followUp = waitingTasks.filter { isFollowUpDue($0) }.count
         var parts: [String] = []
-        if lapsed > 0 { parts.append("\(lapsed) lapsed") }
-        if unsched > 0 { parts.append("\(unsched) unscheduled") }
-        if followUp > 0 { parts.append("\(followUp) follow-up\(followUp == 1 ? "" : "s")") }
-        let body = parts.isEmpty ? "All clear for today!" : parts.joined(separator: " · ")
+        if lapsed > 0 { parts.append(String(format: String(localized: "%lld lapsed"), lapsed)) }
+        if unsched > 0 { parts.append(String(format: String(localized: "%lld unscheduled"), unsched)) }
+        if followUp > 0 { parts.append(followUp == 1
+            ? String(format: String(localized: "%lld follow-up"), followUp)
+            : String(format: String(localized: "%lld follow-ups"), followUp)) }
+        let body = parts.isEmpty ? String(localized: "All clear for today!") : parts.joined(separator: " · ")
         notifSvc.scheduleMorningSummary(hour: morningHour, minute: morningMinute, body: body)
     }
 
