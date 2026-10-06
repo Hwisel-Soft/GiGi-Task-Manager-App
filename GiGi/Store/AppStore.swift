@@ -698,7 +698,7 @@ final class AppStore {
     }
 
     func extendFollowUp(_ id: Int, to date: Date) {
-        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]; isoFmt.timeZone = .current
         let dateStr = isoFmt.string(from: date)
         update(id) { t in
             t.followUpDate = dateStr

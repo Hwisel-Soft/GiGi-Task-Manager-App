@@ -178,9 +178,12 @@ struct TaskDetailView: View {
                             Divider().padding(.top, 10)
                             Button {
                                 if !showExtendPicker {
-                                    let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
-                                    extendDate = isoFmt.date(from: task.followUpDate ?? "") ??
+                                    let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]; isoFmt.timeZone = .current
+                                    let tomorrow = Calendar.current.date(byAdding: .day, value: 1,
+                                        to: Calendar.current.startOfDay(for: Date())) ?? Date()
+                                    let stored = isoFmt.date(from: task.followUpDate ?? "") ??
                                         (Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date())
+                                    extendDate = stored > tomorrow ? stored : tomorrow
                                 }
                                 showExtendPicker.toggle()
                             } label: {
@@ -399,7 +402,7 @@ struct TaskDetailView: View {
     }
 
     func followUpLabel(_ task: GTask) -> String {
-        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]; isoFmt.timeZone = .current
         guard let dateStr = task.followUpDate, let date = isoFmt.date(from: dateStr) else {
             return "Set Follow-up Date"
         }

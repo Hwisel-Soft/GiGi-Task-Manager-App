@@ -96,7 +96,7 @@ struct WaitingSheet: View {
         #endif
         .onAppear {
             if store.waitForm.followUpDate.isEmpty {
-                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]; f.timeZone = .current
                 let threeDays = Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
                 store.waitForm.followUpDate = f.string(from: threeDays)
             }
@@ -110,11 +110,11 @@ struct WaitingSheet: View {
     private var followUpBinding: Binding<Date> {
         Binding(
             get: {
-                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]; f.timeZone = .current
                 return f.date(from: store.waitForm.followUpDate) ?? Date()
             },
             set: { d in
-                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]
+                let f = ISO8601DateFormatter(); f.formatOptions = [.withFullDate]; f.timeZone = .current
                 store.waitForm.followUpDate = f.string(from: d)
             }
         )
