@@ -321,6 +321,16 @@
         "el" : { "stringUnit" : { "state" : "translated", "value" : "Αναφορά σφάλματος" } }
       }
     },
+    "Privacy Policy" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πολιτική απορρήτου" } }
+      }
+    },
+    "Terms of Service" : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όροι χρήσης" } }
+      }
+    },
     "SAY TO SIRI" : {
       "localizations" : {
         "el" : { "stringUnit" : { "state" : "translated", "value" : "ΠΕΊΤΕ ΣΤΟ SIRI" } }

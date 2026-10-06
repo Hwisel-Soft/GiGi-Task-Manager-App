@@ -266,6 +266,36 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    Divider().background(C.border)
+                    Button { gigiOpenURL(URL(string: "https://hwisel.com/pages/privacy-policy")!) } label: {
+                        HStack {
+                            Image(systemName: "lock.shield")
+                                .foregroundColor(C.primary)
+                            Text("Privacy Policy")
+                                .font(.subheadline)
+                                .foregroundColor(C.text)
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .font(.caption)
+                                .foregroundColor(C.muted)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    Divider().background(C.border)
+                    Button { gigiOpenURL(URL(string: "https://hwisel.com/pages/terms-of-service")!) } label: {
+                        HStack {
+                            Image(systemName: "doc.text")
+                                .foregroundColor(C.primary)
+                            Text("Terms of Service")
+                                .font(.subheadline)
+                                .foregroundColor(C.text)
+                            Spacer()
+                            Image(systemName: "arrow.up.right")
+                                .font(.caption)
+                                .foregroundColor(C.muted)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
 
             }
@@ -364,10 +394,9 @@ struct SettingsView: View {
 
 
 """
-        var comps = URLComponents(string: "https://github.com/Hwisel-Soft/GiGi-Task-Manager-App/issues/new")!
+        var comps = URLComponents(string: "mailto:info@hwisel.com")!
         comps.queryItems = [
-            URLQueryItem(name: "labels", value: "ios,bug"),
-            URLQueryItem(name: "title", value: "Bug: "),
+            URLQueryItem(name: "subject", value: "GiGi Bug Report — v\(version) (\(build))"),
             URLQueryItem(name: "body", value: body)
         ]
         guard let url = comps.url else { return }
