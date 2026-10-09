@@ -580,6 +580,36 @@
       "localizations" : {
         "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld παρακολουθήσεις" } }
       }
+    },
+    "No tasks completed this week." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Καμία εργασία δεν ολοκληρώθηκε αυτή την εβδομάδα." } }
+      }
+    },
+    "%lld task still pending." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασία σε εκκρεμότητα." } }
+      }
+    },
+    "%lld tasks still pending." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασίες σε εκκρεμότητα." } }
+      }
+    },
+    "%lld task completed — %@/day avg." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασία ολοκληρώθηκε — %@ ανά ημέρα κατά μέσο όρο." } }
+      }
+    },
+    "%lld tasks completed — %@/day avg." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασίες ολοκληρώθηκαν — %@ ανά ημέρα κατά μέσο όρο." } }
+      }
+    },
+    "Top: %@." : {
+      "localizations" : {
+        "el" : { "stringUnit" : { "state" : "translated", "value" : "Κορυφαία κατηγορία: %@." } }
+      }
     }
   },
   "version" : "1.0"

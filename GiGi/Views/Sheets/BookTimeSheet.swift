@@ -48,6 +48,9 @@ struct BookTimeSheet: View {
                         .datePickerStyle(.graphical)
                         .tint(C.primary)
                         .labelsHidden()
+                        .onChange(of: store.bookForm.date) { _, newVal in
+                            if newVal < minDate { store.bookForm.date = minDate }
+                        }
 
                     // Time picker
                     sectionLabel("Time")

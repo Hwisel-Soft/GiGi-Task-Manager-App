@@ -782,6 +782,7 @@ final class AppStore {
         let followUpDateStr = waitForm.followUpDate.isEmpty ? nil : waitForm.followUpDate
         update(id) { t in
             t.state = .waiting
+            t.autoRolled = nil
             t.waitingOn = waitingOn
             t.waitingNote = waitForm.note.isEmpty ? nil : waitForm.note
             t.followUpDate = followUpDateStr
@@ -833,6 +834,8 @@ final class AppStore {
     }
 
     func bookTask(_ id: Int) {
+        let today = Calendar.current.startOfDay(for: Date())
+        if bookForm.date < today { bookForm.date = today }
         let mins = ["15m": 15, "30m": 30, "45m": 45, "1h": 60, "2h": 120][bookForm.duration] ?? 60
         var h24 = bookForm.hour
         if bookForm.period == "PM" && h24 != 12 { h24 += 12 }
@@ -1045,23 +1048,31 @@ final class AppStore {
             $0.state == .booked || $0.state == .unscheduled || $0.state == .waiting
         }.count
 
+        func pendingStr(_ n: Int) -> String {
+            n == 1
+                ? String(format: String(localized: "%lld task still pending."), n)
+                : String(format: String(localized: "%lld tasks still pending."), n)
+        }
+
         guard count > 0 else {
-            let p = pending > 0 ? " \(pending) task\(pending == 1 ? "" : "s") still pending." : ""
-            return "No tasks completed this week.\(p)"
+            let base = String(localized: "No tasks completed this week.")
+            return pending > 0 ? base + " " + pendingStr(pending) : base
         }
 
         let rate = String(format: "%.1f", Double(count) / 7.0)
-        var body = "\(count) task\(count == 1 ? "" : "s") completed — \(rate)/day avg."
+        var body = count == 1
+            ? String(format: String(localized: "%lld task completed \u{2014} %@/day avg."), count, rate)
+            : String(format: String(localized: "%lld tasks completed \u{2014} %@/day avg."), count, rate)
 
         var catCounts: [String: Int] = [:]
         for task in completedThisWeek where !task.category.isEmpty {
             catCounts[task.category, default: 0] += 1
         }
         if let top = catCounts.max(by: { $0.value < $1.value }), catCounts.count > 1 {
-            body += " Top: \(top.key)."
+            body += " " + String(format: String(localized: "Top: %@."), top.key)
         }
         if pending > 0 {
-            body += " \(pending) still pending."
+            body += " " + pendingStr(pending)
         }
         return body
     }

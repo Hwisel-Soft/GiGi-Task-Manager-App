@@ -78,6 +78,11 @@ struct WaitingView: View {
                 Text("Waiting on \(task.waitingOn ?? "someone")")
                     .font(.caption)
                     .foregroundColor(C.muted)
+                if let label = followUpLabel(task) {
+                    Text(label)
+                        .font(.caption)
+                        .foregroundColor(C.purple)
+                }
                 Text("\(task.waitingDays)d waiting")
                     .font(.caption.bold())
                     .foregroundColor(C.purple)
@@ -108,5 +113,13 @@ struct WaitingView: View {
         .background(C.card)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.07), radius: 5, x: 0, y: 2)
+    }
+
+    func followUpLabel(_ task: GTask) -> String? {
+        guard let dateStr = task.followUpDate, !store.isFollowUpDue(task) else { return nil }
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]; isoFmt.timeZone = .current
+        guard let date = isoFmt.date(from: dateStr) else { return nil }
+        let df = DateFormatter(); df.dateStyle = .medium; df.timeStyle = .none
+        return "Follow up: \(df.string(from: date))"
     }
 }

@@ -11,6 +11,15 @@ struct GiGiApp: App {
                 .preferredColorScheme(store.darkMode ? .dark : .light)
                 .dynamicTypeSize(.xSmall ... .xxLarge)
         }
+        #if os(macOS)
+        .commands {
+            CommandGroup(replacing: .help) {
+                Button("GiGi Help") {
+                    NSWorkspace.shared.open(URL(string: "mailto:info@hwisel.com")!)
+                }
+            }
+        }
+        #endif
     }
 }
 
