@@ -1,24 +1,48 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Add task in ${applicationName}" : {
+    "Add Task" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πρόσθεσε εργασία στο ${applicationName}" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Νέα εργασία"
+          }
+        }
       }
     },
-    "New task in ${applicationName}" : {
+    "Add task in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία στο ${applicationName}" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πρόσθεσε εργασία στο ${applicationName}"
+          }
+        }
       }
     },
     "Create task in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Δημιούργησε εργασία στο ${applicationName}" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δημιούργησε εργασία στο ${applicationName}"
+          }
+        }
       }
     },
-    "Add Task" : {
+    "New task in ${applicationName}" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Νέα εργασία στο ${applicationName}"
+          }
+        }
       }
     }
   },

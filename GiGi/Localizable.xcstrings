@@ -1,616 +1,1426 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Add Category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προσθήκη κατηγορίας" } }
-      }
-    },
-    "Add Task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία" } }
-      }
-    },
-    "Add Task Shortcut" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Συντόμευση εργασίας" } }
-      }
-    },
-    "Add deadline" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προσθήκη προθεσμίας" } }
-      }
-    },
-    "Add notes…" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προσθήκη σημειώσεων…" } }
-      }
-    },
-    "All clear!" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όλα εντάξει!" } }
-      }
-    },
-    "All clear for today!" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όλα εντάξει για σήμερα!" } }
-      }
-    },
-    "Automatically available in Siri" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διαθέσιμο αυτόματα στο Siri" } }
-      }
-    },
-    "Back" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πίσω" } }
-      }
-    },
-    "BOOKED" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΠΡΟΓΡΑΜΜΑΤΙΣΜΈΝΟ" } }
-      }
-    },
-    "Book Time" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ορισμός ώρας" } }
-      }
-    },
-    "Book It" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ορισμός" } }
-      }
-    },
-    "Book It Anyway" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ορισμός παρόλα αυτά" } }
-      }
-    },
-    "Cancel" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ακύρωση" } }
-      }
-    },
-    "Category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Κατηγορία" } }
-      }
-    },
-    "Category name…" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όνομα κατηγορίας…" } }
-      }
-    },
-    "Change the follow-up reminder date" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αλλαγή ημερομηνίας υπενθύμισης" } }
-      }
-    },
-    "Color" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Χρώμα" } }
-      }
-    },
-    "COMPLETION RATE" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΠΟΣΟΣΤΌ ΟΛΟΚΛΉΡΩΣΗΣ" } }
-      }
-    },
-    "Conflict detection checks all calendars connected to iOS." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ο εντοπισμός διενέξεων ελέγχει όλα τα ημερολόγια που συνδέονται με iOS." } }
-      }
-    },
-    "Day" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Μέρα" } }
-      }
-    },
-    "Default Category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προεπιλεγμένη κατηγορία" } }
-      }
-    },
-    "Default Duration" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προεπιλεγμένη διάρκεια" } }
-      }
-    },
-    "Default Priority" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προεπιλεγμένη προτεραιότητα" } }
-      }
-    },
-    "Default Sort" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προεπιλεγμένη ταξινόμηση" } }
-      }
-    },
-    "Delete" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διαγραφή" } }
-      }
-    },
-    "Delete Category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διαγραφή κατηγορίας" } }
-      }
-    },
-    "Delete Task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διαγραφή εργασίας" } }
-      }
-    },
-    "Describe what you're waiting for…" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Περιγράψτε τι περιμένετε…" } }
-      }
-    },
-    "Dictate task title" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Υπαγόρευση τίτλου εργασίας" } }
-      }
-    },
-    "Double tap to open" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διπλό πάτημα για άνοιγμα" } }
-      }
-    },
-    "Duration" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Διάρκεια" } }
-      }
-    },
-    "Edit Category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Επεξεργασία κατηγορίας" } }
-      }
-    },
-    "Enable microphone and speech recognition in Settings to use voice dictation." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ενεργοποιήστε το μικρόφωνο και την αναγνώριση ομιλίας στις Ρυθμίσεις για χρήση υπαγόρευσης." } }
-      }
-    },
-    "Enter a title to add the task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Εισάγετε τίτλο για να προσθέσετε εργασία" } }
-      }
-    },
-    "EXAMPLE" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΠΑΡΆΔΕΙΓΜΑ" } }
-      }
-    },
-    "FOLLOW UP DUE" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΕΚΚΡΕΜΕΊ ΠΑΡΑΚΟΛΟΎΘΗΣΗ" } }
-      }
-    },
-    "Follow up on" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Παρακολούθηση στις" } }
-      }
-    },
-    "GiGi" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "GiGi" } }
-      }
-    },
-    "Good morning from GiGi" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Καλημέρα από το GiGi" } }
-      }
-    },
-    "Got it" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Έγινε" } }
-      }
-    },
-    "Got It" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Έγινε" } }
-      }
-    },
-    "History" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ιστορικό" } }
-      }
-    },
-    "Lapsed" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Εκπρόθεσμη" } }
-      }
-    },
-    "Later — carry forward" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αργότερα — μεταφορά" } }
-      }
-    },
-    "Mark as Waiting" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Σε αναμονή" } }
-      }
-    },
-    "Mark as unblocked, move back to unscheduled" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Κατάργηση αναμονής, επιστροφή στις μη προγραμματισμένες" } }
-      }
-    },
-    "MESSAGE" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΜΉΝΥΜΑ" } }
-      }
-    },
-    "Name" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όνομα" } }
-      }
-    },
-    "New Task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Νέα εργασία" } }
-      }
-    },
-    "No category" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Χωρίς κατηγορία" } }
-      }
-    },
-    "No dependencies." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Δεν υπάρχουν εξαρτήσεις." } }
-      }
-    },
-    "No reminder will be sent without a follow-up date." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Δεν θα αποσταλεί υπενθύμιση χωρίς ημερομηνία παρακολούθησης." } }
-      }
-    },
-    "None" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Κανένα" } }
-      }
-    },
-    "Notes" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Σημειώσεις" } }
-      }
-    },
-    "Nothing unscheduled." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Δεν υπάρχουν μη προγραμματισμένες εργασίες." } }
-      }
-    },
-    "Nothing's blocking you." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τίποτα δεν σε εμποδίζει." } }
-      }
-    },
-    "Nudge" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Υπενθύμιση" } }
-      }
-    },
-    "Open Settings" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Άνοιγμα ρυθμίσεων" } }
-      }
-    },
-    "Park in Waiting" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Σε αναμονή" } }
-      }
-    },
-    "Person's name…" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όνομα ατόμου…" } }
-      }
-    },
-    "Priority" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προτεραιότητα" } }
-      }
-    },
-    "PRIORITY FOLLOW-THROUGH" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΥΛΟΠΟΊΗΣΗ ΠΡΟΤΕΡΑΙΟΤΉΤΩΝ" } }
-      }
-    },
-    "Report a Bug" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αναφορά σφάλματος" } }
-      }
-    },
-    "Privacy Policy" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πολιτική απορρήτου" } }
-      }
-    },
-    "Terms of Service" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Όροι χρήσης" } }
-      }
-    },
-    "SAY TO SIRI" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΠΕΊΤΕ ΣΤΟ SIRI" } }
-      }
-    },
-    "Schedule" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προγραμματισμός" } }
-      }
-    },
-    "Scheduled" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Προγραμματισμένο" } }
-      }
-    },
-    "Send a follow-up message" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αποστολή μηνύματος υπενθύμισης" } }
-      }
-    },
-    "SESSION ENDED" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΣΥΝΕΔΡΊΑ ΟΛΟΚΛΗΡΏΘΗΚΕ" } }
-      }
-    },
-    "Set Follow-up Date" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ορισμός ημερομηνίας παρακολούθησης" } }
-      }
-    },
-    "Settings" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ρυθμίσεις" } }
-      }
-    },
-    "Siri Shortcut" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Συντόμευση Siri" } }
-      }
-    },
-    "SORT BY" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΤΑΞΙΝΌΜΗΣΗ ΚΑΤΆ" } }
-      }
-    },
-    "Summary time" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ώρα σύνοψης" } }
-      }
-    },
-    "Synced" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Συγχρονίστηκε" } }
-      }
-    },
-    "Tap + to add your first task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πατήστε + για να προσθέσετε την πρώτη σας εργασία" } }
-      }
-    },
-    "Tap + to schedule something." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Πατήστε + για προγραμματισμό." } }
-      }
-    },
-    "Task" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Εργασία" } }
-      }
-    },
-    "Task title" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τίτλος εργασίας" } }
-      }
-    },
-    "Task title…" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τίτλος εργασίας…" } }
-      }
-    },
-    "Tasks" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Εργασίες" } }
-      }
-    },
-    "Tasks in this category will become uncategorized." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Οι εργασίες αυτής της κατηγορίας θα αποκατηγοριοποιηθούν." } }
-      }
-    },
-    "Tapping the mic uses on-device speech recognition to transcribe your task title — no network required. Just speak naturally; punctuation is handled automatically." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Το πάτημα του μικροφώνου χρησιμοποιεί αναγνώριση ομιλίας στη συσκευή — δεν απαιτείται δίκτυο. Μιλήστε φυσιολογικά· η στίξη γίνεται αυτόματα." } }
-      }
-    },
-    "The task will be moved to Deleted and can be restored from History." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Η εργασία θα μεταφερθεί στα Διαγραμμένα και μπορεί να αποκατασταθεί από το Ιστορικό." } }
-      }
-    },
-    "This is how your morning notification will appear." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Έτσι θα εμφανίζεται η πρωινή σας ειδοποίηση." } }
-      }
-    },
-    "Time" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ώρα" } }
-      }
-    },
-    "To include Outlook or work events, add your account in iOS Settings → Calendar." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Για συμπερίληψη συμβάντων Outlook ή εργασίας, προσθέστε τον λογαριασμό σας στις Ρυθμίσεις iOS → Ημερολόγιο." } }
-      }
-    },
-    "Today" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Σήμερα" } }
-      }
-    },
-    "Unscheduled" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Μη προγραμματισμένο" } }
-      }
-    },
-    "Unscheduled · tap to schedule" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Μη προγραμματισμένο · πατήστε για προγραμματισμό" } }
-      }
-    },
-    "Version" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Έκδοση" } }
-      }
-    },
-    "Voice Input" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Φωνητική εισαγωγή" } }
-      }
-    },
-    "WAITING ON" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "ΣΕ ΑΝΑΜΟΝΉ ΑΠΌ" } }
-      }
+    ":" : {
+
     },
-    "Waiting" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αναμονή" } }
-      }
+    "·" : {
+      "comment" : "A number of days.",
+      "isCommentAutoGenerated" : true
     },
-    "Waiting on" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Αναμονή από" } }
-      }
+    "· Carried %@d" : {
+
     },
-    "What you need" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τι χρειάζεστε" } }
-      }
+    "· category tag" : {
+      "comment" : "A description of a category tag.",
+      "isCommentAutoGenerated" : true
     },
-    "You're on top of it." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τα πας καλά." } }
-      }
+    "\"Hey Siri, add task — send invoice to client\"" : {
+      "comment" : "A Siri shortcut phrase.",
+      "isCommentAutoGenerated" : true
     },
-    "Your accomplishments, once a week" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Τα επιτεύγματά σας, μία φορά την εβδομάδα" } }
-      }
+    "\"Hey Siri, add task in GiGi\"" : {
+
     },
-    "Your work session just ended. Did you finish it?" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Η εργασία σας μόλις ολοκληρώθηκε. Την τελειώσατε;" } }
-      }
+    "%@" : {
+
     },
-    "across selected period" : {
+    "%@ – %@ %@" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "για την επιλεγμένη περίοδο" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ – %2$@ %3$@"
+          }
+        }
       }
     },
-    "↻ Rolled forward" : {
+    "%@ – %@ %@  ·  You can still proceed." : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "↻ Μεταφέρθηκε" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ – %2$@ %3$@  ·  You can still proceed."
+          }
+        }
       }
     },
-    "✓ Mark Complete" : {
+    "%@ · %@" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "✓ Ολοκλήρωση" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
       }
     },
-    "⏰ FOLLOW UP TODAY" : {
+    "%@ (%@)" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "⏰ ΠΑΡΑΚΟΛΟΎΘΗΣΗ ΣΉΜΕΡΑ" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
       }
     },
-    "🔄 Reschedule" : {
+    "%@ / %@" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "🔄 Επαναπρογραμματισμός" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
       }
     },
-    "Did you finish it? Open GiGi to log your progress." : {
+    "%@ %@" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Το τελειώσατε; Ανοίξτε το GiGi για να καταγράψετε την πρόοδό σας." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
       }
     },
-    "Time to check in with %@." : {
+    "%@ of %@ tasks completed" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Ώρα να επικοινωνήσετε με %@." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ of %2$@ tasks completed"
+          }
+        }
       }
     },
-    "Your week in GiGi" : {
+    "%@ scheduled · %@ unscheduled%@" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Η εβδομάδα σας στο GiGi" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ scheduled · %2$@ unscheduled%3$@"
+          }
+        }
       }
     },
-    "Follow up: %@" : {
+    "%@ task%@ waiting" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Παρακολούθηση: %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ task%2$@ waiting"
+          }
+        }
       }
     },
-    "Session ended — %@" : {
+    "%@/%@ done" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Συνεδρία ολοκληρώθηκε — %@" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@/%2$@ done"
+          }
+        }
       }
     },
-    "Follow-up overdue · %@" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Εκπρόθεσμη παρακολούθηση · %@" } }
-      }
+    "%@%%" : {
+
     },
-    "%lld lapsed" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εκπρόθεσμες" } }
-      }
+    "%@d" : {
+
     },
-    "%lld unscheduled" : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld μη προγραμματισμένες" } }
-      }
+    "%@d waiting" : {
+
     },
     "%lld follow-up" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld παρακολούθηση" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld παρακολούθηση"
+          }
+        }
       }
     },
     "%lld follow-ups" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld παρακολουθήσεις" } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld παρακολουθήσεις"
+          }
+        }
       }
     },
-    "No tasks completed this week." : {
+    "%lld lapsed" : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Καμία εργασία δεν ολοκληρώθηκε αυτή την εβδομάδα." } }
-      }
-    },
-    "%lld task still pending." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασία σε εκκρεμότητα." } }
-      }
-    },
-    "%lld tasks still pending." : {
-      "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασίες σε εκκρεμότητα." } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld εκπρόθεσμες"
+          }
+        }
       }
     },
     "%lld task completed — %@/day avg." : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασία ολοκληρώθηκε — %@ ανά ημέρα κατά μέσο όρο." } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld εργασία ολοκληρώθηκε — %@ ανά ημέρα κατά μέσο όρο."
+          }
+        }
+      }
+    },
+    "%lld task still pending." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld εργασία σε εκκρεμότητα."
+          }
+        }
       }
     },
     "%lld tasks completed — %@/day avg." : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "%lld εργασίες ολοκληρώθηκαν — %@ ανά ημέρα κατά μέσο όρο." } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld εργασίες ολοκληρώθηκαν — %@ ανά ημέρα κατά μέσο όρο."
+          }
+        }
+      }
+    },
+    "%lld tasks still pending." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld εργασίες σε εκκρεμότητα."
+          }
+        }
+      }
+    },
+    "%lld unscheduled" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld μη προγραμματισμένες"
+          }
+        }
+      }
+    },
+    "→ Creates task in GiGi, Medium priority" : {
+      "comment" : "A description of how a Siri shortcut creates a task in GiGi.",
+      "isCommentAutoGenerated" : true
+    },
+    "→ Title filled in, ready to set priority" : {
+      "comment" : "A description of how the mic input is processed.",
+      "isCommentAutoGenerated" : true
+    },
+    "↻" : {
+      "comment" : "A symbol that indicates that a task is automatically rolled.",
+      "isCommentAutoGenerated" : true
+    },
+    "↻ Rolled forward" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "↻ Μεταφέρθηκε"
+          }
+        }
+      }
+    },
+    "+" : {
+
+    },
+    "⏰ FOLLOW UP TODAY" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⏰ ΠΑΡΑΚΟΛΟΎΘΗΣΗ ΣΉΜΕΡΑ"
+          }
+        }
+      }
+    },
+    "✓ Mark Complete" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ Ολοκλήρωση"
+          }
+        }
+      }
+    },
+    "✨" : {
+      "comment" : "A \"magic\" emoji.",
+      "isCommentAutoGenerated" : true
+    },
+    "🎉" : {
+      "comment" : "A 48pt emoji of a party popper.",
+      "isCommentAutoGenerated" : true
+    },
+    "🎙" : {
+      "comment" : "A 🎙️ emoji.",
+      "isCommentAutoGenerated" : true
+    },
+    "🎙 \"Send invoice to Acme by Friday\"" : {
+      "comment" : "A transcribed task title.",
+      "isCommentAutoGenerated" : true
+    },
+    "🏷" : {
+
+    },
+    "🔄 Reschedule" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄 Επαναπρογραμματισμός"
+          }
+        }
+      }
+    },
+    "8:00 AM" : {
+      "comment" : "The time of day.",
+      "isCommentAutoGenerated" : true
+    },
+    "across selected period" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "για την επιλεγμένη περίοδο"
+          }
+        }
+      }
+    },
+    "Add Category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προσθήκη κατηγορίας"
+          }
+        }
+      }
+    },
+    "Add deadline" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προσθήκη προθεσμίας"
+          }
+        }
+      }
+    },
+    "Add notes…" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προσθήκη σημειώσεων…"
+          }
+        }
+      }
+    },
+    "Add Task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Νέα εργασία"
+          }
+        }
+      }
+    },
+    "Add Task Shortcut" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Συντόμευση εργασίας"
+          }
+        }
+      }
+    },
+    "Added %@" : {
+
+    },
+    "All clear for today!" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όλα εντάξει για σήμερα!"
+          }
+        }
+      }
+    },
+    "All clear!" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όλα εντάξει!"
+          }
+        }
+      }
+    },
+    "Automatically available in Siri" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διαθέσιμο αυτόματα στο Siri"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πίσω"
+          }
+        }
+      }
+    },
+    "Book It" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορισμός"
+          }
+        }
+      }
+    },
+    "Book It Anyway" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορισμός παρόλα αυτά"
+          }
+        }
+      }
+    },
+    "Book Time" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορισμός ώρας"
+          }
+        }
+      }
+    },
+    "BOOKED" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΠΡΟΓΡΑΜΜΑΤΙΣΜΈΝΟ"
+          }
+        }
+      }
+    },
+    "Calendar conflict: %@" : {
+
+    },
+    "Cancel" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ακύρωση"
+          }
+        }
+      }
+    },
+    "Category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κατηγορία"
+          }
+        }
+      }
+    },
+    "Category name…" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όνομα κατηγορίας…"
+          }
+        }
+      }
+    },
+    "Change the follow-up reminder date" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αλλαγή ημερομηνίας υπενθύμισης"
+          }
+        }
+      }
+    },
+    "Color" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χρώμα"
+          }
+        }
+      }
+    },
+    "COMPLETION RATE" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΠΟΣΟΣΤΌ ΟΛΟΚΛΉΡΩΣΗΣ"
+          }
+        }
+      }
+    },
+    "Conflict detection checks all calendars connected to iOS." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ο εντοπισμός διενέξεων ελέγχει όλα τα ημερολόγια που συνδέονται με iOS."
+          }
+        }
+      }
+    },
+    "Conflicts with: %@" : {
+
+    },
+    "Day" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μέρα"
+          }
+        }
+      }
+    },
+    "Default Category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προεπιλεγμένη κατηγορία"
+          }
+        }
+      }
+    },
+    "Default Duration" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προεπιλεγμένη διάρκεια"
+          }
+        }
+      }
+    },
+    "Default Priority" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προεπιλεγμένη προτεραιότητα"
+          }
+        }
+      }
+    },
+    "Default Sort" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προεπιλεγμένη ταξινόμηση"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διαγραφή"
+          }
+        }
+      }
+    },
+    "Delete Category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διαγραφή κατηγορίας"
+          }
+        }
+      }
+    },
+    "Delete Task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διαγραφή εργασίας"
+          }
+        }
+      }
+    },
+    "Describe what you're waiting for…" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Περιγράψτε τι περιμένετε…"
+          }
+        }
+      }
+    },
+    "Dictate task title" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Υπαγόρευση τίτλου εργασίας"
+          }
+        }
+      }
+    },
+    "Did you finish it? Open GiGi to log your progress." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το τελειώσατε; Ανοίξτε το GiGi για να καταγράψετε την πρόοδό σας."
+          }
+        }
+      }
+    },
+    "Double tap to open" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διπλό πάτημα για άνοιγμα"
+          }
+        }
+      }
+    },
+    "Due %@" : {
+
+    },
+    "Duration" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Διάρκεια"
+          }
+        }
+      }
+    },
+    "Edit Category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Επεξεργασία κατηγορίας"
+          }
+        }
+      }
+    },
+    "Enable microphone and speech recognition in Settings to use voice dictation." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ενεργοποιήστε το μικρόφωνο και την αναγνώριση ομιλίας στις Ρυθμίσεις για χρήση υπαγόρευσης."
+          }
+        }
+      }
+    },
+    "Enter a title to add the task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εισάγετε τίτλο για να προσθέσετε εργασία"
+          }
+        }
+      }
+    },
+    "EXAMPLE" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΠΑΡΆΔΕΙΓΜΑ"
+          }
+        }
+      }
+    },
+    "FOLLOW UP DUE" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΕΚΚΡΕΜΕΊ ΠΑΡΑΚΟΛΟΎΘΗΣΗ"
+          }
+        }
+      }
+    },
+    "Follow up on" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Παρακολούθηση στις"
+          }
+        }
+      }
+    },
+    "Follow up: %@" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Παρακολούθηση: %@"
+          }
+        }
+      }
+    },
+    "Follow-up overdue · %@" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εκπρόθεσμη παρακολούθηση · %@"
+          }
+        }
+      }
+    },
+    "Following up with %@ about:" : {
+
+    },
+    "G" : {
+      "comment" : "The name of the app.",
+      "isCommentAutoGenerated" : true
+    },
+    "GiGi" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GiGi"
+          }
+        }
+      }
+    },
+    "Good morning from GiGi" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Καλημέρα από το GiGi"
+          }
+        }
+      }
+    },
+    "Got it" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έγινε"
+          }
+        }
+      }
+    },
+    "Got It" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έγινε"
+          }
+        }
+      }
+    },
+    "History" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ιστορικό"
+          }
+        }
+      }
+    },
+    "Lapsed" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εκπρόθεσμη"
+          }
+        }
+      }
+    },
+    "LAPSED (%@)" : {
+
+    },
+    "Later — carry forward" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αργότερα — μεταφορά"
+          }
+        }
+      }
+    },
+    "Mark as unblocked, move back to unscheduled" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κατάργηση αναμονής, επιστροφή στις μη προγραμματισμένες"
+          }
+        }
+      }
+    },
+    "Mark as Waiting" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σε αναμονή"
+          }
+        }
+      }
+    },
+    "MESSAGE" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΜΉΝΥΜΑ"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όνομα"
+          }
+        }
+      }
+    },
+    "New Task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Νέα εργασία"
+          }
+        }
+      }
+    },
+    "No category" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χωρίς κατηγορία"
+          }
+        }
+      }
+    },
+    "No dependencies." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν υπάρχουν εξαρτήσεις."
+          }
+        }
+      }
+    },
+    "No reminder will be sent without a follow-up date." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν θα αποσταλεί υπενθύμιση χωρίς ημερομηνία παρακολούθησης."
+          }
+        }
+      }
+    },
+    "No tasks completed this week." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Καμία εργασία δεν ολοκληρώθηκε αυτή την εβδομάδα."
+          }
+        }
+      }
+    },
+    "None" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κανένα"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σημειώσεις"
+          }
+        }
+      }
+    },
+    "Nothing unscheduled." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν υπάρχουν μη προγραμματισμένες εργασίες."
+          }
+        }
+      }
+    },
+    "Nothing's blocking you." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τίποτα δεν σε εμποδίζει."
+          }
+        }
+      }
+    },
+    "Nudge" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Υπενθύμιση"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Άνοιγμα ρυθμίσεων"
+          }
+        }
+      }
+    },
+    "Park in Waiting" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σε αναμονή"
+          }
+        }
+      }
+    },
+    "Person's name…" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όνομα ατόμου…"
+          }
+        }
+      }
+    },
+    "Priority" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προτεραιότητα"
+          }
+        }
+      }
+    },
+    "PRIORITY FOLLOW-THROUGH" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΥΛΟΠΟΊΗΣΗ ΠΡΟΤΕΡΑΙΟΤΉΤΩΝ"
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πολιτική απορρήτου"
+          }
+        }
+      }
+    },
+    "Report a Bug" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αναφορά σφάλματος"
+          }
+        }
+      }
+    },
+    "SAY TO SIRI" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΠΕΊΤΕ ΣΤΟ SIRI"
+          }
+        }
+      }
+    },
+    "Schedule" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προγραμματισμός"
+          }
+        }
+      }
+    },
+    "Scheduled" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Προγραμματισμένο"
+          }
+        }
+      }
+    },
+    "Send a follow-up message" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αποστολή μηνύματος υπενθύμισης"
+          }
+        }
+      }
+    },
+    "SESSION ENDED" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΣΥΝΕΔΡΊΑ ΟΛΟΚΛΗΡΏΘΗΚΕ"
+          }
+        }
+      }
+    },
+    "Session ended — %@" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Συνεδρία ολοκληρώθηκε — %@"
+          }
+        }
+      }
+    },
+    "Set Follow-up Date" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ορισμός ημερομηνίας παρακολούθησης"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ρυθμίσεις"
+          }
+        }
+      }
+    },
+    "Siri Shortcut" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Συντόμευση Siri"
+          }
+        }
+      }
+    },
+    "SORT BY" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΤΑΞΙΝΌΜΗΣΗ ΚΑΤΆ"
+          }
+        }
+      }
+    },
+    "Summary time" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ώρα σύνοψης"
+          }
+        }
+      }
+    },
+    "Synced" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Συγχρονίστηκε"
+          }
+        }
+      }
+    },
+    "Tap + to add your first task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πατήστε + για να προσθέσετε την πρώτη σας εργασία"
+          }
+        }
+      }
+    },
+    "Tap + to schedule something." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Πατήστε + για προγραμματισμό."
+          }
+        }
+      }
+    },
+    "Tapping Set up opens iOS Shortcuts where you record a custom phrase — e.g. \"Hey Siri, add task.\" From then on, speaking that phrase creates an Unscheduled task directly in GiGi without opening the app." : {
+      "comment" : "A description of how to use Siri Shortcuts to add tasks.",
+      "isCommentAutoGenerated" : true
+    },
+    "Tapping the mic uses on-device speech recognition to transcribe your task title — no network required. Just speak naturally; punctuation is handled automatically." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Το πάτημα του μικροφώνου χρησιμοποιεί αναγνώριση ομιλίας στη συσκευή — δεν απαιτείται δίκτυο. Μιλήστε φυσιολογικά· η στίξη γίνεται αυτόματα."
+          }
+        }
+      }
+    },
+    "Task" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εργασία"
+          }
+        }
+      }
+    },
+    "Task title" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τίτλος εργασίας"
+          }
+        }
+      }
+    },
+    "Task title…" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τίτλος εργασίας…"
+          }
+        }
+      }
+    },
+    "Tasks" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Εργασίες"
+          }
+        }
+      }
+    },
+    "Tasks in this category will become uncategorized." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Οι εργασίες αυτής της κατηγορίας θα αποκατηγοριοποιηθούν."
+          }
+        }
+      }
+    },
+    "Terms of Service" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Όροι χρήσης"
+          }
+        }
+      }
+    },
+    "The task will be moved to Deleted and can be restored from History." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η εργασία θα μεταφερθεί στα Διαγραμμένα και μπορεί να αποκατασταθεί από το Ιστορικό."
+          }
+        }
+      }
+    },
+    "This is how your morning notification will appear." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έτσι θα εμφανίζεται η πρωινή σας ειδοποίηση."
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ώρα"
+          }
+        }
+      }
+    },
+    "Time to check in with %@." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ώρα να επικοινωνήσετε με %@."
+          }
+        }
+      }
+    },
+    "To include Outlook or work events, add your account in iOS Settings → Calendar." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Για συμπερίληψη συμβάντων Outlook ή εργασίας, προσθέστε τον λογαριασμό σας στις Ρυθμίσεις iOS → Ημερολόγιο."
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Σήμερα"
+          }
+        }
       }
     },
     "Top: %@." : {
       "localizations" : {
-        "el" : { "stringUnit" : { "state" : "translated", "value" : "Κορυφαία κατηγορία: %@." } }
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κορυφαία κατηγορία: %@."
+          }
+        }
+      }
+    },
+    "Unscheduled" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μη προγραμματισμένο"
+          }
+        }
+      }
+    },
+    "Unscheduled · tap to schedule" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μη προγραμματισμένο · πατήστε για προγραμματισμό"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Έκδοση"
+          }
+        }
+      }
+    },
+    "Voice Input" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Φωνητική εισαγωγή"
+          }
+        }
+      }
+    },
+    "Waiting" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αναμονή"
+          }
+        }
+      }
+    },
+    "Waiting on" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Αναμονή από"
+          }
+        }
+      }
+    },
+    "WAITING ON" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ΣΕ ΑΝΑΜΟΝΉ ΑΠΌ"
+          }
+        }
+      }
+    },
+    "Waiting on %@" : {
+
+    },
+    "What you need" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τι χρειάζεστε"
+          }
+        }
+      }
+    },
+    "You're on top of it." : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τα πας καλά."
+          }
+        }
+      }
+    },
+    "Your accomplishments, once a week" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Τα επιτεύγματά σας, μία φορά την εβδομάδα"
+          }
+        }
+      }
+    },
+    "Your week in GiGi" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η εβδομάδα σας στο GiGi"
+          }
+        }
+      }
+    },
+    "Your work session just ended. Did you finish it?" : {
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η εργασία σας μόλις ολοκληρώθηκε. Την τελειώσατε;"
+          }
+        }
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }

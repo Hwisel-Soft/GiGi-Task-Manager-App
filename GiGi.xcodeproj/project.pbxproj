@@ -91,7 +91,7 @@
 		998377DD58251B230192AFB8 /* BookTimeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookTimeSheet.swift; sourceTree = "<group>"; };
 		A1BF64BE449D5CC8CA570B71 /* GiGi.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GiGi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC59BD98258EB299E005AEE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B843B6AAB8E1114C3E21B018 /* GiGiMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GiGiMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B843B6AAB8E1114C3E21B018 /* GiGiMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = GiGiMac.app; path = GiGi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFC7A60BA2CE23B7F4C50781 /* TasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		D1ADBB835FA62AACB9ABB715 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		D5623790AE1B1A16B1BB6105 /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };

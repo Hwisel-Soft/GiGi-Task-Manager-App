@@ -299,9 +299,7 @@ final class AppStore {
         let decoder = JSONDecoder()
         let encoder = JSONEncoder()
 
-        let kvTasksExist = kvs.object(forKey: "gigi.tasks") != nil
         let kvNextId = Int(kvs.longLong(forKey: "gigi.nextId"))
-        let localNextId = ud.integer(forKey: "gigi.nextId")
 
         // Tasks: iCloud wins for shared task IDs; preserve local-only real tasks (ID >= 11).
         // IDs 1-10 are sample tasks and are never merged from local into iCloud data.
@@ -381,14 +379,6 @@ final class AppStore {
         ) { [weak self] notification in
             guard let self else { return }
             let reason = notification.userInfo?[NSUbiquitousKeyValueStoreChangeReasonKey] as? Int ?? -1
-            let reasonLabel: String
-            switch reason {
-            case NSUbiquitousKeyValueStoreServerChange: reasonLabel = "serverChange"
-            case NSUbiquitousKeyValueStoreInitialSyncChange: reasonLabel = "initialSync"
-            case NSUbiquitousKeyValueStoreQuotaViolationChange: reasonLabel = "quotaViolation"
-            case NSUbiquitousKeyValueStoreAccountChange: reasonLabel = "accountChange"
-            default: reasonLabel = "unknown(\(reason))"
-            }
             if reason == NSUbiquitousKeyValueStoreQuotaViolationChange { return }
             MainActor.assumeIsolated {
                 AppStore.mergeKVStoreIntoDefaults()
