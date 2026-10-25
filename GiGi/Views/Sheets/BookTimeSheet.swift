@@ -24,6 +24,17 @@ struct BookTimeSheet: View {
 
     private var minDate: Date { Calendar.current.startOfDay(for: Date()) }
 
+    private var isTimeInPast: Bool {
+        let cal = Calendar.current
+        guard cal.isDateInToday(store.bookForm.date) else { return false }
+        var h24 = store.bookForm.hour
+        if store.bookForm.period == "PM" && h24 != 12 { h24 += 12 }
+        if store.bookForm.period == "AM" && h24 == 12 { h24 = 0 }
+        let start = cal.date(bySettingHour: h24, minute: store.bookForm.minute, second: 0,
+                             of: store.bookForm.date) ?? store.bookForm.date
+        return start < Date()
+    }
+
     var body: some View {
         @Bindable var store = store
         NavigationStack {
@@ -141,6 +152,20 @@ struct BookTimeSheet: View {
                         }
                     }
 
+                    // Past time warning
+                    if isTimeInPast {
+                        HStack(spacing: 10) {
+                            Image(systemName: "clock.badge.exclamationmark.fill")
+                                .foregroundColor(C.high)
+                            Text("This time has already passed. Please choose a future time.")
+                                .font(.footnote.weight(.semibold))
+                                .foregroundColor(C.text)
+                        }
+                        .padding(14)
+                        .background(C.highLight)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
                     // GiGi task conflict warning
                     if let c = conflict {
                         HStack(spacing: 10) {
@@ -186,18 +211,22 @@ struct BookTimeSheet: View {
                         if let id = store.selectedTaskId { store.bookTask(id) }
                         else { store.showBookTime = false }
                     } label: {
-                        Text((conflict != nil || externalConflict != nil) ? "Book It Anyway" : "Book It")
+                        let blocked = isTimeInPast
+                        Text(blocked ? "Choose a Future Time" : (conflict != nil || externalConflict != nil) ? "Book It Anyway" : "Book It")
                             .font(.callout.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
                             .background(
-                                LinearGradient(colors: [C.primary, C.primaryDark], startPoint: .leading, endPoint: .trailing)
+                                blocked
+                                    ? LinearGradient(colors: [Color.gray, Color.gray.opacity(0.8)], startPoint: .leading, endPoint: .trailing)
+                                    : LinearGradient(colors: [C.primary, C.primaryDark], startPoint: .leading, endPoint: .trailing)
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 18))
-                            .shadow(color: C.primary.opacity(0.35), radius: 10, x: 0, y: 6)
+                            .shadow(color: C.primary.opacity(blocked ? 0 : 0.35), radius: 10, x: 0, y: 6)
                     }
                     .buttonStyle(.plain)
+                    .disabled(isTimeInPast)
                 }
                 .padding(24)
             }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CategorySheet: View {
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
     private var C: GColors { store.C }
     @State private var showDeleteConfirm = false
 
@@ -66,18 +67,42 @@ struct CategorySheet: View {
                     .background(C.bg)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
 
+                    // Category limit notice for free users
+                    let atFreeLimit = isNew && store.categories.count >= 3 && !subStore.isPro
+                    if atFreeLimit {
+                        HStack(spacing: 8) {
+                            Image(systemName: "lock.fill")
+                                .font(.caption)
+                                .foregroundColor(Color(hex: "#1547CC"))
+                            Text("Free plan includes up to 3 categories. Upgrade to Pro for unlimited.")
+                                .font(.caption)
+                                .foregroundColor(Color(hex: "#1547CC"))
+                        }
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(hex: "#EEF1FB"))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
                     // Save button
-                    Button { store.saveCategory() } label: {
-                        Text(isNew ? "Add Category" : "Save Changes")
+                    Button {
+                        if atFreeLimit {
+                            subStore.showPaywall = true
+                        } else {
+                            store.saveCategory()
+                        }
+                    } label: {
+                        Text(atFreeLimit ? "Upgrade to Add More" : (isNew ? "Add Category" : "Save Changes"))
                             .font(.subheadline.weight(.heavy))
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(store.catForm.name.isEmpty ? C.border : C.primary)
+                            .background(store.catForm.name.isEmpty ? C.border :
+                                        atFreeLimit ? Color(hex: "#1547CC") : C.primary)
                             .clipShape(RoundedRectangle(cornerRadius: 18))
                     }
                     .buttonStyle(.plain)
-                    .disabled(store.catForm.name.isEmpty)
+                    .disabled(store.catForm.name.isEmpty && !atFreeLimit)
 
                     // Delete button (edit mode only)
                     if !isNew {

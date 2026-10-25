@@ -3,11 +3,13 @@ import SwiftUI
 @main
 struct GiGiApp: App {
     @State private var store = AppStore()
+    @State private var subStore = SubscriptionStore()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(store)
+                .environment(subStore)
                 .preferredColorScheme(store.darkMode ? .dark : .light)
                 .dynamicTypeSize(.xSmall ... .xxLarge)
         }
@@ -25,6 +27,7 @@ struct GiGiApp: App {
 
 struct RootView: View {
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
     @Environment(\.scenePhase) private var scenePhase
     @State private var timerTick = 0
 
@@ -37,6 +40,7 @@ struct RootView: View {
 
     var body: some View {
         @Bindable var store = store
+        @Bindable var subStore = subStore
         ZStack(alignment: .bottom) {
             MainTabView()
         }
@@ -47,6 +51,7 @@ struct RootView: View {
         .sheet(isPresented: $store.showCategorySheet) { CategorySheet() }
         .sheet(isPresented: $store.showSiriInfo) { SiriInfoModal() }
         .sheet(isPresented: $store.showMicInfo) { MicInfoModal() }
+        .sheet(isPresented: $subStore.showPaywall) { PaywallSheet() }
         .overlay {
             if let task = currentLapsedTask {
                 LapsedSessionModal(task: task)

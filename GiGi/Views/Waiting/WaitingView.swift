@@ -2,11 +2,23 @@ import SwiftUI
 
 struct WaitingView: View {
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
     private var C: GColors { store.C }
 
     var body: some View {
+        Group {
+            if !subStore.isPro {
+                ProLockedView(featureName: "Waiting Workflow", icon: "hourglass")
+            } else {
+                waitingContent
+            }
+        }
+        .background(C.bg)
+        .hideNavigationBar()
+    }
+
+    var waitingContent: some View {
         VStack(spacing: 0) {
-            // Header
             VStack(alignment: .leading, spacing: 3) {
                 Text("Waiting")
                     .font(.title.weight(.heavy))
@@ -47,8 +59,6 @@ struct WaitingView: View {
                 }
             }
         }
-        .background(C.bg)
-        .hideNavigationBar()
     }
 
     @ViewBuilder

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
 
     var body: some View {
         @Bindable var store = store
@@ -38,8 +39,12 @@ struct MainTabView: View {
                     CalendarView()
                         .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
                 case .history:
-                    HistoryView()
-                        .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
+                    if subStore.isPro {
+                        HistoryView()
+                            .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
+                    } else {
+                        ProLockedView(featureName: "History", icon: "clock.arrow.circlepath")
+                    }
                 case .settings:
                     SettingsView()
                 }
@@ -86,10 +91,12 @@ struct MainTabView: View {
             .tag(AppTab.calendar)
 
             NavigationStack {
-                HistoryView()
-                    .navigationDestination(isPresented: $store.showDetail) {
-                        TaskDetailView()
-                    }
+                if subStore.isPro {
+                    HistoryView()
+                        .navigationDestination(isPresented: $store.showDetail) { TaskDetailView() }
+                } else {
+                    ProLockedView(featureName: "History", icon: "clock.arrow.circlepath")
+                }
             }
             .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
             .tag(AppTab.history)

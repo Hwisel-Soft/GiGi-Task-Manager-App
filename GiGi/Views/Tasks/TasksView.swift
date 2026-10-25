@@ -109,7 +109,7 @@ struct TasksView: View {
     var allSections: some View {
         let scheduled = applySorting(store.scheduledTasks)
         let unscheduled = applySorting(store.unscheduledTasks)
-        let waiting = applySorting(store.waitingTasks)
+        let waiting = applySorting(store.waitingTasks.filter { !store.isFollowUpDue($0) })
         if !scheduled.isEmpty {
             sectionHeader("SCHEDULED", count: scheduled.count, expanded: $scheduledExpanded)
             if scheduledExpanded {
@@ -128,7 +128,7 @@ struct TasksView: View {
                 ForEach(unscheduled) { TaskCardView(task: $0, showStateBadge: true) }
             }
         }
-        if scheduled.isEmpty && unscheduled.isEmpty && waiting.isEmpty { emptyState }
+        if scheduled.isEmpty && unscheduled.isEmpty && store.waitingTasks.isEmpty { emptyState }
     }
 
     @ViewBuilder

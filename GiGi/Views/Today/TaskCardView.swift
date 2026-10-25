@@ -4,6 +4,7 @@ struct TaskCardView: View {
     let task: GTask
     var showStateBadge: Bool = false
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
 
     @State private var offset: CGFloat = 0
     @State private var isOpen = false
@@ -21,8 +22,12 @@ struct TaskCardView: View {
                 }
                 actionBtn(label: "Waiting", icon: "hourglass", bg: C.purple) {
                     close()
-                    store.selectedTaskId = task.id
-                    store.showWaitingSheet = true
+                    if subStore.isPro {
+                        store.selectedTaskId = task.id
+                        store.showWaitingSheet = true
+                    } else {
+                        subStore.showPaywall = true
+                    }
                 }
                 actionBtn(label: "Delete", icon: "trash", bg: C.high, cornerRight: 16) {
                     close(); store.deleteTask(task.id)
@@ -58,8 +63,12 @@ struct TaskCardView: View {
             store.completeTask(task.id)
         }
         .accessibilityAction(named: "Mark as Waiting") {
-            store.selectedTaskId = task.id
-            store.showWaitingSheet = true
+            if subStore.isPro {
+                store.selectedTaskId = task.id
+                store.showWaitingSheet = true
+            } else {
+                subStore.showPaywall = true
+            }
         }
         .accessibilityAction(named: "Delete") {
             store.deleteTask(task.id)

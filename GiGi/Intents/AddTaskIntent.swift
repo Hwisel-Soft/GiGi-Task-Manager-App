@@ -1,4 +1,5 @@
 import AppIntents
+import CoreFoundation
 import Foundation
 
 struct AddTaskIntent: AppIntent {
@@ -60,6 +61,12 @@ struct AddTaskIntent: AppIntent {
             ud.set(encoded, forKey: "gigi.tasks")
             ud.set(nextId + 1, forKey: "gigi.nextId")
         }
+
+        CFNotificationCenterPostNotification(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            CFNotificationName("com.johnnassar.GiGi.siriTaskAdded" as CFString),
+            nil, nil, true
+        )
 
         return .result(dialog: "Added \"\(taskTitle)\" to GiGi.")
     }

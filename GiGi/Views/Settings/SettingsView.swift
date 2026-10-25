@@ -3,6 +3,7 @@ import AppIntents
 
 struct SettingsView: View {
     @Environment(AppStore.self) var store
+    @Environment(SubscriptionStore.self) var subStore
     private var C: GColors { store.C }
 
     var body: some View {
@@ -16,16 +17,19 @@ struct SettingsView: View {
                     .padding(.horizontal, 24)
                     .padding(.top, 18)
 
+                // GiGi Pro status
+                proStatusCard
+
                 // Notifications
                 settingsCard {
                     sectionHeader("Notifications")
                     toggleRow(label: "Lapsed Session Alert", value: $store.lapsedAlert,
                                sub: "Prompt when a booked task's time passes")
                     Divider().background(C.border)
-                    toggleRow(label: "Morning Summary", value: $store.morningSummary,
-                               sub: "Daily digest at \(store.morningSummary ? store.morningTimeLabel : "—")")
+                    proToggleRow(label: "Morning Summary", value: $store.morningSummary,
+                                sub: "Daily digest at \(store.morningSummary ? store.morningTimeLabel : "—")")
 
-                    if store.morningSummary {
+                    if subStore.isPro && store.morningSummary {
                         Divider().background(C.border)
                         HStack {
                             Text("Summary time")
@@ -39,10 +43,10 @@ struct SettingsView: View {
                         notificationPreview
                     }
                     Divider().background(C.border)
-                    toggleRow(label: "Weekly Stats",
-                              value: $store.weeklyStats,
-                              sub: store.weeklyStats ? "Every \(AppStore.weekdayNames[(store.weeklyDay - 1 + 7) % 7]) at \(store.weeklyTimeLabel)" : "Your accomplishments, once a week")
-                    if store.weeklyStats {
+                    proToggleRow(label: "Weekly Stats",
+                                 value: $store.weeklyStats,
+                                 sub: store.weeklyStats ? "Every \(AppStore.weekdayNames[(store.weeklyDay - 1 + 7) % 7]) at \(store.weeklyTimeLabel)" : "Your accomplishments, once a week")
+                    if subStore.isPro && store.weeklyStats {
                         Divider().background(C.border)
                         HStack {
                             Text("Day")
@@ -95,38 +99,57 @@ struct SettingsView: View {
                     }
                 }
 
-                // Siri
+                // Siri (Pro)
                 settingsCard {
-                    sectionHeader("Siri")
-                    HStack(spacing: 12) {
-                        Image(systemName: "waveform")
-                            .font(.title3)
-                            .foregroundColor(.purple)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Add Task Shortcut")
-                                .font(.subheadline)
-                                .foregroundColor(C.text)
-                            Text("Automatically available in Siri")
-                                .font(.caption)
-                                .foregroundColor(C.muted)
-                        }
+                    HStack {
+                        sectionHeader("Siri")
                         Spacer()
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
+                        if !subStore.isPro {
+                            proBadge
+                        }
                     }
-                    Divider().background(C.border).padding(.vertical, 8)
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("SAY TO SIRI")
-                            .font(.caption2.bold())
+                    if subStore.isPro {
+                        HStack(spacing: 12) {
+                            Image(systemName: "waveform")
+                                .font(.title3)
+                                .foregroundColor(.purple)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Add Task Shortcut")
+                                    .font(.subheadline)
+                                    .foregroundColor(C.text)
+                                Text("Automatically available in Siri")
+                                    .font(.caption)
+                                    .foregroundColor(C.muted)
+                            }
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        }
+                        Divider().background(C.border).padding(.vertical, 8)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("SAY TO SIRI")
+                                .font(.caption2.bold())
+                                .foregroundColor(C.muted)
+                                .tracking(0.8)
+                            Text("\"Hey Siri, add task in GiGi\"")
+                                .font(.callout.weight(.semibold))
+                                .foregroundColor(C.text)
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(C.bg)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                    } else {
+                        Text("Use Siri to create tasks hands-free — available with GiGi Pro.")
+                            .font(.callout)
                             .foregroundColor(C.muted)
-                            .tracking(0.8)
-                        Text("\"Hey Siri, add task in GiGi\"")
-                            .font(.callout.weight(.semibold))
-                            .foregroundColor(C.text)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(C.bg)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        Button { subStore.showPaywall = true } label: {
+                            Text("Upgrade to Pro")
+                                .font(.callout.weight(.semibold))
+                                .foregroundColor(Color(hex: "#1547CC"))
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 2)
                     }
                 }
 
@@ -401,6 +424,93 @@ struct SettingsView: View {
         ]
         guard let url = comps.url else { return }
         gigiOpenURL(url)
+    }
+
+    var proStatusCard: some View {
+        Button {
+            if !subStore.isPro { subStore.showPaywall = true }
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(colors: [Color(hex: "#1547CC"), Color(hex: "#6B3FD4")],
+                                             startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: "star.fill")
+                        .font(.callout)
+                        .foregroundColor(.white)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(subStore.isPro ? "GiGi Pro" : "Upgrade to GiGi Pro")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(C.text)
+                    Text(subStore.isPro
+                         ? "All features unlocked"
+                         : "Unlock Waiting, History, Siri & more")
+                        .font(.caption)
+                        .foregroundColor(C.muted)
+                }
+                Spacer()
+                if subStore.isPro {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(C.muted)
+                }
+            }
+            .padding(16)
+            .background(C.card)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
+            .padding(.horizontal, 24)
+        }
+        .buttonStyle(.plain)
+        .disabled(subStore.isPro)
+    }
+
+    var proBadge: some View {
+        Text("PRO")
+            .font(.caption2.bold())
+            .foregroundColor(.white)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(
+                LinearGradient(colors: [Color(hex: "#1547CC"), Color(hex: "#6B3FD4")],
+                               startPoint: .leading, endPoint: .trailing)
+            )
+            .clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    func proToggleRow(label: String, value: Binding<Bool>, sub: String?) -> some View {
+        if subStore.isPro {
+            toggleRow(label: label, value: value, sub: sub)
+        } else {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 6) {
+                        Text(label)
+                            .font(.subheadline)
+                            .foregroundColor(C.text)
+                        proBadge
+                    }
+                    if let sub {
+                        Text(sub)
+                            .font(.caption)
+                            .foregroundColor(C.muted)
+                    }
+                }
+                Spacer()
+                Toggle("", isOn: .constant(false))
+                    .tint(C.primary)
+                    .labelsHidden()
+                    .disabled(true)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { subStore.showPaywall = true }
+        }
     }
 
     @ViewBuilder

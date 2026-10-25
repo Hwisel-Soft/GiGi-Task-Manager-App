@@ -91,6 +91,10 @@ enum TaskSort: String, CaseIterable {
 @Observable
 final class AppStore {
 
+    // Used by the Darwin notification callback (no captures allowed in @convention(c)).
+    nonisolated(unsafe) private static weak var instance: AppStore?
+    private static let siriNotificationName = "com.johnnassar.GiGi.siriTaskAdded" as CFString
+
     // MARK: Data
     var tasks: [GTask]
     var categories: [GCategory]
@@ -199,6 +203,14 @@ final class AppStore {
         nextCatId = max(6, ud.integer(forKey: "gigi.nextCatId"))
         calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
         setupKVStoreSync()
+        AppStore.instance = self
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(), nil,
+            { _, _, _, _, _ in
+                DispatchQueue.main.async { AppStore.instance?.reloadTasksFromUserDefaults() }
+            },
+            AppStore.siriNotificationName, nil, .deliverImmediately
+        )
     }
 
     // One-time migration from UserDefaults.standard to shared App Group container.
@@ -845,6 +857,7 @@ final class AppStore {
         let cal = Calendar.current
         let startDate = cal.date(bySettingHour: h24, minute: bookForm.minute, second: 0,
                                  of: bookForm.date) ?? bookForm.date
+        guard startDate >= Date() else { return }
         let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]
         let isoDate = isoFmt.string(from: bookForm.date)
 
