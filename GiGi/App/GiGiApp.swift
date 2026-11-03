@@ -62,13 +62,31 @@ struct RootView: View {
         .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
             timerTick += 1
             store.updateBadge()
+            // Pull iCloud KV changes on every timer tick so cross-device sync
+            // is never more than ~60s stale even when scenePhase doesn't fire.
+            AppStore.mergeKVStoreIntoDefaults()
+            store.reloadTasksFromUserDefaults()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                AppStore.mergeKVStoreIntoDefaults() // pull remote changes before overwriting
+                AppStore.mergeKVStoreIntoDefaults()
                 store.reloadTasksFromUserDefaults()
                 store.autoUpdateAges()
                 store.save()
+            }
+        }
+        #if os(macOS)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            AppStore.mergeKVStoreIntoDefaults()
+            store.reloadTasksFromUserDefaults()
+            store.autoUpdateAges()
+            store.save()
+        }
+        #endif
+        .onChange(of: subStore.isProStatusLoaded) { _, loaded in
+            if loaded && !subStore.isPro {
+                store.cancelMorningNotification()
+                store.cancelWeeklyStatsNotification()
             }
         }
         .task {

@@ -141,6 +141,7 @@ final class AppStore {
 
     // MARK: Calendar
     var calendarAddMode: Bool = false
+    var pendingBookDate: Date? = nil
     var calSelDay: Int
     var calDrawerOpen: Bool = false
 
@@ -805,7 +806,10 @@ final class AppStore {
         selectedTaskId = id
         let task = tasks.first(where: { $0.id == id })
         var form = BookForm(duration: task?.duration ?? defaultDuration)
-        if let bd = task?.bookedDate {
+        if let pending = pendingBookDate {
+            form.date = pending
+            pendingBookDate = nil
+        } else if let bd = task?.bookedDate {
             let isoFmt = ISO8601DateFormatter()
             isoFmt.formatOptions = [.withFullDate]
             isoFmt.timeZone = .current

@@ -51,8 +51,12 @@ struct CalendarView: View {
     private var completedForSelectedDay: [GTask] {
         let dateStr = selectedDayISO
         return store.completedTasks
-            .filter { $0.completedDateLabel == dateStr && $0.startTime != nil }
-            .sorted { store.timeToMinutes($0.startTime, $0.period) < store.timeToMinutes($1.startTime, $1.period) }
+            .filter { $0.completedDateLabel == dateStr }
+            .sorted {
+                if $0.startTime == nil { return false }
+                if $1.startTime == nil { return true }
+                return store.timeToMinutes($0.startTime, $0.period) < store.timeToMinutes($1.startTime, $1.period)
+            }
     }
 
     private var lapsedForSelectedDay: [GTask] {
@@ -210,7 +214,6 @@ struct CalendarView: View {
             .hideNavigationBar()
             .onAppear {
                 weekOffset = 0
-                store.calSelDay = Calendar.current.component(.weekday, from: Date()) - 1
             }
 
             // Unscheduled Drawer
@@ -218,6 +221,9 @@ struct CalendarView: View {
 
             // FAB
             Button {
+                let selectedDate = Calendar.current.date(
+                    byAdding: .day, value: store.calSelDay, to: startOfViewedWeek)!
+                store.pendingBookDate = Calendar.current.startOfDay(for: selectedDate)
                 store.calendarAddMode = true
                 store.openAddTask()
             } label: {

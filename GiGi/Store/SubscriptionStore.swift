@@ -9,6 +9,7 @@ final class SubscriptionStore {
     static let annualId  = "com.johnnassar.GiGi.pro.annual"
 
     var isPro: Bool = false
+    var isProStatusLoaded: Bool = false
     var monthly: Product?
     var annual: Product?
     var isLoading: Bool = false
@@ -49,6 +50,7 @@ final class SubscriptionStore {
             }
         }
         isPro = active
+        isProStatusLoaded = true
     }
 
     @MainActor
