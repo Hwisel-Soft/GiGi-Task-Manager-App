@@ -19,6 +19,7 @@ struct GTask: Identifiable, Codable {
     var age: Int
     var category: String
     var notes: String
+    var motivation: String?  // "why" this task matters — boosts follow-through on hard tasks
     var deadline: String?
     var startTime: String?
     var endTime: String?

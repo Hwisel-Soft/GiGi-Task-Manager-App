@@ -5,6 +5,9 @@ struct LapsedSessionModal: View {
     @Environment(AppStore.self) var store
     private var C: GColors { store.C }
 
+    @State private var showWhyPrompt = false
+    @State private var whyText = ""
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.6)
@@ -73,14 +76,54 @@ struct LapsedSessionModal: View {
                         }
                         .buttonStyle(.plain)
 
-                        Button { store.carryForward(task.id) } label: {
-                            Text("Later — carry forward")
+                        Button {
+                            if task.motivation == nil && !showWhyPrompt {
+                                withAnimation(.spring(response: 0.3)) { showWhyPrompt = true }
+                            } else {
+                                if !whyText.isEmpty { store.updateMotivation(task.id, whyText) }
+                                store.carryForward(task.id)
+                            }
+                        } label: {
+                            Text(showWhyPrompt ? "Save & Carry Forward" : "Later — carry forward")
                                 .font(.callout.weight(.semibold))
-                                .foregroundColor(C.muted)
+                                .foregroundColor(showWhyPrompt ? C.primary : C.muted)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
+
+                        if showWhyPrompt {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "lightbulb")
+                                        .font(.caption)
+                                        .foregroundColor(C.primary)
+                                    Text("Why does this task matter?")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundColor(C.primary)
+                                }
+                                TextField("Adding a reason boosts follow-through…", text: $whyText, axis: .vertical)
+                                    .font(.callout)
+                                    .foregroundColor(C.text)
+                                    .tint(C.primary)
+                                    .lineLimit(2...3)
+                                    .padding(12)
+                                    .background(C.bg)
+                                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.primary.opacity(0.4), lineWidth: 1.5))
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                Button {
+                                    store.carryForward(task.id)
+                                } label: {
+                                    Text("Skip — carry forward anyway")
+                                        .font(.caption)
+                                        .foregroundColor(C.muted)
+                                        .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .padding(.top, 4)
+                            .transition(.opacity.combined(with: .move(edge: .bottom)))
+                        }
                     }
                 }
                 .padding(.horizontal, 24)

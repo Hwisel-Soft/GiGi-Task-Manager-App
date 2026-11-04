@@ -234,6 +234,29 @@ struct TaskDetailView: View {
                         .padding(.bottom, 18)
                     }
 
+                    // Why (motivation)
+                    sectionLabel("Why does this matter?")
+                    HStack(alignment: .top, spacing: 10) {
+                        Image(systemName: "lightbulb")
+                            .font(.callout)
+                            .foregroundColor(task.motivation?.isEmpty == false ? C.primary : C.muted)
+                            .padding(.top, 2)
+                        TextField("e.g. Keeps the team unblocked…", text: Binding(
+                            get: { task.motivation ?? "" },
+                            set: { store.updateMotivation(task.id, $0) }
+                        ), axis: .vertical)
+                            .font(.callout)
+                            .foregroundColor(C.text)
+                            .tint(C.primary)
+                            .lineLimit(2...)
+                    }
+                    .padding(12)
+                    .background(C.card)
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(
+                        task.motivation?.isEmpty == false ? C.primary : C.border, lineWidth: 1.5))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .padding(.bottom, 18)
+
                     // Notes
                     sectionLabel("Notes")
                     TextField("Add notes…", text: Binding(

@@ -50,6 +50,7 @@ struct AddForm {
     var priority: Priority = .medium
     var duration: String = "30m"
     var notes: String = ""
+    var motivation: String = ""
     var deadline: String = ""
     var category: String = ""
 }
@@ -746,6 +747,10 @@ final class AppStore {
         update(id) { $0.title = trimmed }
     }
 
+    func updateMotivation(_ id: Int, _ motivation: String) {
+        update(id) { $0.motivation = motivation.isEmpty ? nil : motivation }
+    }
+
     func addTask() {
         let title = addForm.title.trimmingCharacters(in: .whitespaces)
         guard !title.isEmpty else { return }
@@ -758,6 +763,7 @@ final class AppStore {
             age: 0,
             category: addForm.category,
             notes: addForm.notes,
+            motivation: addForm.motivation.isEmpty ? nil : addForm.motivation,
             deadline: addForm.deadline.isEmpty ? nil : addForm.deadline,
             startTime: nil, endTime: nil, period: nil,
             waitingOn: nil, waitingNote: nil, followUpDate: nil,
@@ -1000,8 +1006,22 @@ final class AppStore {
         if followUp > 0 { parts.append(followUp == 1
             ? String(format: String(localized: "%lld follow-up"), followUp)
             : String(format: String(localized: "%lld follow-ups"), followUp)) }
-        let body = parts.isEmpty ? String(localized: "All clear for today!") : parts.joined(separator: " · ")
+        var body = parts.isEmpty ? String(localized: "All clear for today!") : parts.joined(separator: " · ")
+        // Append the "why" for today's highest-priority scheduled task that has one
+        let isoFmt = ISO8601DateFormatter(); isoFmt.formatOptions = [.withFullDate]; isoFmt.timeZone = .current
+        let todayStr = isoFmt.string(from: Date())
+        let todayTopTask = scheduledTasks
+            .filter { $0.bookedDate == todayStr }
+            .sorted { priorityRank($0.priority) < priorityRank($1.priority) }
+            .first { $0.motivation?.isEmpty == false }
+        if let m = todayTopTask?.motivation {
+            body += " — \(m)"
+        }
         notifSvc.scheduleMorningSummary(hour: morningHour, minute: morningMinute, body: body)
+    }
+
+    private func priorityRank(_ p: Priority) -> Int {
+        switch p { case .high: 0; case .medium: 1; case .low: 2 }
     }
 
     // MARK: Session End Notifications
@@ -1081,6 +1101,11 @@ final class AppStore {
         if pending > 0 {
             body += " " + pendingStr(pending)
         }
+        // Surface the "why" behind a completed task as a motivational close
+        if let highlight = completedThisWeek.first(where: { $0.motivation?.isEmpty == false }),
+           let motivation = highlight.motivation {
+            body += " \"\(highlight.title)\" — \(motivation)"
+        }
         return body
     }
 
@@ -1135,16 +1160,16 @@ final class AppStore {
 
     // MARK: Sample Data
     static let sampleTasks: [GTask] = [
-        GTask(id:1,title:"Prepare Q3 Report",priority:.high,state:.unscheduled,age:3,category:"Work",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
-        GTask(id:2,title:"Team Standup Prep",priority:.medium,state:.booked,age:0,category:"Meetings",notes:"Review blockers and progress updates",deadline:nil,startTime:"9:00",endTime:"9:30",period:"AM",waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
-        GTask(id:3,title:"Review Design Mockups",priority:.medium,state:.unscheduled,age:1,category:"Design",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
-        GTask(id:4,title:"Update Client Proposal",priority:.high,state:.unscheduled,age:0,category:"Client",notes:"Focus on the pricing section",deadline:"2026-08-29",startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
-        GTask(id:5,title:"Code Review PR #42",priority:.low,state:.booked,age:0,category:"Dev",notes:"",deadline:nil,startTime:"2:00",endTime:"3:00",period:"PM",waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
-        GTask(id:6,title:"Follow up with Sarah",priority:.high,state:.waiting,age:0,category:"Client",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:"Sarah",waitingNote:"Contract approval",followUpDate:"2026-08-28",waitingDays:2,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
-        GTask(id:7,title:"Get vendor quote",priority:.medium,state:.waiting,age:0,category:"Work",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:"Vendor Co.",waitingNote:"Q4 pricing sheet",followUpDate:nil,waitingDays:5,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"15m",createdDate:nil),
-        GTask(id:8,title:"Fix login bug",priority:.high,state:.completed,age:0,category:"Dev",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:"10:30 AM",completedDateLabel:"Today",deletedDateLabel:nil,duration:"1h",createdDate:nil),
-        GTask(id:9,title:"Update documentation",priority:.medium,state:.completed,age:1,category:"Dev",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:"3:15 PM",completedDateLabel:"Yesterday",deletedDateLabel:nil,duration:"30m",createdDate:nil),
-        GTask(id:10,title:"Write blog post draft",priority:.low,state:.deleted,age:2,category:"Marketing",notes:"",deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:"Yesterday",duration:"2h",createdDate:nil),
+        GTask(id:1,title:"Prepare Q3 Report",priority:.high,state:.unscheduled,age:3,category:"Work",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
+        GTask(id:2,title:"Team Standup Prep",priority:.medium,state:.booked,age:0,category:"Meetings",notes:"Review blockers and progress updates",motivation:nil,deadline:nil,startTime:"9:00",endTime:"9:30",period:"AM",waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
+        GTask(id:3,title:"Review Design Mockups",priority:.medium,state:.unscheduled,age:1,category:"Design",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
+        GTask(id:4,title:"Update Client Proposal",priority:.high,state:.unscheduled,age:0,category:"Client",notes:"Focus on the pricing section",motivation:nil,deadline:"2026-08-29",startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
+        GTask(id:5,title:"Code Review PR #42",priority:.low,state:.booked,age:0,category:"Dev",notes:"",motivation:nil,deadline:nil,startTime:"2:00",endTime:"3:00",period:"PM",waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"1h",createdDate:nil),
+        GTask(id:6,title:"Follow up with Sarah",priority:.high,state:.waiting,age:0,category:"Client",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:"Sarah",waitingNote:"Contract approval",followUpDate:"2026-08-28",waitingDays:2,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"30m",createdDate:nil),
+        GTask(id:7,title:"Get vendor quote",priority:.medium,state:.waiting,age:0,category:"Work",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:"Vendor Co.",waitingNote:"Q4 pricing sheet",followUpDate:nil,waitingDays:5,completedTime:nil,completedDateLabel:nil,deletedDateLabel:nil,duration:"15m",createdDate:nil),
+        GTask(id:8,title:"Fix login bug",priority:.high,state:.completed,age:0,category:"Dev",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:"10:30 AM",completedDateLabel:"Today",deletedDateLabel:nil,duration:"1h",createdDate:nil),
+        GTask(id:9,title:"Update documentation",priority:.medium,state:.completed,age:1,category:"Dev",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:"3:15 PM",completedDateLabel:"Yesterday",deletedDateLabel:nil,duration:"30m",createdDate:nil),
+        GTask(id:10,title:"Write blog post draft",priority:.low,state:.deleted,age:2,category:"Marketing",notes:"",motivation:nil,deadline:nil,startTime:nil,endTime:nil,period:nil,waitingOn:nil,waitingNote:nil,followUpDate:nil,waitingDays:0,completedTime:nil,completedDateLabel:nil,deletedDateLabel:"Yesterday",duration:"2h",createdDate:nil),
     ]
 
     static let sampleCategories: [GCategory] = [

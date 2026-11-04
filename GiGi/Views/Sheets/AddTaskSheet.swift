@@ -167,6 +167,25 @@ struct AddTaskSheet: View {
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(C.border, lineWidth: 1.5))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
 
+                    // Motivation (why)
+                    label("Why does this matter? (optional)")
+                    HStack(alignment: .top, spacing: 10) {
+                        Image(systemName: "lightbulb")
+                            .font(.callout)
+                            .foregroundColor(store.addForm.motivation.isEmpty ? C.muted : C.primary)
+                            .padding(.top, 1)
+                        TextField("e.g. Keeps the team unblocked…", text: $store.addForm.motivation, axis: .vertical)
+                            .font(.callout)
+                            .foregroundColor(C.text)
+                            .tint(C.primary)
+                            .lineLimit(2...4)
+                    }
+                    .padding(14)
+                    .background(C.card)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(
+                        store.addForm.motivation.isEmpty ? C.border : C.primary, lineWidth: 1.5))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+
                     // Add button
                     Button { store.addTask() } label: {
                         Text("Add Task")
