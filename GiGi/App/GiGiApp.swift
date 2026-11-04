@@ -73,6 +73,7 @@ struct RootView: View {
                 store.reloadTasksFromUserDefaults()
                 store.autoUpdateAges()
                 store.save()
+                timerTick += 1
             }
         }
         #if os(macOS)
@@ -81,6 +82,16 @@ struct RootView: View {
             store.reloadTasksFromUserDefaults()
             store.autoUpdateAges()
             store.save()
+            timerTick += 1
+        }
+        #endif
+        #if os(iOS)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            AppStore.mergeKVStoreIntoDefaults()
+            store.reloadTasksFromUserDefaults()
+            store.autoUpdateAges()
+            store.save()
+            timerTick += 1
         }
         #endif
         .onChange(of: subStore.isProStatusLoaded) { _, loaded in

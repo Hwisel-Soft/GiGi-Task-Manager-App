@@ -1,9 +1,23 @@
 import UserNotifications
 import Foundation
 
-final class NotificationService {
+final class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     static let morningId = "gigi.morning.summary"
     static func sessionEndId(_ taskId: Int) -> String { "gigi.session.\(taskId)" }
+
+    override init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self
+    }
+
+    // Show banners (and play sound) even when the app is in the foreground.
+    // Without this, iOS silently drops all notifications while GiGi is active,
+    // so the session-end alert never appears if the user doesn't background the app.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                 willPresent notification: UNNotification,
+                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound])
+    }
 
     func requestPermission() async -> Bool {
         do {
