@@ -17,7 +17,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>41</string>
+	<string>42</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>GiGi adds your booked tasks to your calendar so you can see them alongside other events.</string>
 	<key>NSMicrophoneUsageDescription</key>
